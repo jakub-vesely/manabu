@@ -16,7 +16,7 @@ void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
     SetDutyCyclePWM3(blue);
 }
 
-void SetColor(unsigned char i, unsigned pwmPeriod, bool blackAndWhite)
+void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
 {
 	unsigned value = i % pwmPeriod;
 	if (i == 0)
@@ -56,12 +56,24 @@ void SetColor(unsigned char i, unsigned pwmPeriod, bool blackAndWhite)
 
 void SetWhiteValue(unsigned char value)
 {
-	SetDutyCyclePWM2(value);
-	SetDutyCyclePWM1(value);          
-    SetDutyCyclePWM3(value);
+	SetDutyCyclePWM(value, value, value);
 }
 
 
+void SetRed(unsigned char pwmPeriod)
+{
+	SetDutyCyclePWM(pwmPeriod -1, 0, 0);          
+}
+
+void SetGreen(unsigned char pwmPeriod)
+{
+	SetDutyCyclePWM(0, pwmPeriod, 0);
+}
+
+void SetBlue(unsigned char pwmPeriod)
+{
+	SetDutyCyclePWM(0, 0, pwmPeriod -1);
+}
 
 void main(void)
 {  
@@ -77,10 +89,13 @@ void main(void)
 	PwmInit(pwmPeriod);
 	I2cInit(I2C_ADDRESS); 
 
+	SetRed(102);
 	while(1)
 	{
-		if (g_valueChanged) 
+		if (g_valueChanged)
+		{ 
 	    	SetColor(g_value, pwmPeriod, true);
+		}
 	}
 }
 
@@ -91,6 +106,4 @@ void interrupt isr(void)
 	unsigned char status = (SSPSTAT & 0b00101101);    //Mask out unimportant bits
 	ProcessI2cInterrupt(status);
 } 
-
-
 
