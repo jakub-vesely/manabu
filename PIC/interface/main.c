@@ -5,6 +5,9 @@
 #include <p18F14K50.h> 
 #include <delays.h> 
 #include <string.h>
+#include <eep.h>
+
+#include <CommonConstants.h>
 
 //14K50
 #pragma config CPUDIV = NOCLKDIV
@@ -39,21 +42,11 @@
 
 
 #pragma udata
-char out_buffer[100]; //FIXME: originally ther was 30 but something overwrited followed constants
-const char serial_number[] = "0001";
-const char  led1SN[] = "0002";
-const char buttonSN[] = "0003"; 
-const char  led2SN[] = "0004";
-//const char protocolId[] = PROTOCOL_ID;
-
-int IsConnected();
-//unsigned g_bufferHead;
+char out_buffer[8]; //FIXME: originally ther was 30 but something overwrited followed constants
+const char protocolId[] = PROTOCOL_ID;
 #pragma code
 
-//unsigned char firstDeviceAddress = INIT_SLAVA_CUBE_ADDRESS;
-unsigned char maxAddress = 0;
-unsigned char led1Address;
-unsigned char buttonAddress;
+char state = 255;
 
 int IsConnected()
 {
@@ -169,51 +162,27 @@ void GetNeighborAddress(char const *data)
 
 	PutUsbData(out_buffer, 1);
 }
-
+*/
 void SetState(char const *data)
 {
-unsigned ledState = 0;
-	if (led1Address == data[1])
-	{
-		ledState = data[3];
+	state = data[3];
+	Write_b_eep(0, state);
+	Busy_eep ();
 
-		if (1 == data[3])
-			PORTC = 0b1111;
-		else
-			PORTC = 0b0000;
-		out_buffer[0] = 1;
-	}
-	else if (buttonAddress == data[1])
-	{
-		out_buffer[0] = 0;
-	}
-	else
-	{
-		PutI2C(data[1], FID_SET_STATE);
-		PutI2C(data[1], data[3]);
-		out_buffer[0] = 1;
-	}
-
+	PutI2C(0x01, state);
+	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
 }
 
 void GetState(char const *data)
 {
-	unsigned ledState = 0;
-	unsigned address = data[1];
-	if (buttonAddress == address)
-		out_buffer[0] = !PORTAbits.RA3;
-	else if (led1Address == address)
-		out_buffer[0] =ledState;
-	else
-		out_buffer[0] = GetI2C(address); 		
-
+	out_buffer[0] = state;
 	PutUsbData(out_buffer, 1);
-}*/
+}
 
 void usbDataReaded(char const *data, int size)
 {
-/*	FunctionId functionId;
+	FunctionId functionId;
 	
 	if (0 == size)
 		return;
@@ -223,16 +192,18 @@ void usbDataReaded(char const *data, int size)
 	{
 		case FID_GET_PROTOCOL_ID:
 			Response(protocolId, sizeof(protocolId)-1);
+			PORTC = 0b0011;
 		break;
 
 		case FID_GET_PARAMETERS:
-			GetParameters(data);
+			//GetParameters(data);
 		break;
 		
 		case FID_GET_NEIGHBOR_ADDRESS:
-			GetNeighborAddress(data);
+			//GetNeighborAddress(data);
 		break;
 		case FID_SET_STATE:
+			PORTC = 0b0111;
 			SetState(data);
 			
 		break;
@@ -240,7 +211,7 @@ void usbDataReaded(char const *data, int size)
 		case FID_GET_STATE:
 			GetState(data);
 		break;
-	}*/
+	}
 }
 void main(void)
 {  
@@ -248,53 +219,22 @@ void main(void)
 
 	LATC=0;
 	TRISC = 0;
-	
-	led1Address = ++maxAddress;
-	buttonAddress = ++maxAddress;
 
 	I2CInit();
-	//InitializeUSB();
+	InitializeUSB();
 
 	LATB=0;
 	LATBbits.LATB7= 0;
 	TRISBbits.TRISB7 = 0; 
 	PORTBbits.RB7 = 1; //is connected bite
 
-	PORTC = 0b0001;
 	
-	PORTC = 0b0010;
-	
-    while(1)
+	state = Read_b_eep(0);
+	PutI2C(0x01, state);
+	while(1)
     {
-		int i = 1;
-		for (;i < 255; i++)
-		{
-			int j = 0;
-	 		for (; j < 10000; j++)
-				;
-
-			PutI2C(0x01, i);			
-		}
-
-		for (i = 254;i > 0; i--)
-		{
-			int j = 0;
-	 		for (; j < 10000; j++)
-				;
-
-			PutI2C(0x01, i);			
-		}
-
 		
-		for (i = 0;i < 255; i++)
-		{
-			int j = 0;
-	 		for (; j < 10000; j++)
-				;
-
-			PutI2C(0x01, 255);			
-		}	
 		
-		//ProcessUSB(usbDataReaded);  
+		ProcessUSB(usbDataReaded);  
     }//end while
 }//end main

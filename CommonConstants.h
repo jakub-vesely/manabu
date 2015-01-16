@@ -1,0 +1,31 @@
+#ifndef _COMMON_CONSTANTS_H_
+#define _COMMON_CONSTANTS_H_
+
+#define FIRMWARE_VERSION			1
+
+#define MESSAGE_LENGTH_BYTE_COUNT	1
+
+#define PROTOCOL_ID				"CUBO"
+
+#define INTERFACE_CUBE_ADDRESS  0
+//#define INIT_SLAVA_CUBE_ADDRESS 0
+
+//function ids
+typedef enum FunctionId{
+FID_GET_PARAMETERS,
+FID_GET_PROTOCOL_ID,
+FID_GET_NEIGHBOR_ADDRESS,
+FID_GET_STATE,
+FID_SET_STATE,
+FID_SET_ADDRESS
+} FunctionId;
+
+//Cube types
+//enum CubeTypes{
+//	CT_INTERFACE,
+//	CT_LED,
+//	CT_BUTTON,
+//	CT_HUB
+//};
+
+#endif //_COMMON_CONSTANTS_H_
