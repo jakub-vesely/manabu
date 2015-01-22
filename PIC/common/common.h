@@ -2,7 +2,7 @@
 #define _COMMON_COMMON_H_
 
 #include <stdbool.h>
-#include <common/common.h>
+#include <pic16f1503.h>
 
 unsigned char g_value = 0;
 bool g_valueChanged = true;

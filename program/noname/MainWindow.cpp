@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "ui_MainWindow.h"
 #include <QMessageBox>
 #include "SerialPort.h"
 #include <QString>
@@ -12,7 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	setMinimumSize(200, 20);
 	SerialPort *serialPort = new SerialPort(this);
-	serialPort->Open();
+	if (!serialPort->Open())
+	{
+		QMessageBox::critical(this, "", tr("Device not connected."));
+		return;
+	}
 
 	QVBoxLayout *vBoxLayout = new  QVBoxLayout(this);
 	setLayout(vBoxLayout);
@@ -28,6 +31,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		slider->setValue(value);
 		qDebug() << "value: " << value;
+	}
+	else
+	{
+		QMessageBox::critical(this, "", tr("Value was not read."));
+
 	}
 	connect(slider, SIGNAL(valueChanged(int)), serialPort, SLOT(SetValue(int)));
 

@@ -1,9 +1,8 @@
-#include <htc.h>
 #include <stdbool.h>
 #include <common/common.h>
 #include <common/i2c.h>
 #include <common/pwm.h>
-
+#include "HEFlash.h"
 
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
@@ -53,12 +52,10 @@ void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
 	SetDutyCyclePWM(28, 28, 28);
 }
 
-
 void SetWhiteValue(unsigned char value)
 {
 	SetDutyCyclePWM(value, value, value);
 }
-
 
 void SetRed(unsigned char pwmPeriod)
 {
@@ -75,35 +72,38 @@ void SetBlue(unsigned char pwmPeriod)
 	SetDutyCyclePWM(0, 0, pwmPeriod -1);
 }
 
+void interrupt isr(void)
+{
+	SSP1IF = 0; //Clear interrupt flag
+	unsigned char status = (SSPSTAT & 0b00101101);    //Mask out unimportant bits
+	ProcessI2cInterrupt(status);
+}
+
 void main(void)
-{  
-	CommonInit();
+{
+        CommonInit();
     
 	ANSELA = 0x00;      //set analog pins to digital 
-    ANSELC = 0x00; 
+        ANSELC = 0x00;
         //TRISbits for PWM are set in InitPWM() 
     
 	//unsigned char pwmPeriod = 85; //red to red
 	unsigned char pwmPeriod = 102; //red to purple
-	
+        
 	PwmInit(pwmPeriod);
 	I2cInit(I2C_ADDRESS); 
 
-	SetRed(102);
+	//SetRed(102);
+
+	g_value = HEFLASH_readByte (0, 0);
+	unsigned newValue = g_value+ 5;
+	HEFLASH_writeBlock(0, (void*)&newValue, sizeof(newValue));
 	while(1)
 	{
 		if (g_valueChanged)
-		{ 
-	    	SetColor(g_value, pwmPeriod, true);
+		{
+			SetColor(g_value, pwmPeriod, true);
 		}
 	}
 }
-
-void interrupt isr(void) 
-{
-	int value;
-	SSP1IF = 0; //Clear interrupt flag  
-	unsigned char status = (SSPSTAT & 0b00101101);    //Mask out unimportant bits
-	ProcessI2cInterrupt(status);
-} 
 

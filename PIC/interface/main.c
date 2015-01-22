@@ -169,7 +169,7 @@ void SetState(char const *data)
 	Write_b_eep(0, state);
 	Busy_eep ();
 
-	PutI2C(0x01, state);
+	PutI2C(0x00, state);
 	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
 }
