@@ -1,3 +1,6 @@
+#ifndef _COMMON_HEFLAS_H_
+#define _COMMON_HEFLAS_H_
+
 /*copied from http://ww1.microchip.com/downloads/en/AppNotes/00001673A.pdf*/
 /*
 * HEFlash.h
@@ -35,3 +38,5 @@ char HEFLASH_readBlock (char* buffer, char radd, char count);
 * @return byte of data retrieved
 */
 char HEFLASH_readByte (char radd, char offset);
+
+#endif //_COMMON_HEFLAS_H_

@@ -1,3 +1,6 @@
+#ifndef _COMMON_FLASH_H_
+#define _COMMON_FLASH_H_
+
 /*copied from http://ww1.microchip.com/downloads/en/AppNotes/00001673A.pdf*/
 /*
 * Flash.h
@@ -77,3 +80,5 @@ void FLASH_write (unsigned address, unsigned data, char latch);
 * @param address absolute address in Flash contained in selected row
 */
 void FLASH_erase (unsigned address);
+
+#endif //_COMMON_FLASH_H_
