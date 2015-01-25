@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../RGB.c ../../common/HEFlash.c ../../common/Flash.c ../../common/pwm.c ../../common/i2c.c ../../common/common.c
+SOURCEFILES_QUOTED_IF_SPACED=../../common/HEFlash.c ../../common/Flash.c ../../common/pwm.c ../../common/i2c.c ../../common/common.c ../RGB.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1472/RGB.p1 ${OBJECTDIR}/_ext/1329223797/HEFlash.p1 ${OBJECTDIR}/_ext/1329223797/Flash.p1 ${OBJECTDIR}/_ext/1329223797/pwm.p1 ${OBJECTDIR}/_ext/1329223797/i2c.p1 ${OBJECTDIR}/_ext/1329223797/common.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1472/RGB.p1.d ${OBJECTDIR}/_ext/1329223797/HEFlash.p1.d ${OBJECTDIR}/_ext/1329223797/Flash.p1.d ${OBJECTDIR}/_ext/1329223797/pwm.p1.d ${OBJECTDIR}/_ext/1329223797/i2c.p1.d ${OBJECTDIR}/_ext/1329223797/common.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1329223797/HEFlash.p1 ${OBJECTDIR}/_ext/1329223797/Flash.p1 ${OBJECTDIR}/_ext/1329223797/pwm.p1 ${OBJECTDIR}/_ext/1329223797/i2c.p1 ${OBJECTDIR}/_ext/1329223797/common.p1 ${OBJECTDIR}/_ext/1472/RGB.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1329223797/HEFlash.p1.d ${OBJECTDIR}/_ext/1329223797/Flash.p1.d ${OBJECTDIR}/_ext/1329223797/pwm.p1.d ${OBJECTDIR}/_ext/1329223797/i2c.p1.d ${OBJECTDIR}/_ext/1329223797/common.p1.d ${OBJECTDIR}/_ext/1472/RGB.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1472/RGB.p1 ${OBJECTDIR}/_ext/1329223797/HEFlash.p1 ${OBJECTDIR}/_ext/1329223797/Flash.p1 ${OBJECTDIR}/_ext/1329223797/pwm.p1 ${OBJECTDIR}/_ext/1329223797/i2c.p1 ${OBJECTDIR}/_ext/1329223797/common.p1
+OBJECTFILES=${OBJECTDIR}/_ext/1329223797/HEFlash.p1 ${OBJECTDIR}/_ext/1329223797/Flash.p1 ${OBJECTDIR}/_ext/1329223797/pwm.p1 ${OBJECTDIR}/_ext/1329223797/i2c.p1 ${OBJECTDIR}/_ext/1329223797/common.p1 ${OBJECTDIR}/_ext/1472/RGB.p1
 
 # Source Files
-SOURCEFILES=../RGB.c ../../common/HEFlash.c ../../common/Flash.c ../../common/pwm.c ../../common/i2c.c ../../common/common.c
+SOURCEFILES=../../common/HEFlash.c ../../common/Flash.c ../../common/pwm.c ../../common/i2c.c ../../common/common.c ../RGB.c
 
 
 CFLAGS=
@@ -81,14 +81,6 @@ MP_PROCESSOR_OPTION=16F1503
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/1472/RGB.p1: ../RGB.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
-	@${RM} ${OBJECTDIR}/_ext/1472/RGB.p1.d 
-	@${RM} ${OBJECTDIR}/_ext/1472/RGB.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=24 --float=24 --rom=default,-1f80-1fff --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../.." -I"../../common" -I"." -I"../../../../../Program Files/Microchip/xc8/v1.33/include" --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,+oscval:0,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf --stack=compiled "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/1472/RGB.p1  ../RGB.c 
-	@-${MV} ${OBJECTDIR}/_ext/1472/RGB.d ${OBJECTDIR}/_ext/1472/RGB.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/_ext/1472/RGB.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/_ext/1329223797/HEFlash.p1: ../../common/HEFlash.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1329223797" 
 	@${RM} ${OBJECTDIR}/_ext/1329223797/HEFlash.p1.d 
@@ -129,15 +121,15 @@ ${OBJECTDIR}/_ext/1329223797/common.p1: ../../common/common.c  nbproject/Makefil
 	@-${MV} ${OBJECTDIR}/_ext/1329223797/common.d ${OBJECTDIR}/_ext/1329223797/common.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1329223797/common.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-else
 ${OBJECTDIR}/_ext/1472/RGB.p1: ../RGB.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/RGB.p1.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/RGB.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --rom=default,-1f80-1fff --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../.." -I"../../common" -I"." -I"../../../../../Program Files/Microchip/xc8/v1.33/include" --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,+oscval:0,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf --stack=compiled "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/1472/RGB.p1  ../RGB.c 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=24 --float=24 --rom=default,-1f80-1fff --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../.." -I"../../common" -I"." -I"../../../../../Program Files/Microchip/xc8/v1.33/include" --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,+oscval:0,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf --stack=compiled "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/1472/RGB.p1  ../RGB.c 
 	@-${MV} ${OBJECTDIR}/_ext/1472/RGB.d ${OBJECTDIR}/_ext/1472/RGB.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1472/RGB.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+else
 ${OBJECTDIR}/_ext/1329223797/HEFlash.p1: ../../common/HEFlash.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1329223797" 
 	@${RM} ${OBJECTDIR}/_ext/1329223797/HEFlash.p1.d 
@@ -177,6 +169,14 @@ ${OBJECTDIR}/_ext/1329223797/common.p1: ../../common/common.c  nbproject/Makefil
 	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --rom=default,-1f80-1fff --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../.." -I"../../common" -I"." -I"../../../../../Program Files/Microchip/xc8/v1.33/include" --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,+oscval:0,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf --stack=compiled "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/1329223797/common.p1  ../../common/common.c 
 	@-${MV} ${OBJECTDIR}/_ext/1329223797/common.d ${OBJECTDIR}/_ext/1329223797/common.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1329223797/common.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/_ext/1472/RGB.p1: ../RGB.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
+	@${RM} ${OBJECTDIR}/_ext/1472/RGB.p1.d 
+	@${RM} ${OBJECTDIR}/_ext/1472/RGB.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --rom=default,-1f80-1fff --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../.." -I"../../common" -I"." -I"../../../../../Program Files/Microchip/xc8/v1.33/include" --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,+oscval:0,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf --stack=compiled "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/1472/RGB.p1  ../RGB.c 
+	@-${MV} ${OBJECTDIR}/_ext/1472/RGB.d ${OBJECTDIR}/_ext/1472/RGB.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/_ext/1472/RGB.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

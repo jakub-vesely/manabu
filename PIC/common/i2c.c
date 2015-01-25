@@ -39,60 +39,61 @@ void I2cInit(unsigned char address)
 
 }
 
-void ProcessI2cInterrupt(unsigned char status)
+void ProcessI2cInterrupt()
 {
+	if (0 == SSPSTAT & 0b00000001) //it's mot I2C interrupt
+		return;
+	
+	bool isData = SSPSTAT & 0b00100000;
+	bool isRead = SSPSTAT & 0b00000100;
 	unsigned char value;
-	status = (status & 0b00101101);
-	switch (status)
+	
+	if (!isData && !isRead)
 	{
-		//I2C write, last byte was an address
-		//SSPSTAT bits: D/A=0, S=1, R/W=0, BF=1
-		case 0b00001001:
-			value = SSPBUF;         //read buffer, clear BF
-			if (0 != value) //data are spred as a broadcast command have an address
-				g_commandPartFollowed = 0; //command is composed from two bytes comand Id + command value
+		value = SSPBUF;
+		if (0 != value) //data are spred as a broadcast command have an address
+			g_commandPartFollowed = 0; //command is composed from two bytes comand Id + command value
+	}
+	else if (isData && !isRead)
+	{
+		value = SSPBUF;
 
-			if (SEN)
-				CKP = 1;           //release the SCL line
-		break;
-
-		//I2C write, last byte was data
-		//SSPSTAT bits D/A=1, S=1, R/W=0, BF=1
-		case 0b00101001:
-			value = SSPBUF; //read buffer, clear BF
-			if (SEN)
-				CKP = 1;
-
-			if (-1 != g_commandPartFollowed)
+		if (-1 != g_commandPartFollowed)
+		{
+			if (0 == g_commandPartFollowed)
 			{
-				if (0 == g_commandPartFollowed)
-				{
-					g_commandInstruction = value;
-					g_commandPartFollowed = 1;
-				}
-
+				g_commandInstruction = value;
+				g_commandPartFollowed = 1;
+			}
+			else
+			{
 				g_commandValue = value;
 				g_commandPartFollowed = -1;
 				g_commandRecieved = true;
 			}
-			else if (value != g_value)
-			{
-				g_value = value;
-				g_valueChanged = 1;
-			}
-
-			/*TODO: i2c body*/
-		break;
-
-		//may be later
-		/*
-		//I2C read, last byte was address
-		//SSPSTAT bits: D/A = 0, S=1, R/W=1, BF=0
-		case 0b00001101:    //possibly BF==1
-		break;
-		*/
-
+		}
+		else if (value != g_value)
+		{
+			g_value = value;
+			g_valueChanged = 1;
+		}
 	}
+	else //isRead. I guess it will be always an address
+	{
+		value = SSPBUF; //clear BF
+
+		switch (g_commandInstruction)
+		{
+			case COMMAND_GET_CURRENT_MODE:
+				g_commandRecieved = false;
+				 SSPBUF = g_mode;
+				break;
+			default:
+				 SSPBUF = 0;
+		}
+	}
+	if (SEN)
+		CKP = 1;
 }
 
 

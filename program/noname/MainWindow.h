@@ -3,17 +3,25 @@
 
 #include <QMainWindow>
 
-namespace Ui {
-class MainWindow;
-}
-
+class QTabWidget;
+class Qstring;
+class SerialPort;
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
+	void _SetMainLayout();
+	bool _AddInterfaceTab();
+	void _AddRgbTab();
+
+	SerialPort *m_serialPort;
+	QTabWidget *m_tabWidget;
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
+
+public slots:
+	void modeChanged(int value);
 };
 
 #endif // MAINWINDOW_H

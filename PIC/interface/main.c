@@ -1,7 +1,6 @@
 #include "i2c_connector.h"
 #include "HardwareProfile.h"
 #include "usb_connector.h"
-
 #include <p18F14K50.h> 
 #include <delays.h> 
 #include <string.h>
@@ -46,7 +45,14 @@ char out_buffer[8]; //FIXME: originally ther was 30 but something overwrited fol
 const char protocolId[] = PROTOCOL_ID;
 #pragma code
 
-char state = 255;
+#define DATA_ADDRESS  0
+#define COMMAND_ADDRESS  1
+
+#define COMMAND_CHANGE_MODE  1
+#define COMMAND_GET_CURRENT_MODE  2
+
+
+unsigned char g_state = 255;
 
 int IsConnected()
 {
@@ -71,6 +77,12 @@ void Response(char const * answer, unsigned answerLength)
 	PutUsbData(out_buffer, out_buffer[0]);	
 }
 
+void ResponseChar(unsigned char answer)
+{
+	out_buffer[0] = 2;
+	out_buffer[1] = answer;
+	PutUsbData(out_buffer, 2);
+}
 /*void GetParameters(char const *data)
 {
 	unsigned address = data[1];
@@ -165,18 +177,43 @@ void GetNeighborAddress(char const *data)
 */
 void SetState(char const *data)
 {
-	state = data[3];
-	Write_b_eep(0, state);
+	g_state = data[3];
+	Write_b_eep(0, g_state);
 	Busy_eep ();
-
-	PutI2C(0x00, state);
+	
+	PutI2C(DATA_ADDRESS, &g_state, 1);
 	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
 }
 
+unsigned char PutI2CCommand(unsigned char instruction, unsigned char value, int responseRequired)
+{
+	unsigned char command[2];
+	command[0] = instruction;
+	command[1] = value;
+	PutI2C(COMMAND_ADDRESS, command, 2);
+
+	if (responseRequired)
+		return GetI2C(COMMAND_ADDRESS);
+
+	return 0;
+}
+
+void SetDescendentMode(char const *data)
+{
+	PutI2CCommand(COMMAND_CHANGE_MODE, data[3], 0);
+	out_buffer[0] = 1;
+	PutUsbData(out_buffer, 1);
+}
+
+unsigned char GetDescendentMode()
+{
+	return PutI2CCommand(COMMAND_GET_CURRENT_MODE, 0, 1); //FIXME: I don't have to transfer any value
+}
+
 void GetState(char const *data)
 {
-	out_buffer[0] = state;
+	out_buffer[0] = g_state;
 	PutUsbData(out_buffer, 1);
 }
 
@@ -192,31 +229,32 @@ void usbDataReaded(char const *data, int size)
 	{
 		case FID_GET_PROTOCOL_ID:
 			Response(protocolId, sizeof(protocolId)-1);
-			PORTC = 0b0011;
-		break;
+			break;
 
-		case FID_GET_PARAMETERS:
+		//case FID_GET_PARAMETERS:
 			//GetParameters(data);
-		break;
+			//break;
 		
-		case FID_GET_NEIGHBOR_ADDRESS:
+		//case FID_GET_NEIGHBOR_ADDRESS:
 			//GetNeighborAddress(data);
-		break;
+			//break;
 		case FID_SET_STATE:
-			PORTC = 0b0111;
 			SetState(data);
-			
-		break;
-
+			break;
 		case FID_GET_STATE:
 			GetState(data);
-		break;
+			break;
+		case FID_GET_MODE:
+			ResponseChar(GetDescendentMode());
+			break;
+		case FID_SET_MODE:
+			SetDescendentMode(data);
+			break;
 	}
 }
+
 void main(void)
 {  
-	int pass = 0;
-
 	LATC=0;
 	TRISC = 0;
 
@@ -228,13 +266,10 @@ void main(void)
 	TRISBbits.TRISB7 = 0; 
 	PORTBbits.RB7 = 1; //is connected bite
 
-	
-	state = Read_b_eep(0);
-	PutI2C(0x01, state);
+	g_state = Read_b_eep(0);
+	PutI2C(DATA_ADDRESS, &g_state, 1);
 	while(1)
     {
-		
-		
-		ProcessUSB(usbDataReaded);  
-    }//end while
+		ProcessUSB(usbDataReaded);
+    }
 }//end main

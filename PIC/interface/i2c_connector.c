@@ -28,15 +28,18 @@ void I2CInit(void)
 	LATC=0;
 	TRISC = 0;
 
-	SSPADD = (FREQ/(BITRATE*4))-1;
+	SSPADD = (FREQ/(BITRATE*4))-1; //TODO: 16F1503 datacheet, page 211
 	OpenI2C(MASTER, SLEW_OFF);  
 }
 
-void PutI2C(int address, int data)
+void PutI2C(unsigned char address, unsigned char *data, unsigned char count)
 {
-	StartI2C(); 
+	//TODO: I cound check current address and send address message just in the case the address is different
+	unsigned char i = 0;
+	StartI2C();
 	while (WriteI2C(address << 1) != 0);
-	while (WriteI2C(data) != 0);
+	for (; i < count; i++)
+		while (WriteI2C(data[i]) != 0);
 	StopI2C();
 }
 

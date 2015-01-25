@@ -3,31 +3,53 @@
 #include "SerialPort.h"
 #include <QString>
 #include <QSlider>
+#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QtCore/QDebug>
+#include <QLineEdit>
+#include <QTabWidget>
+#include <QComboBox>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent)
+	QMainWindow(parent),
+	m_serialPort(NULL)
 {
 	setMinimumSize(200, 20);
-	SerialPort *serialPort = new SerialPort(this);
-	if (!serialPort->Open())
+
+	_SetMainLayout();
+	if (!_AddInterfaceTab())
+		return;
+
+	_AddRgbTab();
+}
+
+void MainWindow::_SetMainLayout()
+{
+	m_tabWidget = new QTabWidget(this);
+	this->setCentralWidget(m_tabWidget);
+}
+
+bool MainWindow::_AddInterfaceTab()
+{
+	m_serialPort = new SerialPort(this);
+	if (!m_serialPort->Open())
 	{
 		QMessageBox::critical(this, "", tr("Device not connected."));
-		return;
+		return false;
 	}
 
-	QVBoxLayout *vBoxLayout = new  QVBoxLayout(this);
-	setLayout(vBoxLayout);
+	QWidget *widget = new QWidget(this);
+	m_tabWidget->addTab(widget, tr("Interface"));
+	QVBoxLayout *layout = new QVBoxLayout(widget);
 
-	QSlider *slider = new QSlider(Qt::Horizontal, this);
+	QSlider *slider = new QSlider(Qt::Horizontal, widget);
 	slider->setMinimumSize(200, 20);
-	vBoxLayout->addWidget(slider);
-
 	slider->setRange(0, 255);
+	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
+	layout->addWidget(slider);
 
 	int value;
-	if (serialPort->FillValue(value))
+	if (m_serialPort->FillValue(value))
 	{
 		slider->setValue(value);
 		qDebug() << "value: " << value;
@@ -37,10 +59,33 @@ MainWindow::MainWindow(QWidget *parent) :
 		QMessageBox::critical(this, "", tr("Value was not read."));
 
 	}
-	connect(slider, SIGNAL(valueChanged(int)), serialPort, SLOT(SetValue(int)));
 
+	return true;
+}
+
+void MainWindow::_AddRgbTab()
+{
+	QWidget *widget = new QWidget(this);
+	m_tabWidget->addTab(widget, tr("RGB"));
+	QVBoxLayout *layout = new QVBoxLayout(widget);
+
+	QComboBox *mode = new QComboBox(widget);
+	mode->addItem(tr("red to red"));
+	mode->addItem(tr("red to purple"));
+	mode->addItem(tr("white value"));
+	mode->setCurrentIndex(m_serialPort->GetMode()-1);
+
+	//m_serialPort->SetMode(mode->currentIndex()+1);
+
+	connect(mode, SIGNAL(currentIndexChanged(int)), this, SLOT(modeChanged(int)));
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::modeChanged(int value)
+{
+	m_serialPort->SetMode(value+1);
+
 }

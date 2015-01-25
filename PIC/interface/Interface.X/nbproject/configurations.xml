@@ -102,7 +102,7 @@
         <property key="enable-ou" value="false"/>
         <property key="enable-ow" value="true"/>
         <property key="extra-include-directories"
-                  value="../../..;../../../../../Program Files/Microchip/mplabc18/v3.41/h;../../../../../Microchip Solutions v2012-07-18/Microchip/Include;..;../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB;../../../../RoboStavebnice/common;."/>
+                  value="../..;../../../../../Program Files/Microchip/mplabc18/v3.41/h;../../../../../Microchip Solutions v2012-07-18/Microchip/Include;..;../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB;.;../../.."/>
         <property key="optimization-master" value="Custom"/>
         <property key="preprocessor-macros" value=""/>
         <property key="procedural-abstraction-passes" value="4"/>

@@ -9,7 +9,7 @@
 #define TRIS_SDA TRISCbits.TRISC1 
 
 void I2cInit(unsigned char address);
-void ProcessI2cInterrupt(unsigned char status);
+void ProcessI2cInterrupt();
 
 
 #endif //_COMMON_I2C_H_

@@ -1,5 +1,5 @@
 #include <stdbool.h>
-//#include <common/common.h>
+#include <common/common.h>
 #include <common/i2c.h>
 #include <common/pwm.h>
 #include "HEFlash.h"
@@ -10,18 +10,13 @@ __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_
 #define RED_TO_RED_PERIOD 85 //6 states
 #define RED_TO_PURPLE_PERIOD 102 //5 states
 
-typedef enum
-{
-	COMMAND_MODE_CHANGE = 1
-} COMMAND;
+
 typedef enum
 {
 	MODE_RED_TO_RED = 1,
 	MODE_RED_TO_PURPLE = 2,
 	MODE_WHITE_VALUE = 3,
 } MODE;
-
-MODE g_mode = MODE_RED_TO_RED;
 
 void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
 {
@@ -90,18 +85,17 @@ void SetBlue(unsigned char pwmPeriod)
 void interrupt isr(void)
 {
 	SSP1IF = 0; //Clear interrupt flag
-	unsigned char status = (SSPSTAT & 0b00101101);    //Mask out unimportant bits
-	ProcessI2cInterrupt(status);
+	ProcessI2cInterrupt();
 }
 
 void ProcessCommand()
 {
 	switch(g_commandInstruction)
 	{
-		case COMMAND_MODE_CHANGE:
+		case COMMAND_CHANGE_MODE:
+			g_commandRecieved = false;
 			g_mode = g_commandValue;
-			HEFLASH_writeBlock(0, (void*)&g_mode, sizeof(g_mode));
-
+			HEFLASH_writeBlock(1, (void*)&g_mode, sizeof(g_mode)); //I dont understand why but radd = 0 doesn't work for me
 			g_valueChanged = true;
 			break;
 	}
@@ -109,21 +103,18 @@ void ProcessCommand()
 
 void main(void)
 {
-        CommonInit();
+	CommonInit();
 
 	ANSELA = 0x00;      //set analog pins to digital
-        ANSELC = 0x00;
+    ANSELC = 0x00;
         //TRISbits for PWM are set in InitPWM()
 
 	//unsigned char pwmPeriod = 85; //red to red
 	unsigned char pwmPeriod = 102; //red to purple
-
-	PwmInit(pwmPeriod);
+	PwmInit(pwmPeriod); //FIXME: do I need it If so why I dont use it by every mode change
+	g_mode = HEFLASH_readByte (1, 0);
 	I2cInit(I2C_ADDRESS);
 
-	//SetRed(102);
-
-	g_mode = HEFLASH_readByte (0, 0);
 	while(1)
 	{
 		if (g_commandRecieved)
@@ -132,6 +123,7 @@ void main(void)
 		if (g_valueChanged)
 		{
 			g_valueChanged = false;
+
 			switch (g_mode)
 			{
 				case MODE_RED_TO_RED:
@@ -142,7 +134,7 @@ void main(void)
 					break;
 				case MODE_WHITE_VALUE:
 					SetWhiteValue(g_value);
-					break;
+					break;					
 			}
 		}
 	}

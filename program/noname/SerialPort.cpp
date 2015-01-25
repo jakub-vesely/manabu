@@ -5,10 +5,6 @@
 
 #define BUFFER_SIZE 100
 #define TIMEOUT 500
-#define INTERFACE_MODULE_ADDRESS 0
-
-#define MESSAGE_LENGTH_BYTE_COUNT 1
-#define PROTOCOL_ID "CUBO"
 
 static char g_buffer[BUFFER_SIZE];
 
@@ -50,6 +46,22 @@ void SerialPort::SetValue(int value)
 {
 	g_buffer[0] = value;
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_STATE, 1, 1, false);
+}
+
+int SerialPort::GetMode()
+{
+	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_MODE, 0, 1, true);
+	if (0 == size || size != g_buffer[0])
+		return 0;
+
+	qDebug() << "mode: " << (int)(g_buffer[1]);
+	return g_buffer[1];
+}
+
+void SerialPort::SetMode(int mode)
+{
+	g_buffer[0] = mode;
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_MODE, 1, 1, false);
 }
 
 bool SerialPort::FillValue(int &value)
@@ -127,7 +139,7 @@ unsigned SerialPort::_CallCubeFunction(
 
 unsigned SerialPort::_ReadData()
 {
-	m_serialPort.waitForReadyRead(10);
+	m_serialPort.waitForReadyRead(100);
 	QByteArray data = m_serialPort.readAll();
 
 	if (data.size() > 0)

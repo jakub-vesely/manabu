@@ -93,7 +93,7 @@ ${OBJECTDIR}/_ext/1249981638/usb_device.o: ../../../../../Microchip\ Solutions\ 
 	@${MKDIR} "${OBJECTDIR}/_ext/1249981638" 
 	@${RM} ${OBJECTDIR}/_ext/1249981638/usb_device.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1249981638/usb_device.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1249981638/usb_device.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/usb_device.c" 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1249981638/usb_device.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/usb_device.c" 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1249981638/usb_device.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1249981638/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -101,7 +101,7 @@ ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o: ../../../../../Microchip\ Soluti
 	@${MKDIR} "${OBJECTDIR}/_ext/957001867" 
 	@${RM} ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/CDC Device Driver/usb_function_cdc.c" 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/CDC Device Driver/usb_function_cdc.c" 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/957001867/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -109,7 +109,7 @@ ${OBJECTDIR}/_ext/1472/usb_descriptors.o: ../usb_descriptors.c  nbproject/Makefi
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_descriptors.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_descriptors.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_descriptors.o   ../usb_descriptors.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_descriptors.o   ../usb_descriptors.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/usb_descriptors.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -117,7 +117,7 @@ ${OBJECTDIR}/_ext/1472/main.o: ../main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/main.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/main.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/main.o   ../main.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/main.o   ../main.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/main.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -125,7 +125,7 @@ ${OBJECTDIR}/_ext/1472/usb_connector.o: ../usb_connector.c  nbproject/Makefile-$
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_connector.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_connector.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_connector.o   ../usb_connector.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_connector.o   ../usb_connector.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/usb_connector.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/usb_connector.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -133,7 +133,7 @@ ${OBJECTDIR}/_ext/1472/i2c_connector.o: ../i2c_connector.c  nbproject/Makefile-$
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/i2c_connector.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/i2c_connector.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/i2c_connector.o   ../i2c_connector.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/i2c_connector.o   ../i2c_connector.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/i2c_connector.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/i2c_connector.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -142,7 +142,7 @@ ${OBJECTDIR}/_ext/1249981638/usb_device.o: ../../../../../Microchip\ Solutions\ 
 	@${MKDIR} "${OBJECTDIR}/_ext/1249981638" 
 	@${RM} ${OBJECTDIR}/_ext/1249981638/usb_device.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1249981638/usb_device.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1249981638/usb_device.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/usb_device.c" 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1249981638/usb_device.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/usb_device.c" 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1249981638/usb_device.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1249981638/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -150,7 +150,7 @@ ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o: ../../../../../Microchip\ Soluti
 	@${MKDIR} "${OBJECTDIR}/_ext/957001867" 
 	@${RM} ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/CDC Device Driver/usb_function_cdc.c" 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o   "../../../../../Microchip Solutions v2012-07-18/Microchip/USB/CDC Device Driver/usb_function_cdc.c" 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/957001867/usb_function_cdc.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/957001867/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -158,7 +158,7 @@ ${OBJECTDIR}/_ext/1472/usb_descriptors.o: ../usb_descriptors.c  nbproject/Makefi
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_descriptors.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_descriptors.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_descriptors.o   ../usb_descriptors.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_descriptors.o   ../usb_descriptors.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/usb_descriptors.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -166,7 +166,7 @@ ${OBJECTDIR}/_ext/1472/main.o: ../main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/main.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/main.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/main.o   ../main.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/main.o   ../main.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/main.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -174,7 +174,7 @@ ${OBJECTDIR}/_ext/1472/usb_connector.o: ../usb_connector.c  nbproject/Makefile-$
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_connector.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/usb_connector.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_connector.o   ../usb_connector.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/usb_connector.o   ../usb_connector.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/usb_connector.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/usb_connector.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	
@@ -182,7 +182,7 @@ ${OBJECTDIR}/_ext/1472/i2c_connector.o: ../i2c_connector.c  nbproject/Makefile-$
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/i2c_connector.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/i2c_connector.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"../../../../RoboStavebnice/common" -I"." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/i2c_connector.o   ../i2c_connector.c 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -p$(MP_PROCESSOR_OPTION) -I"../.." -I"../../../../../Program Files/Microchip/mplabc18/v3.41/h" -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include" -I".." -I"../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB" -I"." -I"../../.." -ms -oa- -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-  -I ${MP_CC_DIR}\\..\\h  -fo ${OBJECTDIR}/_ext/1472/i2c_connector.o   ../i2c_connector.c 
 	@${DEP_GEN} -d ${OBJECTDIR}/_ext/1472/i2c_connector.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/i2c_connector.o.d" $(SILENT) -rsi ${MP_CC_DIR}../ -c18 
 	

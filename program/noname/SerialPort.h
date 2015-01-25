@@ -6,19 +6,11 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
 
+#include "../../CommonConstants.h"
+
 class SerialPort : public QObject
 {
 	Q_OBJECT
-
-	enum FunctionId
-	{
-		FID_GET_PARAMETERS,
-		FID_GET_PROTOCOL_ID,
-		FID_GET_NEIGHBOR_ADDRESS,
-		FID_GET_STATE,
-		FID_SET_STATE,
-		FID_SET_ADDRESS
-	};
 
 	bool _OpenIfMyPotr();
 	bool _IsMyDevice();
@@ -40,6 +32,8 @@ signals:
 
 public slots:
 	void SetValue(int value);
+	int GetMode();
+	void SetMode(int mode);
 	bool FillValue(int &value);
 protected slots:
 	void readyRead();
