@@ -40,6 +40,6 @@ volatile bit PWM3POL @ ((unsigned)&PWM3CON*8)+4;
 #define SetDutyCyclePWM2(x) (PWM2DCH = x) 
 #define SetDutyCyclePWM3(x) (PWM3DCH = x) 
 
-void PwmInit(unsigned char pwmPeriod);
+void PwmInit();
 
 #endif //_COMMON_PWM_H_

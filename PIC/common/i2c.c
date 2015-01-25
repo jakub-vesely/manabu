@@ -41,7 +41,7 @@ void I2cInit(unsigned char address)
 
 void ProcessI2cInterrupt()
 {
-	if (0 == SSPSTAT & 0b00000001) //it's mot I2C interrupt
+	if (0 == SSPSTAT & 0b00000001) //it's not I2C interrupt FIXME: may be it is not a correct condition
 		return;
 	
 	bool isData = SSPSTAT & 0b00100000;

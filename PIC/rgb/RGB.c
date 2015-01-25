@@ -109,9 +109,7 @@ void main(void)
     ANSELC = 0x00;
         //TRISbits for PWM are set in InitPWM()
 
-	//unsigned char pwmPeriod = 85; //red to red
-	unsigned char pwmPeriod = 102; //red to purple
-	PwmInit(pwmPeriod); //FIXME: do I need it If so why I dont use it by every mode change
+	PwmInit();
 	g_mode = HEFLASH_readByte (1, 0);
 	I2cInit(I2C_ADDRESS);
 
@@ -133,6 +131,7 @@ void main(void)
 					SetColor(g_value, RED_TO_PURPLE_PERIOD, true);
 					break;
 				case MODE_WHITE_VALUE:
+
 					SetWhiteValue(g_value);
 					break;					
 			}

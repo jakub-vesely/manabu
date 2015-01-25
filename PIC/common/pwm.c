@@ -1,5 +1,5 @@
 #include "pwm.h"
-void PwmInit(unsigned char pwmPeriod)
+void PwmInit()
 {
 
     TRISC5 = 1; //disconnect PWM1 output
@@ -18,7 +18,7 @@ void PwmInit(unsigned char pwmPeriod)
     PWM2DCL = 0x00;
     PWM3DCL = 0x00;
 
-    PR2 = pwmPeriod;
+    PR2 = 255;
 
 	//timer
     TMR2IF = 0; //disable timer interupt
