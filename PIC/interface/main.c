@@ -181,9 +181,10 @@ void SetState(char const *data)
 	Write_b_eep(0, g_state);
 	Busy_eep ();
 	
-	PutI2C(DATA_ADDRESS, &g_state, 1);
+	PutI2C(DATA_ADDRESS, &g_state, 1, 1);
 	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
+	PORTC = 0b0101;
 }
 
 unsigned char PutI2CCommand(unsigned char instruction, unsigned char value, int responseRequired)
@@ -191,11 +192,10 @@ unsigned char PutI2CCommand(unsigned char instruction, unsigned char value, int 
 	unsigned char command[2];
 	command[0] = instruction;
 	command[1] = value;
-	PutI2C(COMMAND_ADDRESS, command, 2);
-
 	if (responseRequired)
-		return GetI2C(COMMAND_ADDRESS);
-
+		return PutAndGetI2C(COMMAND_ADDRESS, command, 2);
+	else
+		PutI2C(COMMAND_ADDRESS, command, 2, 1);
 	return 0;
 }
 
@@ -267,7 +267,7 @@ void main(void)
 	PORTBbits.RB7 = 1; //is connected bite
 
 	g_state = Read_b_eep(0);
-	PutI2C(DATA_ADDRESS, &g_state, 1);
+	PutI2C(DATA_ADDRESS, &g_state, 1, 1);
 	while(1)
     {
 		ProcessUSB(usbDataReaded);

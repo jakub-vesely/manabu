@@ -1,5 +1,5 @@
 MPLINK 4.42, Linker
-Linker Map File - Created Sat Jan 24 23:07:17 2015
+Linker Map File - Created Tue Jan 27 08:53:27 2015
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -16,54 +16,54 @@ REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
        .code_usb_device.o       code   0x00102c    program   0x0012ec
  .code_usb_function_cdc.o       code   0x002318    program   0x0004f8
     .code_usb_connector.o       code   0x002810    program   0x00043a
-             .code_main.o       code   0x002c4a    program   0x0003a6
-    .code_i2c_connector.o       code   0x002ff0    program   0x0001de
-.romdata_usb_descriptors.o    romdata   0x0031ce    program   0x0000c9
- .idata_i2c_connector.o_i    romdata   0x003297    program   0x000000
- .romdata_i2c_connector.o    romdata   0x003297    program   0x000000
-      .idata_busy_eep.o_i    romdata   0x003297    program   0x000000
-      .romdata_busy_eep.o    romdata   0x003297    program   0x000000
-      .idata_fxd3232u.o_i    romdata   0x003297    program   0x000000
-      .romdata_fxd3232u.o    romdata   0x003297    program   0x000000
-      .idata_i2c_open.o_i    romdata   0x003297    program   0x000000
-      .romdata_i2c_open.o    romdata   0x003297    program   0x000000
-      .idata_i2c_read.o_i    romdata   0x003297    program   0x000000
-      .romdata_i2c_read.o    romdata   0x003297    program   0x000000
-        .idata_read_B.o_i    romdata   0x003297    program   0x000000
-        .romdata_read_B.o    romdata   0x003297    program   0x000000
-      .idata_i2c_writ.o_i    romdata   0x003297    program   0x000000
-      .romdata_i2c_writ.o    romdata   0x003297    program   0x000000
-      .idata_i2c_idle.o_i    romdata   0x003297    program   0x000000
-      .romdata_i2c_idle.o    romdata   0x003297    program   0x000000
-       .idata_write_B.o_i    romdata   0x003297    program   0x000000
-       .romdata_write_B.o    romdata   0x003297    program   0x000000
-        .idata___init.o_i    romdata   0x003297    program   0x000000
-        .romdata___init.o    romdata   0x003297    program   0x000000
-         .romdata_c018i.o    romdata   0x003297    program   0x000000
-         .idata_c018i.o_i    romdata   0x003297    program   0x000000
-.idata_usb_function_cdc.o_i    romdata   0x003297    program   0x000000
-.romdata_usb_function_cdc.o    romdata   0x003297    program   0x000000
-    .idata_usb_device.o_i    romdata   0x003297    program   0x000000
-    .romdata_usb_device.o    romdata   0x003297    program   0x000000
- .romdata_usb_connector.o    romdata   0x003297    program   0x000000
-.idata_usb_descriptors.o_i    romdata   0x003297    program   0x000000
- .idata_usb_connector.o_i    romdata   0x003297    program   0x000000
-          .romdata_main.o    romdata   0x003297    program   0x000000
-             .stringtable    romdata   0x003297    program   0x000000
-  .code_usb_descriptors.o       code   0x003298    program   0x000000
-               _cinit_scn       code   0x003298    program   0x00009e
-            .code_c018i.o       code   0x003298    program   0x000000
-                   STRING       code   0x003336    program   0x00008a
-         .code_i2c_writ.o       code   0x0033c0    program   0x000072
-          .code_write_B.o       code   0x003432    program   0x00004e
-         .code_fxd3232u.o       code   0x003480    program   0x000048
-           .code_read_B.o       code   0x0034c8    program   0x000044
-         .code_i2c_open.o       code   0x00350c    program   0x000036
-                    .code       code   0x003542    program   0x000020
-             _startup_scn       code   0x003562    program   0x00001c
-         .code_i2c_read.o       code   0x00357e    program   0x00001a
-         .code_i2c_idle.o       code   0x003598    program   0x00000e
-          .idata_main.o_i    romdata   0x0035a6    program   0x000006
+             .code_main.o       code   0x002c4a    program   0x0003c0
+    .code_i2c_connector.o       code   0x00300a    program   0x00019c
+.romdata_usb_descriptors.o    romdata   0x0031a6    program   0x0000c9
+ .idata_i2c_connector.o_i    romdata   0x00326f    program   0x000000
+ .romdata_i2c_connector.o    romdata   0x00326f    program   0x000000
+      .idata_busy_eep.o_i    romdata   0x00326f    program   0x000000
+      .romdata_busy_eep.o    romdata   0x00326f    program   0x000000
+      .idata_fxd3232u.o_i    romdata   0x00326f    program   0x000000
+      .romdata_fxd3232u.o    romdata   0x00326f    program   0x000000
+      .idata_i2c_idle.o_i    romdata   0x00326f    program   0x000000
+      .romdata_i2c_idle.o    romdata   0x00326f    program   0x000000
+      .idata_i2c_open.o_i    romdata   0x00326f    program   0x000000
+      .romdata_i2c_open.o    romdata   0x00326f    program   0x000000
+      .idata_i2c_read.o_i    romdata   0x00326f    program   0x000000
+      .romdata_i2c_read.o    romdata   0x00326f    program   0x000000
+        .idata_read_B.o_i    romdata   0x00326f    program   0x000000
+        .romdata_read_B.o    romdata   0x00326f    program   0x000000
+      .idata_i2c_writ.o_i    romdata   0x00326f    program   0x000000
+      .romdata_i2c_writ.o    romdata   0x00326f    program   0x000000
+       .idata_write_B.o_i    romdata   0x00326f    program   0x000000
+       .romdata_write_B.o    romdata   0x00326f    program   0x000000
+        .idata___init.o_i    romdata   0x00326f    program   0x000000
+        .romdata___init.o    romdata   0x00326f    program   0x000000
+         .romdata_c018i.o    romdata   0x00326f    program   0x000000
+         .idata_c018i.o_i    romdata   0x00326f    program   0x000000
+.idata_usb_function_cdc.o_i    romdata   0x00326f    program   0x000000
+.romdata_usb_function_cdc.o    romdata   0x00326f    program   0x000000
+    .idata_usb_device.o_i    romdata   0x00326f    program   0x000000
+    .romdata_usb_device.o    romdata   0x00326f    program   0x000000
+ .romdata_usb_connector.o    romdata   0x00326f    program   0x000000
+.idata_usb_descriptors.o_i    romdata   0x00326f    program   0x000000
+ .idata_usb_connector.o_i    romdata   0x00326f    program   0x000000
+          .romdata_main.o    romdata   0x00326f    program   0x000000
+             .stringtable    romdata   0x00326f    program   0x000000
+  .code_usb_descriptors.o       code   0x003270    program   0x000000
+               _cinit_scn       code   0x003270    program   0x00009e
+            .code_c018i.o       code   0x003270    program   0x000000
+                   STRING       code   0x00330e    program   0x00008a
+         .code_i2c_writ.o       code   0x003398    program   0x000072
+          .code_write_B.o       code   0x00340a    program   0x00004e
+         .code_fxd3232u.o       code   0x003458    program   0x000048
+           .code_read_B.o       code   0x0034a0    program   0x000044
+         .code_i2c_open.o       code   0x0034e4    program   0x000036
+                    .code       code   0x00351a    program   0x000020
+             _startup_scn       code   0x00353a    program   0x00001c
+         .code_i2c_read.o       code   0x003556    program   0x00001a
+         .code_i2c_idle.o       code   0x003570    program   0x00000e
+          .idata_main.o_i    romdata   0x00357e    program   0x000006
     .config_300000_main.o    romdata   0x300000    program   0x000001
     .config_300001_main.o    romdata   0x300001    program   0x000001
     .config_300002_main.o    romdata   0x300002    program   0x000001
@@ -89,8 +89,6 @@ REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
           .udata___init.o      udata   0x000150       data   0x000000
          .idata_write_B.o      idata   0x000150       data   0x000000
          .udata_write_B.o      udata   0x000150       data   0x000000
-        .idata_i2c_idle.o      idata   0x000150       data   0x000000
-        .udata_i2c_idle.o      udata   0x000150       data   0x000000
         .idata_i2c_writ.o      idata   0x000150       data   0x000000
         .udata_i2c_writ.o      udata   0x000150       data   0x000000
           .idata_read_B.o      idata   0x000150       data   0x000000
@@ -99,6 +97,8 @@ REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
         .udata_i2c_read.o      udata   0x000150       data   0x000000
         .idata_i2c_open.o      idata   0x000150       data   0x000000
         .udata_i2c_open.o      udata   0x000150       data   0x000000
+        .idata_i2c_idle.o      idata   0x000150       data   0x000000
+        .udata_i2c_idle.o      udata   0x000150       data   0x000000
         .idata_fxd3232u.o      idata   0x000150       data   0x000000
         .udata_fxd3232u.o      udata   0x000150       data   0x000000
         .idata_busy_eep.o      idata   0x000150       data   0x000000
@@ -125,12 +125,12 @@ REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
                             0x000008    0x00000d      
                             0x000018    0x00001d      
                             0x001000    0x001013      
-                            0x001018    0x003296      
-                            0x003298    0x0035ab      
+                            0x001018    0x00326e      
+                            0x003270    0x003583      
                             0x300000    0x300003      
                             0x300005    0x300006      
                             0x300008    0x30000d      
-            9669 out of 16408 program addresses used, program memory utilization is 58%
+            9629 out of 16408 program addresses used, program memory utilization is 58%
 
 
 
@@ -140,29 +140,29 @@ REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
                  Busy_eep   0x00100e    program     extern C:\MCC18\src\pmc_common\EEP\busy_eep.c
                 CDCInitEP   0x0023be    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\CDC Device Driver\usb_function_cdc.c
              CDCTxService   0x0026bc    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\CDC Device Driver\usb_function_cdc.c
-                 FXD3232U   0x003480    program     extern C:\MCC18\src\traditional\math\fxd3232u.c
-              FillFromI2C   0x003110    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-        GetDescendentMode   0x002e9c    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-                   GetI2C   0x0030a6    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-                 GetState   0x002eb6    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+                 FXD3232U   0x003458    program     extern C:\MCC18\src\traditional\math\fxd3232u.c
+        GetDescendentMode   0x002eb4    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+                   GetI2C   0x0030d6    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+                 GetState   0x002ece    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
                  High_ISR   0x000008    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-                  I2CInit   0x002ff0    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-                  IdleI2C   0x003598    program     extern C:\MCC18\src\pmc_common\i2c\i2c_idle.c
+                  I2CInit   0x00300a    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+                  IdleI2C   0x003570    program     extern C:\MCC18\src\pmc_common\i2c\i2c_idle.c
             InitializeUSB   0x0028cc    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
               IsConnected   0x002c4a    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
                   Low_ISR   0x000018    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-                  OpenI2C   0x00350c    program     extern C:\MCC18\src\pmc_common\i2c\i2c_open.c
+                  OpenI2C   0x0034e4    program     extern C:\MCC18\src\pmc_common\i2c\i2c_open.c
                ProcessUSB   0x0029d2    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-                   PutI2C   0x00303c    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-            PutI2CCommand   0x002dc8    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+             PutAndGetI2C   0x003156    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+                   PutI2C   0x003056    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+            PutI2CCommand   0x002dce    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
                PutUsbData   0x002c1e    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-                  ReadI2C   0x00357e    program     extern C:\MCC18\src\pmc_common\i2c\i2c_read.c
-               Read_b_eep   0x0034c8    program     extern C:\MCC18\src\pmc_common\EEP\read_B.c
+                  ReadI2C   0x003556    program     extern C:\MCC18\src\pmc_common\i2c\i2c_read.c
+               Read_b_eep   0x0034a0    program     extern C:\MCC18\src\pmc_common\EEP\read_B.c
         Remapped_High_ISR   0x001008    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
          Remapped_Low_ISR   0x001018    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
                  Response   0x002cba    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
              ResponseChar   0x002d20    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-        SetDescendentMode   0x002e42    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+        SetDescendentMode   0x002e5a    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
                  SetState   0x002d52    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
        USBCBCheckOtherReq   0x002b62    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
         USBCBErrorHandler   0x002b60    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
@@ -200,18 +200,18 @@ USBCtrlEPAllowStatusStage   0x0015f0    program     extern C:\Microchip Solution
                USBSuspend   0x001d3c    program     static C:\Microchip Solutions v2012-07-18\Microchip\USB\usb_device.c
      USBTransferOnePacket   0x00131e    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\usb_device.c
        USBWakeFromSuspend   0x001d66    program     static C:\Microchip Solutions v2012-07-18\Microchip\USB\usb_device.c
-               USB_CD_Ptr   0x00328f    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-               USB_SD_Ptr   0x003291    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+               USB_CD_Ptr   0x003267    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+               USB_SD_Ptr   0x003269    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
 USER_USB_CALLBACK_EVENT_HANDLER   0x002b88    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
                  UserInit   0x0028da    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-                 WriteI2C   0x0033c0    program     extern C:\MCC18\src\pmc_common\i2c\i2c_writ.c
-              Write_b_eep   0x003432    program     extern C:\MCC18\src\pmc_common\EEP\write_B.c
+                 WriteI2C   0x003398    program     extern C:\MCC18\src\pmc_common\i2c\i2c_writ.c
+              Write_b_eep   0x00340a    program     extern C:\MCC18\src\pmc_common\EEP\write_B.c
   YourHighPriorityISRCode   0x002810    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
    YourLowPriorityISRCode   0x0028a6    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-              _2jContinue   0x0033ac    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-                   _3jEnd   0x0033b6    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-              _4jContinue   0x00336a    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-                   _5jEnd   0x003374    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+              _2jContinue   0x003384    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+                   _3jEnd   0x00338e    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+              _4jContinue   0x003342    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+                   _5jEnd   0x00334c    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
      ___case_114_lbl00043   0x002c0c    program     static                          
      ___case_115_lbl00039   0x002bfc    program     static                          
      ___case_116_lbl00041   0x002c04    program     static                          
@@ -222,12 +222,12 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002b88    program     extern C:\GitRepositor
        ___case_3_lbl00038   0x002bf8    program     static                          
       ___default_lbl00044   0x002c10    program     static                          
        ___return_lbl00000   0x001004    program     static                          
-       ___return_lbl00000   0x0034c6    program     static                          
-       ___return_lbl00000   0x003500    program     static                          
+       ___return_lbl00000   0x00349e    program     static                          
+       ___return_lbl00000   0x0034d8    program     static                          
        ___return_lbl00000   0x000004    program     static                          
        ___return_lbl00001   0x00100c    program     static                          
-       ___return_lbl00001   0x00357c    program     static                          
-       ___return_lbl00002   0x003334    program     static                          
+       ___return_lbl00001   0x003554    program     static                          
+       ___return_lbl00002   0x00330c    program     static                          
        ___return_lbl00002   0x00101c    program     static                          
        ___return_lbl00003   0x00000c    program     static                          
        ___return_lbl00004   0x00001c    program     static                          
@@ -254,41 +254,41 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002b88    program     extern C:\GitRepositor
                __tmplbl_7   0x002bce    program     static                          
                __tmplbl_8   0x002bd8    program     static                          
                __tmplbl_9   0x002be2    program     static                          
-            __zero_memory   0x003542    program     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
-                _do_cinit   0x003298    program     extern C:\MCC18\src\traditional\startup\c018i.c
+            __zero_memory   0x00351a    program     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
+                _do_cinit   0x003270    program     extern C:\MCC18\src\traditional\startup\c018i.c
                    _entry   0x000000    program     extern C:\MCC18\src\traditional\startup\c018i.c
-                   _false   0x0034c2    program     static                          
+                   _false   0x00349a    program     static                          
                    _reset   0x001000    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
-                 _startup   0x003562    program     extern C:\MCC18\src\traditional\startup\c018i.c
-                compare_l   0x003558    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-        configDescriptor1   0x0031e0    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                copy_loop   0x00330a    program     static                          
-            copy_one_byte   0x003310    program     static                          
-               device_dsc   0x0031ce    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                     done   0x003334    program     static                          
-             done_copying   0x00331e    program     static                          
+                 _startup   0x00353a    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                compare_l   0x003530    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+        configDescriptor1   0x0031b8    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                copy_loop   0x0032e2    program     static                          
+            copy_one_byte   0x0032e8    program     static                          
+               device_dsc   0x0031a6    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                     done   0x00330c    program     static                          
+             done_copying   0x0032f6    program     static                          
              getsUSBUSART   0x0024b2    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\CDC Device Driver\usb_function_cdc.c
-                     jEnd   0x00337a    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-                     jEnd   0x0033be    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-                    jLoop   0x0033a0    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-                    jLoop   0x00335e    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-                     loop   0x00348e    program     static                          
-                     loop   0x003572    program     static                          
-                   loop_h   0x003550    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-                   loop_l   0x00355a    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-                     main   0x002f9c    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-                   memcpy   0x003336    program     extern C:\MCC18\src\traditional\stdclib\memcpy.asm
-                   memset   0x00338c    program     extern C:\MCC18\src\traditional\stdclib\memset.asm
+                     jEnd   0x003352    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+                     jEnd   0x003396    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+                    jLoop   0x003378    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+                    jLoop   0x003336    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+                     loop   0x003466    program     static                          
+                     loop   0x00354a    program     static                          
+                   loop_h   0x003528    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                   loop_l   0x003532    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                     main   0x002fb4    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+                   memcpy   0x00330e    program     extern C:\MCC18\src\traditional\stdclib\memcpy.asm
+                   memset   0x003364    program     extern C:\MCC18\src\traditional\stdclib\memset.asm
    mySetLineCodingHandler   0x002920    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_connector.c
               putUSBUSART   0x002574    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\CDC Device Driver\usb_function_cdc.c
             putrsUSBUSART   0x002630    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\CDC Device Driver\usb_function_cdc.c
              putsUSBUSART   0x0025a6    program     extern C:\Microchip Solutions v2012-07-18\Microchip\USB\CDC Device Driver\usb_function_cdc.c
-                    sd000   0x003223    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                    sd001   0x003227    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                    sd002   0x00325b    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                     test   0x0032b2    program     static                          
-            usbDataReaded   0x002ee0    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-               zero_block   0x003550    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                    sd000   0x0031fb    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                    sd001   0x0031ff    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                    sd002   0x003233    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                     test   0x00328a    program     static                          
+            usbDataReaded   0x002ef8    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+               zero_block   0x003528    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
                    ADCON0   0x000fc2       data     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
                ADCON0bits   0x000fc2       data     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
                    ADCON1   0x000fc1       data     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
@@ -699,59 +699,59 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002b88    program     extern C:\GitRepositor
                  Response   0x002cba    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
              ResponseChar   0x002d20    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
                  SetState   0x002d52    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-            PutI2CCommand   0x002dc8    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-        SetDescendentMode   0x002e42    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-        GetDescendentMode   0x002e9c    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-                 GetState   0x002eb6    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-            usbDataReaded   0x002ee0    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-                     main   0x002f9c    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
-                  I2CInit   0x002ff0    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-                   PutI2C   0x00303c    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-                   GetI2C   0x0030a6    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-              FillFromI2C   0x003110    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
-               device_dsc   0x0031ce    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-        configDescriptor1   0x0031e0    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                    sd000   0x003223    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                    sd001   0x003227    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                    sd002   0x00325b    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-               USB_CD_Ptr   0x00328f    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-               USB_SD_Ptr   0x003291    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
-                _do_cinit   0x003298    program     extern C:\MCC18\src\traditional\startup\c018i.c
-                     test   0x0032b2    program     static                          
-                copy_loop   0x00330a    program     static                          
-            copy_one_byte   0x003310    program     static                          
-             done_copying   0x00331e    program     static                          
-       ___return_lbl00002   0x003334    program     static                          
-                     done   0x003334    program     static                          
-                   memcpy   0x003336    program     extern C:\MCC18\src\traditional\stdclib\memcpy.asm
-                    jLoop   0x00335e    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-              _4jContinue   0x00336a    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-                   _5jEnd   0x003374    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-                     jEnd   0x00337a    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
-                   memset   0x00338c    program     extern C:\MCC18\src\traditional\stdclib\memset.asm
-                    jLoop   0x0033a0    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-              _2jContinue   0x0033ac    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-                   _3jEnd   0x0033b6    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-                     jEnd   0x0033be    program     static C:\MCC18\src\traditional\stdclib\memset.asm
-                 WriteI2C   0x0033c0    program     extern C:\MCC18\src\pmc_common\i2c\i2c_writ.c
-              Write_b_eep   0x003432    program     extern C:\MCC18\src\pmc_common\EEP\write_B.c
-                 FXD3232U   0x003480    program     extern C:\MCC18\src\traditional\math\fxd3232u.c
-                     loop   0x00348e    program     static                          
-                   _false   0x0034c2    program     static                          
-       ___return_lbl00000   0x0034c6    program     static                          
-               Read_b_eep   0x0034c8    program     extern C:\MCC18\src\pmc_common\EEP\read_B.c
-       ___return_lbl00000   0x003500    program     static                          
-                  OpenI2C   0x00350c    program     extern C:\MCC18\src\pmc_common\i2c\i2c_open.c
-            __zero_memory   0x003542    program     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
-               zero_block   0x003550    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-                   loop_h   0x003550    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-                compare_l   0x003558    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-                   loop_l   0x00355a    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
-                 _startup   0x003562    program     extern C:\MCC18\src\traditional\startup\c018i.c
-                     loop   0x003572    program     static                          
-       ___return_lbl00001   0x00357c    program     static                          
-                  ReadI2C   0x00357e    program     extern C:\MCC18\src\pmc_common\i2c\i2c_read.c
-                  IdleI2C   0x003598    program     extern C:\MCC18\src\pmc_common\i2c\i2c_idle.c
+            PutI2CCommand   0x002dce    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+        SetDescendentMode   0x002e5a    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+        GetDescendentMode   0x002eb4    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+                 GetState   0x002ece    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+            usbDataReaded   0x002ef8    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+                     main   0x002fb4    program     extern C:\GitRepository\stavebnice03\PIC\interface\main.c
+                  I2CInit   0x00300a    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+                   PutI2C   0x003056    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+                   GetI2C   0x0030d6    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+             PutAndGetI2C   0x003156    program     extern C:\GitRepository\stavebnice03\PIC\interface\i2c_connector.c
+               device_dsc   0x0031a6    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+        configDescriptor1   0x0031b8    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                    sd000   0x0031fb    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                    sd001   0x0031ff    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                    sd002   0x003233    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+               USB_CD_Ptr   0x003267    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+               USB_SD_Ptr   0x003269    program     extern C:\GitRepository\stavebnice03\PIC\interface\usb_descriptors.c
+                _do_cinit   0x003270    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                     test   0x00328a    program     static                          
+                copy_loop   0x0032e2    program     static                          
+            copy_one_byte   0x0032e8    program     static                          
+             done_copying   0x0032f6    program     static                          
+       ___return_lbl00002   0x00330c    program     static                          
+                     done   0x00330c    program     static                          
+                   memcpy   0x00330e    program     extern C:\MCC18\src\traditional\stdclib\memcpy.asm
+                    jLoop   0x003336    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+              _4jContinue   0x003342    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+                   _5jEnd   0x00334c    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+                     jEnd   0x003352    program     static C:\MCC18\src\traditional\stdclib\memcpy.asm
+                   memset   0x003364    program     extern C:\MCC18\src\traditional\stdclib\memset.asm
+                    jLoop   0x003378    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+              _2jContinue   0x003384    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+                   _3jEnd   0x00338e    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+                     jEnd   0x003396    program     static C:\MCC18\src\traditional\stdclib\memset.asm
+                 WriteI2C   0x003398    program     extern C:\MCC18\src\pmc_common\i2c\i2c_writ.c
+              Write_b_eep   0x00340a    program     extern C:\MCC18\src\pmc_common\EEP\write_B.c
+                 FXD3232U   0x003458    program     extern C:\MCC18\src\traditional\math\fxd3232u.c
+                     loop   0x003466    program     static                          
+                   _false   0x00349a    program     static                          
+       ___return_lbl00000   0x00349e    program     static                          
+               Read_b_eep   0x0034a0    program     extern C:\MCC18\src\pmc_common\EEP\read_B.c
+       ___return_lbl00000   0x0034d8    program     static                          
+                  OpenI2C   0x0034e4    program     extern C:\MCC18\src\pmc_common\i2c\i2c_open.c
+            __zero_memory   0x00351a    program     extern C:\MCC18\src\traditional\proc\p18F14K50.asm
+               zero_block   0x003528    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                   loop_h   0x003528    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                compare_l   0x003530    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                   loop_l   0x003532    program     static C:\MCC18\src\traditional\proc\p18F14K50.asm
+                 _startup   0x00353a    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                     loop   0x00354a    program     static                          
+       ___return_lbl00001   0x003554    program     static                          
+                  ReadI2C   0x003556    program     extern C:\MCC18\src\pmc_common\i2c\i2c_read.c
+                  IdleI2C   0x003570    program     extern C:\MCC18\src\pmc_common\i2c\i2c_idle.c
                __config_0   0x300000    program     static C:\GitRepository\stavebnice03\PIC\interface\main.c
                __config_1   0x300001    program     static C:\GitRepository\stavebnice03\PIC\interface\main.c
                __config_2   0x300002    program     static C:\GitRepository\stavebnice03\PIC\interface\main.c

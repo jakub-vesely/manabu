@@ -1,6 +1,6 @@
 #include "i2c.h"
 
-signed char g_commandPartFollowed = -1;
+unsigned char g_commandPartFollowed = 0;
 
 void I2cInit(unsigned char address)
 {
@@ -41,57 +41,62 @@ void I2cInit(unsigned char address)
 
 void ProcessI2cInterrupt()
 {
-	if (0 == SSPSTAT & 0b00000001) //it's not I2C interrupt FIXME: may be it is not a correct condition
+	//FIXME: there is still one open isuue when I read a data Im not able to recieve broadcast data
+	//untill first non broadcast data are recieved. It looks then, I get a zero address and read data (not address)
+
+	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;
-	
+
+	SSP1IF = 0;
+
 	bool isData = SSPSTAT & 0b00100000;
 	bool isRead = SSPSTAT & 0b00000100;
 	unsigned char value;
-	
+	if (0 != SSPSTAT & 0b00000001) //BF FIXME:actually I dont solve the case there is not data prepared
+		value = SSPBUF;
 	if (!isData && !isRead)
 	{
-		value = SSPBUF;
-		if (0 != value) //data are spred as a broadcast command have an address
-			g_commandPartFollowed = 0; //command is composed from two bytes comand Id + command value
+		if (0 != value) //data are send as a broadcast, command have an address
+			g_commandPartFollowed = 1; //command is composed from two bytes comand Id + command value
 	}
-	else if (isData && !isRead)
+	else if (!isRead) //isData
 	{
-		value = SSPBUF;
-
-		if (-1 != g_commandPartFollowed)
+		if (0 != g_commandPartFollowed)
 		{
-			if (0 == g_commandPartFollowed)
+			if (1 == g_commandPartFollowed)
 			{
 				g_commandInstruction = value;
-				g_commandPartFollowed = 1;
+				g_commandPartFollowed = 2;
 			}
 			else
 			{
 				g_commandValue = value;
-				g_commandPartFollowed = -1;
+				g_commandPartFollowed = 0;
 				g_commandRecieved = true;
 			}
 		}
 		else if (value != g_value)
 		{
 			g_value = value;
-			g_valueChanged = 1;
+			g_valueChanged = true;
 		}
 	}
 	else //isRead. I guess it will be always an address
 	{
-		value = SSPBUF; //clear BF
-
 		switch (g_commandInstruction)
 		{
+
 			case COMMAND_GET_CURRENT_MODE:
 				g_commandRecieved = false;
-				 SSPBUF = g_mode;
+				while(BF);      //wait while buffer is full
+				SSPBUF = g_mode;
 				break;
 			default:
-				 SSPBUF = 0;
+				SSPBUF = 0; //FIXME: it should not happend I don't it cause probably something wrong
+				break;
 		}
 	}
+	
 	if (SEN)
 		CKP = 1;
 }

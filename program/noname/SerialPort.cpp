@@ -46,6 +46,7 @@ void SerialPort::SetValue(int value)
 {
 	g_buffer[0] = value;
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_STATE, 1, 1, false);
+	qDebug() << "value has been set to: " << value;
 }
 
 int SerialPort::GetMode()
@@ -145,7 +146,7 @@ unsigned SerialPort::_ReadData()
 	if (data.size() > 0)
 	{
 		strcpy(g_buffer, data.toStdString().c_str());
-		qDebug() << "readed: " << g_buffer;
+		//qDebug() << "readed: " << g_buffer;
 	}
 	return data.size();
 }

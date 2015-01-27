@@ -75,7 +75,10 @@ void MainWindow::_AddRgbTab()
 	mode->addItem(tr("white value"));
 	mode->setCurrentIndex(m_serialPort->GetMode()-1);
 
-	//m_serialPort->SetMode(mode->currentIndex()+1);
+	//FIXME:
+	//workaround, I2C slave doesnt get broadcast messaged (predecessor value changed) when a command read is called read
+	//When I call another command they start to go through i2c again
+	m_serialPort->SetMode(mode->currentIndex()+1);
 
 	connect(mode, SIGNAL(currentIndexChanged(int)), this, SLOT(modeChanged(int)));
 }

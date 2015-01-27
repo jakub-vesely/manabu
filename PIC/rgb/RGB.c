@@ -84,7 +84,6 @@ void SetBlue(unsigned char pwmPeriod)
 
 void interrupt isr(void)
 {
-	SSP1IF = 0; //Clear interrupt flag
 	ProcessI2cInterrupt();
 }
 
@@ -115,6 +114,7 @@ void main(void)
 
 	while(1)
 	{
+		GCEN =1; //deleteme
 		if (g_commandRecieved)
 			ProcessCommand();
 
@@ -130,8 +130,7 @@ void main(void)
 				case MODE_RED_TO_PURPLE:
 					SetColor(g_value, RED_TO_PURPLE_PERIOD, true);
 					break;
-				case MODE_WHITE_VALUE:
-
+				default: //white and initial value from HEFLASH after programming
 					SetWhiteValue(g_value);
 					break;					
 			}
