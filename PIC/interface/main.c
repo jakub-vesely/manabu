@@ -189,14 +189,20 @@ void SetState(char const *data)
 
 unsigned char PutI2CCommand(unsigned char instruction, unsigned char value, int responseRequired)
 {
+	unsigned char returnValue = 0;
 	unsigned char command[2];
 	command[0] = instruction;
 	command[1] = value;
+	
 	if (responseRequired)
-		return PutAndGetI2C(COMMAND_ADDRESS, command, 2);
-	else
+		returnValue = PutAndGetI2C(COMMAND_ADDRESS, command, 2);
+	//else
+	//FIXME:
+	//workaround, I2C slave doesnt get broadcast messaged (predecessor value changed) when a command read is called read
+	//When I call a command they start to go through i2c again
 		PutI2C(COMMAND_ADDRESS, command, 2, 1);
-	return 0;
+	
+	return returnValue;
 }
 
 void SetDescendentMode(char const *data)
