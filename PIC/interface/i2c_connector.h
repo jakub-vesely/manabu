@@ -1,14 +1,16 @@
 #ifndef __I2C_CONNECTOR_H__
 #define __I2C_CONNECTOR_H__
 
-#define DEFAULT_ADDRESS 0x1
+#include <common/common.h>
 
 void I2CInit(void);
-void PutI2C(unsigned char address, unsigned char *data, unsigned char count, unsigned char sendStop);
-unsigned GetI2C(int address, unsigned char sendStart);
-unsigned char PutAndGetI2C(
-    unsigned char address, unsigned char *data, unsigned char count);
-//unsigned char FillFromI2C(int address, char *data);
+void PutStateI2C(unsigned char state);
+void PutCommandI2C(I2cCommand command, unsigned char *data, unsigned char count);
+unsigned char GetCommandI2C(I2cCommand command);
+
+void PutI2C(unsigned char messageType, I2cCommand command, unsigned char *data, unsigned char count);
+unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char *data, unsigned char count);
+
 
 
 #endif //__I2C_CONNECTOR_H__

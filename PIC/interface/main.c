@@ -1,13 +1,13 @@
 #include "i2c_connector.h"
 #include "HardwareProfile.h"
 #include "usb_connector.h"
-#include <p18F14K50.h> 
+//#include <p18F14K50.h>
 #include <delays.h> 
 #include <string.h>
 #include <eep.h>
 
 #include <CommonConstants.h>
-
+#include <common/common.h>
 //14K50
 #pragma config CPUDIV = NOCLKDIV
 #pragma config USBDIV = OFF
@@ -37,38 +37,12 @@
 #pragma config EBTR1  = OFF
 #pragma config EBTRB  = OFF 
 
-#define OUTPUT_COUNT 5
-
-
 #pragma udata
-char out_buffer[8]; //FIXME: originally ther was 30 but something overwrited followed constants
+char out_buffer[8];
 const char protocolId[] = PROTOCOL_ID;
 #pragma code
 
-#define DATA_ADDRESS  0
-#define COMMAND_ADDRESS  1
-
-#define COMMAND_CHANGE_MODE  1
-#define COMMAND_GET_CURRENT_MODE  2
-
-
 unsigned char g_state = 255;
-
-int IsConnected()
-{
-	int i;
-
-	if (!PORTBbits.RB7)
-	{	
-		return 0;
-	}
-	
-	PORTBbits.RB7 = 0;
-	for (i = 0; i < 100; i++);
-	PORTBbits.RB7 = 1;
-	
-	return !PORTBbits.RB7;
-}
 
 void Response(char const * answer, unsigned answerLength)
 {
@@ -83,138 +57,24 @@ void ResponseChar(unsigned char answer)
 	out_buffer[1] = answer;
 	PutUsbData(out_buffer, 2);
 }
-/*void GetParameters(char const *data)
-{
-	unsigned address = data[1];
-	char pos;
-	out_buffer[1] = FIRMWARE_VERSION;
-	if (INTERFACE_CUBE_ADDRESS == address)
-	{
-		out_buffer[2] = CT_INTERFACE;
-		out_buffer[3] = OUTPUT_COUNT;
-		pos = 4; //size + version + type size + outputCount
-		memcpy(out_buffer + pos, (void *)serial_number, sizeof(serial_number)-1);
- 		pos += sizeof(serial_number)-1;
-		
-	}
-	else if (led1Address == address)
-	{
-		out_buffer[2] = CT_LED;
-		out_buffer[3] = 0;
-		pos = 4; //size + version + type size + outputCount
-		memcpy(out_buffer + pos, (void *)led1SN, sizeof(led1SN)-1);
- 		pos += sizeof(led1SN)-1;
-	}
-	else if (buttonAddress == address)
-	{
-		out_buffer[2] = CT_BUTTON;
-		out_buffer[3] = 0;
-		pos = 4; //size + version + type size + outputCount
-		memcpy(out_buffer + pos, (void *)buttonSN, sizeof(buttonSN)-1);
- 		pos += sizeof(buttonSN)-1;
-	}
-	else if (buttonAddress < address)
-	{
-		PutI2C(address, FID_GET_PARAMETERS);
-		pos = FillFromI2C(address, out_buffer);				
-	}
 
-	out_buffer[0] = pos;
-	PutUsbData(out_buffer, pos);
-}
-
-void GetNeighborAddress(char const *data)
-{
-	if (data[1] == INTERFACE_CUBE_ADDRESS)
-	{
-		switch (data[3])
-		{
-			case 0:
-				out_buffer[0] = led1Address;
-			break;
-			case 1:
-				out_buffer[0] = buttonAddress;
-			break;
-			case 2:
-				PORTC = 0b1001;
-				if (INIT_SLAVA_CUBE_ADDRESS != firstDeviceAddress && !PORTBbits.RB7) 
-				//IsConnected was already called and device is still connected
-				{
-					out_buffer[0] = firstDeviceAddress;
-					PORTC = 0b0011;
-				}
-				else if (IsConnected())
-				{
-					int i;
-					PORTC = 0b0111;
-					firstDeviceAddress = ++maxAddress;
-					
-					PutI2C(INIT_SLAVA_CUBE_ADDRESS, FID_SET_ADDRESS);
-					PutI2C(INIT_SLAVA_CUBE_ADDRESS, firstDeviceAddress);
-
-					//time to set the address 
-					//may be it would be bater to solve it by holding clk 
-					for (i = 0; i < 1000; i++);
-
-					out_buffer[0] = firstDeviceAddress;					
-				}
-				else 
-				{
-					out_buffer[0] = 0;
-					PORTC = 0b0101;
-				}
-			break;
-			default:
-				out_buffer[0] = 0;
-			break;
-		}
-	}
-	else
-		out_buffer[0] = 0;
-
-	PutUsbData(out_buffer, 1);
-}
-*/
 void SetState(char const *data)
 {
 	g_state = data[3];
 	Write_b_eep(0, g_state);
 	Busy_eep ();
 	
-	PutI2C(DATA_ADDRESS, &g_state, 1, 1);
+	PutStateI2C(g_state);
 	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
 	PORTC = 0b0101;
 }
 
-unsigned char PutI2CCommand(unsigned char instruction, unsigned char value, int responseRequired)
-{
-	unsigned char returnValue = 0;
-	unsigned char command[2];
-	command[0] = instruction;
-	command[1] = value;
-	
-	if (responseRequired)
-		returnValue = PutAndGetI2C(COMMAND_ADDRESS, command, 2);
-	//else
-	//FIXME:
-	//workaround, I2C slave doesnt get broadcast messaged (predecessor value changed) when a command read is called read
-	//When I call a command they start to go through i2c again
-		PutI2C(COMMAND_ADDRESS, command, 2, 1);
-	
-	return returnValue;
-}
-
 void SetDescendentMode(char const *data)
 {
-	PutI2CCommand(COMMAND_CHANGE_MODE, data[3], 0);
+	PutCommandI2C(COMMAND_CHANGE_MODE, data +3, 1);
 	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
-}
-
-unsigned char GetDescendentMode()
-{
-	return PutI2CCommand(COMMAND_GET_CURRENT_MODE, 0, 1); //FIXME: I don't have to transfer any value
 }
 
 void GetState(char const *data)
@@ -251,7 +111,7 @@ void usbDataReaded(char const *data, int size)
 			GetState(data);
 			break;
 		case FID_GET_MODE:
-			ResponseChar(GetDescendentMode());
+			ResponseChar(GetCommandI2C(COMMAND_GET_CURRENT_MODE));
 			break;
 		case FID_SET_MODE:
 			SetDescendentMode(data);
@@ -273,7 +133,7 @@ void main(void)
 	PORTBbits.RB7 = 1; //is connected bite
 
 	g_state = Read_b_eep(0);
-	PutI2C(DATA_ADDRESS, &g_state, 1, 1);
+	PutI2C(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1);
 	while(1)
     {
 		ProcessUSB(usbDataReaded);

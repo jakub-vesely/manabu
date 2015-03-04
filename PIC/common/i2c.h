@@ -4,6 +4,7 @@
 #define _COMMON_I2C_H_
 
 #include <common/common.h>
+#include <common/common_16F1503.h>
 
 #define TRIS_SCL TRISCbits.TRISC0 
 #define TRIS_SDA TRISCbits.TRISC1 

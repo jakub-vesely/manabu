@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="Common" displayName="Common" projectFiles="true">
+        <itemPath>../../common/common.h</itemPath>
       </logicalFolder>
       <logicalFolder name="USB Stack" displayName="USB Stack" projectFiles="true">
         <itemPath>../../../../../Microchip Solutions v2012-07-18/Microchip/Include/USB/usb_ch9.h</itemPath>
@@ -19,7 +20,6 @@
       <itemPath>../usb_config.h</itemPath>
       <itemPath>../usb_connector.h</itemPath>
       <itemPath>../i2c_connector.h</itemPath>
-      <itemPath>../../../../RoboStavebnice/common/Common.h</itemPath>
       <itemPath>../../../CommonConstants.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -47,6 +47,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>..</Elem>
+    <Elem>../../common</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -70,7 +71,7 @@
         </archiverTool>
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
-          <parseOnProdLoad>false</parseOnProdLoad>
+          <parseOnProdLoad>true</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
       </compileType>

@@ -10,6 +10,7 @@
         <itemPath>../../common/i2c.h</itemPath>
         <itemPath>../../common/Flash.h</itemPath>
         <itemPath>../../common/HEFlash.h</itemPath>
+        <itemPath>../../common/common_16F1503.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -25,6 +26,7 @@
         <itemPath>../../common/pwm.c</itemPath>
         <itemPath>../../common/i2c.c</itemPath>
         <itemPath>../../common/common.c</itemPath>
+        <itemPath>../../common/common_16F1503.c</itemPath>
       </logicalFolder>
       <itemPath>../RGB.c</itemPath>
     </logicalFolder>
@@ -146,6 +148,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

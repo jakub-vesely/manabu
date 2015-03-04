@@ -21,12 +21,6 @@ FID_GET_MODE = 6,
 FID_SET_MODE = 7,
 } FunctionId;
 
-//Cube types
-//enum CubeTypes{
-//	CT_INTERFACE,
-//	CT_LED,
-//	CT_BUTTON,
-//	CT_HUB
-//};
+
 
 #endif //_COMMON_CONSTANTS_H_

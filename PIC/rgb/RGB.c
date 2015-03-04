@@ -1,15 +1,17 @@
 #include <stdbool.h>
 #include <common/common.h>
+#include <common/common_16F1503.h>
 #include <common/i2c.h>
 #include <common/pwm.h>
 #include "HEFlash.h"
 
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
-#define I2C_ADDRESS 0x01
+#define I2C_ADDRESS 0x02
 #define RED_TO_RED_PERIOD 85 //6 states
 #define RED_TO_PURPLE_PERIOD 102 //5 states
 
+#define COMMON_ANODE 1
 
 typedef enum
 {
@@ -20,9 +22,9 @@ typedef enum
 
 void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
 {
-	SetDutyCyclePWM1(green);
-	SetDutyCyclePWM2(red);
-    SetDutyCyclePWM3(blue);
+	SetDutyCyclePWM1(COMMON_ANODE ? 255 - green : green);
+	SetDutyCyclePWM2(COMMON_ANODE ? 255 - red : red);
+    SetDutyCyclePWM3(COMMON_ANODE ? 255 - blue : blue);
 }
 
 void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
@@ -100,14 +102,19 @@ void ProcessCommand()
 	}
 }
 
+void SwitchControllerInit()
+{
+	LATA4 = 0;
+	LATA5 = 0;
+	TRISAbits.TRISA4 = 0;
+	TRISAbits.TRISA5 = 0;
+	PORTAbits.RA4 = 0;
+	PORTAbits.RA5 = 1; //input connected
+}
 void main(void)
 {
 	CommonInit();
-
-	ANSELA = 0x00;      //set analog pins to digital
-    ANSELC = 0x00;
-        //TRISbits for PWM are set in InitPWM()
-
+	SwitchControllerInit();
 	PwmInit();
 	g_mode = HEFLASH_readByte (1, 0);
 	I2cInit(I2C_ADDRESS);

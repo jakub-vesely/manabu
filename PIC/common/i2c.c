@@ -1,6 +1,6 @@
 #include "i2c.h"
 
-unsigned char g_commandPartFollowed = 0;
+unsigned char g_valueFollowed = 0;
 
 void I2cInit(unsigned char address)
 {
@@ -14,11 +14,13 @@ void I2cInit(unsigned char address)
     TRIS_SDA = 1;
 
 
-    SSPCON2 = 0b00000001; //SEN is set to enable clock stretching
+	SSPCON2 = 0b00000001; //SEN is set to enable clock stretching
 //      SEN = 1; //Enable Clock Stretching
 
 	SSPCON3 = 0x00;
-    SSPADD = address << 1; //7-bit address is stored in the 7 MSB's of the SSP1ADD register**********
+
+	SSPMSK = 0; //all address bits will be ignored
+	SSPADD = 0;//address << 1; //7-bit address is stored in the 7 MSB's of the SSP1ADD register**********
     SSPSTAT = 0x00;
 
     //SSP1CON1 bits with details
@@ -35,7 +37,7 @@ void I2cInit(unsigned char address)
     PEIE    = 1; //Enable Peripheral interrupts
     GIE     = 1; //Enable global interrupts
 
-	GCEN =1; //General call address
+	//GCEN =1; //General call address
 
 }
 
@@ -54,38 +56,30 @@ void ProcessI2cInterrupt()
 	unsigned char value;
 	if (0 != SSPSTAT & 0b00000001) //BF FIXME:actually I dont solve the case there is not data prepared
 		value = SSPBUF;
-	if (!isData && !isRead)
+	if (!isData && !isRead) //"address" byte in write mode
 	{
-		if (0 != value) //data are send as a broadcast, command have an address
-			g_commandPartFollowed = 1; //command is composed from two bytes comand Id + command value
+		g_valueFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
+		g_commandInstruction = (value >> 2);
 	}
 	else if (!isRead) //isData
 	{
-		if (0 != g_commandPartFollowed)
+		if (g_valueFollowed)
 		{
-			if (1 == g_commandPartFollowed)
-			{
-				g_commandInstruction = value;
-				g_commandPartFollowed = 2;
-			}
-			else
-			{
-				g_commandValue = value;
-				g_commandPartFollowed = 0;
-				g_commandRecieved = true;
-			}
-		}
-		else if (value != g_value)
-		{
+			//FIXME: it should be renamed to state
 			g_value = value;
 			g_valueChanged = true;
+		}
+		else
+		{
+			g_commandValue = value;
+			g_commandRecieved = true;
 		}
 	}
 	else //isRead. I guess it will be always an address
 	{
-		switch (g_commandInstruction)
+		g_valueFollowed = false; //read will be always called for commands only
+		switch (value << 2) 
 		{
-
 			case COMMAND_GET_CURRENT_MODE:
 				g_commandRecieved = false;
 				while(BF);      //wait while buffer is full

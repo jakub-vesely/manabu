@@ -1,19 +1,20 @@
-_HEFLASH_readByte: CODE, 491 0 39
-_PwmInit: CODE, 403 0 46
-_main: CODE, 342 0 61
-_I2cInit: CODE, 530 0 33
-_FLASH_write: CODE, 449 0 42
-__unlock: CODE, 699 0 9
-_CommonInit: CODE, 708 0 6
+_HEFLASH_readByte: CODE, 553 0 39
+_PwmInit: CODE, 465 0 46
+_main: CODE, 349 0 60
+_I2cInit: CODE, 651 0 27
+_FLASH_write: CODE, 511 0 42
+__unlock: CODE, 752 0 9
+_CommonInit: CODE, 761 0 9
 _SetColor: CODE, 27 0 121
 __initialization: CODE, 16 0 8
-_SetWhiteValue: CODE, 686 0 13
-_ProcessI2cInterrupt: CODE, 148 0 101
+_SetWhiteValue: CODE, 729 0 13
+_ProcessI2cInterrupt: CODE, 148 0 108
 _isr: CODE, 4 0 11
-_HEFLASH_writeBlock: CODE, 249 0 93
-_SetDutyCyclePWM: CODE, 672 0 14
-_FLASH_read: CODE, 647 0 25
-___lbmod: CODE, 563 0 32
-_FLASH_erase: CODE, 595 0 27
-_ProcessCommand: CODE, 622 0 25
-Total: 706
+_HEFLASH_writeBlock: CODE, 256 0 93
+_SetDutyCyclePWM: CODE, 409 0 56
+_SwitchControllerInit: CODE, 742 0 10
+_FLASH_read: CODE, 704 0 25
+___lbmod: CODE, 592 0 32
+_FLASH_erase: CODE, 624 0 27
+_ProcessCommand: CODE, 678 0 26
+Total: 762

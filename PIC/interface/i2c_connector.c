@@ -1,11 +1,10 @@
+#include "i2c_connector.h"
+
 #include <i2c.h>
 #include <p18F14K50.h>
 
-#include "i2c_connector.h"
-
-
-#define FREQ 16000000
-#define BITRATE 100000 
+#define FREQ 48000000
+#define BITRATE 100000
 
 #define TRIS_SCL TRISBbits.TRISB6 
 #define TRIS_SDA TRISBbits.TRISB4
@@ -17,7 +16,6 @@
 
 void I2CInit(void)
 {
-	unsigned value;
 	OSCCONbits.IRCF = 7;
 	ANSELH = 0x0;
 	ANSEL = 0x0;
@@ -30,60 +28,62 @@ void I2CInit(void)
 	LATC=0;
 	TRISC = 0;
 
-	SSPADD = (FREQ/(BITRATE*4))-1; //TODO: 16F1503 datacheet, page 211
+	SSPADD = (FREQ/(BITRATE*4))-1;
 	OpenI2C(MASTER, SLEW_OFF);  
 }
 
-void PutI2C(unsigned char address, unsigned char *data, unsigned char count, unsigned char sendStop)
+void PutStateI2C(unsigned char state)
 {
-	//TODO: I cound check current address and send address message just in the case the address is different
+	PutI2C(I2C_MESSAGE_TYPE_DATA, 0,  &state, 1);
+}
+
+void PutCommandI2C(I2cCommand command, unsigned char *data, unsigned char count)
+{
+	PutI2C(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
+}
+
+unsigned char GetCommandI2C(I2cCommand command)
+{
+	return GetI2C(I2C_MESSAGE_TYPE_COMMAND, command, 0, 0);
+}
+
+void PutI2C(unsigned char messageType, I2cCommand command, unsigned char *data, unsigned char count)
+{
+	//FIXME: I guess I dont nedd and IdleI2C. check it!
 	unsigned char i = 0;
 	IdleI2C();
 	StartI2C();
 	IdleI2C();
-	while (WriteI2C(address << 1) != 0);
+
+	/*
+	 * because I will communicate always with one slave only I dont need send an
+	 * address so I will use this required byte for a message type
+	 * on the slave I will mask oall the address byte out
+	 */
+	while (WriteI2C((command << 2) | (messageType << 1)) != 0); //lowest bite is read/write (write = 0)
+
 	for (; i < count; i++)
 	{
 		IdleI2C();
 		while (WriteI2C(data[i]) != 0);
 	}
 	IdleI2C();
-	if (sendStop)
-		StopI2C();
+	StopI2C();
 }
 
-unsigned GetI2C(int address, unsigned char sendStart)
+//FIXME: I will nedd transfer value too because I ill have to specifie a modulle address
+unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char *data, unsigned char count)
 {
-	unsigned value;
+	unsigned char value;
+
 	IdleI2C();
-	if (sendStart)
-		StartI2C();
+	StartI2C();
 	IdleI2C();
-	while (WriteI2C((address << 1) + 1) != 0);
+	//for an explanation take alook to PutI2C
+	while (WriteI2C((command << 2) | (messageType << 1) | 1) != 0); //lowest bite is read/write (write = 0)
 	IdleI2C();
 	value = ReadI2C();
 	IdleI2C();
 	StopI2C();
 	return value;
 }
-
-unsigned char PutAndGetI2C(unsigned char address, unsigned char *data, unsigned char count)
-{
-	PutI2C(address, data, count, 0);
-	RestartI2C();
-	return GetI2C(address, 0);
-}
-
-/*unsigned char FillFromI2C(int address, char *data)
-{
-	unsigned char size;
-	int i;
-		
-	size = GetI2C(address, 1);
-	data[0] = size;
-	
-	for (i = 1;i< size; i++)
-		data[i] = GetI2C(address, 1);
-
-	return size;
-}*/

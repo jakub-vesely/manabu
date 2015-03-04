@@ -4,6 +4,7 @@
 #define _COMMON_PWM_H_
 
 #include <common/common.h>
+#include <common/common_16F1503.h>
 
 volatile unsigned char PWM1DCL @ 0x611;
 volatile unsigned char PWM1DCH @ 0x612;
@@ -36,7 +37,7 @@ volatile bit PWM3POL @ ((unsigned)&PWM3CON*8)+4;
 
 
 
-#define SetDutyCyclePWM1(x) (PWM1DCH = x) 
+#define SetDutyCyclePWM1(x,) (PWM1DCH = x)
 #define SetDutyCyclePWM2(x) (PWM2DCH = x) 
 #define SetDutyCyclePWM3(x) (PWM3DCH = x) 
 

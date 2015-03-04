@@ -1,7 +1,6 @@
 #include "pwm.h"
 void PwmInit()
 {
-
     TRISC5 = 1; //disconnect PWM1 output
     TRISC3 = 1; //PWM2
     TRISA2 = 1; //PWM3
