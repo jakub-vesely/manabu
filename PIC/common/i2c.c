@@ -1,6 +1,6 @@
 #include "i2c.h"
 
-unsigned char g_valueFollowed = 0;
+unsigned char g_stateFollowed = 0;
 
 void I2cInit(unsigned char address)
 {
@@ -51,33 +51,41 @@ void ProcessI2cInterrupt()
 
 	SSP1IF = 0;
 
-	bool isData = SSPSTAT & 0b00100000;
-	bool isRead = SSPSTAT & 0b00000100;
+	bool isData = SSPSTATbits.D_nA;
+	bool isRead = SSPSTATbits.R_nW;
 	unsigned char value;
-	if (0 != SSPSTAT & 0b00000001) //BF FIXME:actually I dont solve the case there is not data prepared
+	if (0 != SSPSTATbits.BF) //BF FIXME:actually I dont solve the case there is not data prepared
 		value = SSPBUF;
+
+	//FIXME: I should wait for processing last command or data
 	if (!isData && !isRead) //"address" byte in write mode
 	{
-		g_valueFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
+		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
+
+		if (g_stateFollowed)
+			g_state = 0;
+		else
+			g_commandValue = 0;
 	}
 	else if (!isRead) //isData
 	{
-		if (g_valueFollowed)
+		if (g_stateFollowed)
 		{
-			//FIXME: it should be renamed to state
-			g_value = value;
-			g_valueChanged = true;
+			g_state = (g_state << 8) | value;
+			//if (SSPSTATbits.P == 1)
+				g_valueChanged = true;
 		}
 		else
 		{
-			g_commandValue = value;
-			g_commandRecieved = true;
+			g_commandValue = (g_commandValue << 8) | value;
+			//if (SSPSTATbits.P == 1)
+				g_commandRecieved = true;
 		}
 	}
 	else //isRead. I guess it will be always an address
 	{
-		g_valueFollowed = false; //read will be always called for commands only
+		g_stateFollowed = false; //read will be always called for commands only
 		switch (value << 2) 
 		{
 			case COMMAND_GET_CURRENT_MODE:

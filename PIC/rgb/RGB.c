@@ -132,13 +132,13 @@ void main(void)
 			switch (g_mode)
 			{
 				case MODE_RED_TO_RED:
-					SetColor(g_value, RED_TO_RED_PERIOD, true);
+					SetColor(g_state, RED_TO_RED_PERIOD, true);
 					break;
 				case MODE_RED_TO_PURPLE:
-					SetColor(g_value, RED_TO_PURPLE_PERIOD, true);
+					SetColor(g_state, RED_TO_PURPLE_PERIOD, true);
 					break;
 				default: //white and initial value from HEFLASH after programming
-					SetWhiteValue(g_value);
+					SetWhiteValue(g_state);
 					break;					
 			}
 		}
