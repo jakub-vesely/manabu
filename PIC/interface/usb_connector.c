@@ -263,7 +263,7 @@ void mySetLineCodingHandler(void)
  *                  routines. It is a mixture of both USB and
  *                  non-USB tasks.
  *******************************************************************/
-void ProcessUSB(void (*usbDataReaded)(char const *data, int size))
+void ProcessUSB(void (*usbDataReaded)(unsigned char const *data, int size))
 {   
     unsigned count;
 	unsigned iterator;
@@ -281,7 +281,7 @@ void ProcessUSB(void (*usbDataReaded)(char const *data, int size))
  
 		if (g_bufferHead >= length)
 		{
-			usbDataReaded(g_buffer, g_bufferHead);
+			usbDataReaded((unsigned char const *)g_buffer, g_bufferHead);
 	
 			for (iterator = length; iterator < g_bufferHead; iterator++)
 			{

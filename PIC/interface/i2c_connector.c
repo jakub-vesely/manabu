@@ -17,8 +17,6 @@
 void I2CInit(void)
 {
 	OSCCONbits.IRCF = 7;
-	ANSELH = 0x0;
-	ANSEL = 0x0;
 	ANSELHbits.ANS10 = 0;
 	
 	LATB=0;
@@ -37,7 +35,7 @@ void PutStateI2C(unsigned char state)
 	PutI2C(I2C_MESSAGE_TYPE_DATA, 0,  &state, 1);
 }
 
-void PutCommandI2C(I2cCommand command, unsigned char *data, unsigned char count)
+void PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	PutI2C(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
 }
@@ -47,7 +45,7 @@ unsigned char GetCommandI2C(I2cCommand command)
 	return GetI2C(I2C_MESSAGE_TYPE_COMMAND, command, 0, 0);
 }
 
-void PutI2C(unsigned char messageType, I2cCommand command, unsigned char *data, unsigned char count)
+void PutI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	//FIXME: I guess I dont nedd and IdleI2C. check it!
 	unsigned char i = 0;
@@ -72,7 +70,7 @@ void PutI2C(unsigned char messageType, I2cCommand command, unsigned char *data, 
 }
 
 //FIXME: I will nedd transfer value too because I ill have to specifie a modulle address
-unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char *data, unsigned char count)
+unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char value;
 

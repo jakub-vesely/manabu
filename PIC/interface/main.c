@@ -8,6 +8,7 @@
 
 #include <CommonConstants.h>
 #include <common/common.h>
+
 //14K50
 #pragma config CPUDIV = NOCLKDIV
 #pragma config USBDIV = OFF
@@ -39,12 +40,12 @@
 
 #pragma udata
 char out_buffer[8];
-const char protocolId[] = PROTOCOL_ID;
+unsigned const char protocolId[] = PROTOCOL_ID;
 #pragma code
 
 unsigned char g_state = 255;
 
-void Response(char const * answer, unsigned answerLength)
+void Response(unsigned char const * answer, unsigned answerLength)
 {
 	out_buffer[0] = 1 + answerLength;
 	memcpy(out_buffer+1, answer, answerLength);
@@ -58,9 +59,9 @@ void ResponseChar(unsigned char answer)
 	PutUsbData(out_buffer, 2);
 }
 
-void SetState(char const *data)
+void SetState(unsigned char state)
 {
-	g_state = data[3];
+	g_state = state;
 	Write_b_eep(0, g_state);
 	Busy_eep ();
 	
@@ -70,20 +71,20 @@ void SetState(char const *data)
 	PORTC = 0b0101;
 }
 
-void SetDescendentMode(char const *data)
+void SetDescendentMode(unsigned char data)
 {
-	PutCommandI2C(COMMAND_CHANGE_MODE, data +3, 1);
+	PutCommandI2C(COMMAND_CHANGE_MODE, &data, 1);
 	out_buffer[0] = 1;
 	PutUsbData(out_buffer, 1);
 }
 
-void GetState(char const *data)
+void GetState(unsigned char const *data)
 {
 	out_buffer[0] = g_state;
 	PutUsbData(out_buffer, 1);
 }
 
-void usbDataReaded(char const *data, int size)
+void usbDataReaded(unsigned char const *data, int size)
 {
 	FunctionId functionId;
 	
@@ -105,7 +106,7 @@ void usbDataReaded(char const *data, int size)
 			//GetNeighborAddress(data);
 			//break;
 		case FID_SET_STATE:
-			SetState(data);
+			SetState(data[3]);
 			break;
 		case FID_GET_STATE:
 			GetState(data);
@@ -114,18 +115,50 @@ void usbDataReaded(char const *data, int size)
 			ResponseChar(GetCommandI2C(COMMAND_GET_CURRENT_MODE));
 			break;
 		case FID_SET_MODE:
-			SetDescendentMode(data);
+			SetDescendentMode(data[3]);
 			break;
 	}
 }
 
+unsigned int ADC_Read10bit(void)
+{
+    unsigned int result;
+
+	ADCON0bits.CHS = 9;
+    ADCON0bits.GO = 1;              // Start AD conversion
+    while(ADCON0bits.NOT_DONE);     // Wait for conversion
+
+    result = ADRESH;
+    result <<=8;
+    result |= ADRESL;
+
+    return result;
+}
+
+
 void main(void)
 {  
-	LATC=0;
+	unsigned char potValue = 0;
+	unsigned char pressed = 0;
+	unsigned char mode = 0;
+	LATA = 0;
+	LATC = 0;
+	TRISA = 0;
 	TRISC = 0;
+	ANSELH = 0x0;
+	ANSEL = 0x0;
 
 	I2CInit();
 	InitializeUSB();
+
+	TRISCbits.TRISC7 = 1;
+	ANSELHbits.ANS9 = 1;
+	
+	ADCON0bits.CHS = 9;
+	ADCON0bits.ADON = 1;
+	ADCON1=0;
+	ADCON2=0x3E;
+	ADCON2bits.ADFM = 1;
 
 	LATB=0;
 	LATBbits.LATB7= 0;
@@ -134,8 +167,32 @@ void main(void)
 
 	g_state = Read_b_eep(0);
 	PutI2C(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1);
+	potValue = g_state;
 	while(1)
     {
+		unsigned int potValue10 = ADC_Read10bit();
+
+		if (PORTAbits.RA3 == 0)
+		{
+			if (!pressed)
+			{
+				mode++;
+				if (mode > 3)
+					mode = 1;
+				SetDescendentMode(mode);
+
+				pressed = 1;
+			}
+		}
+		else if (pressed)
+			pressed = 0;
+
+		
+		if (potValue10 / 4 != potValue)
+		{
+			potValue = potValue10 / 4;
+			SetState(potValue);
+		}
 		ProcessUSB(usbDataReaded);
     }
 }//end main
