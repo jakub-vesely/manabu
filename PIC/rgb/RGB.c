@@ -97,37 +97,49 @@ void ProcessCommand()
 			g_commandRecieved = false;
 			g_mode = g_commandValue;
 			HEFLASH_writeBlock(1, (void*)&g_mode, sizeof(g_mode)); //I dont understand why but radd = 0 doesn't work for me
-			g_valueChanged = true;
+			g_stateChanged = true;
 			break;
 	}
 }
 
+void ConnectInputInput(bool connect)
+{
+	PORTAbits.RA5 = connect;
+}
+
+void ConnectOutput(bool connect)
+{
+	PORTAbits.RA4 = connect;
+}
 void SwitchControllerInit()
 {
 	LATA4 = 0;
 	LATA5 = 0;
 	TRISAbits.TRISA4 = 0;
 	TRISAbits.TRISA5 = 0;
-	PORTAbits.RA4 = 0;
-	PORTAbits.RA5 = 1; //input connected
+	ConnectOutput(false);
+	ConnectInputInput(true);
 }
+
 void main(void)
 {
-	CommonInit();
+	Common16F1503Init();
 	SwitchControllerInit();
 	PwmInit();
 	g_mode = HEFLASH_readByte (1, 0);
-	I2cInit(I2C_ADDRESS);
+	I2cSlaveInit(I2C_ADDRESS);
+
+	//I2cMasterPut(I2C_MESSAGE_TYPE_COMMAND, COMMAND_CHANGE_MODE, &deleteme, 1);
+	//I2cMasterPut(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1);
 
 	while(1)
 	{
-		GCEN =1; //deleteme
 		if (g_commandRecieved)
 			ProcessCommand();
 
-		if (g_valueChanged)
+		if (g_stateChanged)
 		{
-			g_valueChanged = false;
+			g_stateChanged = false;
 
 			switch (g_mode)
 			{
@@ -141,6 +153,15 @@ void main(void)
 					SetWhiteValue(g_state);
 					break;					
 			}
+			ConnectInputInput(false);
+			ConnectOutput(true);
+			I2cMasterInit();
+			I2cMasterPut(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1);
+			//Wait(1);
+			I2cSlaveInit(I2C_ADDRESS);
+			ConnectOutput(false);
+			ConnectInputInput(true);
 		}
+
 	}
 }

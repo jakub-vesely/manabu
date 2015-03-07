@@ -2,7 +2,7 @@
 
 unsigned char g_stateFollowed = 0;
 
-void I2cInit(unsigned char address)
+void I2cSlaveInit(unsigned char address)
 {
     SSPEN = 0;
 
@@ -24,10 +24,9 @@ void I2cInit(unsigned char address)
     SSPSTAT = 0x00;
 
     //SSP1CON1 bits with details
-    SSPCON1 = 0b00110110;
+    SSPCON1 = 0b00010110;
 //      WCOL = 0; //clear write collisions
 //      SSPOV = 0; //clear receive overflow indicator
-//      SSPEN = 1; //enable SSP and configures SDA & SCL pins
 //      CKP = 1; //releases clock stretching
 //      SSPM = 0b0110; //7-bit addressing slave mode
 
@@ -38,7 +37,75 @@ void I2cInit(unsigned char address)
     GIE     = 1; //Enable global interrupts
 
 	//GCEN =1; //General call address
+	SSPEN = 1; //enable SSP and configures SDA & SCL pins
+}
 
+void I2cMasterInit(void)
+{
+	SSPEN = 0;
+	//SDA andSCL port setting
+	LATCbits.LATC0 = 0;
+	LATCbits.LATC1 = 0;
+	PORTCbits.RC0 = 0;
+	PORTCbits.RC1 = 0;
+	TRIS_SCL = 1; //as input
+	TRIS_SDA = 1;
+	ANSC0 = 0;
+	ANSC1 = 0;
+
+	//I2C master mode setting
+	SDAHT = 1;			//Minimum of 300 ns hold time on SDAx after the falling edge of SCLx
+	SMP = 1;           //Slew rate control disabled for standard speed mode (100 kHz and 1 MHz)
+	CKE = 1;           //Transmit occurs on transition from active to Idle clock state
+
+	SSPMSK = 0;
+	SSPCON1 = 0; 
+	SSPCON2 = 0;
+	SSPCON3 = 0;
+
+	SSPADD = 39;		//100KHz
+	SSPM3 = 1;         //Enable I2C Master mode
+	SSPEN = 1;         //Enable SSP module - I2C Initialized
+ }
+
+void I2cMasterStart(void)
+{
+	SSPCON2bits.SEN=1;
+	while(SSPCON2bits.SEN);
+}
+/*
+FIXME: legacy - returns false when success
+*/
+bool I2cMasterWrite(char byte)
+{
+	SSPBUF = byte;
+	while(SSP1STATbits.R_nW);
+	return SSPCON2bits.ACKSTAT;
+}
+void I2cMasterStop(void){
+	SSPCON2bits.PEN = 1;             //Generate Stop Condition
+	while(SSPCON2bits.PEN);
+}
+
+bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+{
+	unsigned char i = 0;
+	I2cMasterStart();
+
+	/*
+	 * because I will communicate always with one slave only I dont need send an
+	 * address so I will use this required byte for a message type
+	 * on the slave I will mask oall the address byte out
+	 */
+	I2cMasterWrite((command << 2) | (messageType << 1)); //lowest bite is read/write (write = 0)
+	for (; i < count; i++)
+	{
+		if(I2cMasterWrite(data[i])) //FIXME: false when success
+			return false;
+	}
+
+	I2cMasterStop();
+	return true;
 }
 
 void ProcessI2cInterrupt()
@@ -50,7 +117,7 @@ void ProcessI2cInterrupt()
 		return;
 
 	SSP1IF = 0;
-
+	
 	bool isData = SSPSTATbits.D_nA;
 	bool isRead = SSPSTATbits.R_nW;
 	unsigned char value;
@@ -59,28 +126,21 @@ void ProcessI2cInterrupt()
 
 	//FIXME: I should wait for processing last command or data
 	if (!isData && !isRead) //"address" byte in write mode
-	{
+	{	
 		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
-
-		if (g_stateFollowed)
-			g_state = 0;
-		else
-			g_commandValue = 0;
 	}
 	else if (!isRead) //isData
 	{
 		if (g_stateFollowed)
 		{
-			g_state = (g_state << 8) | value;
-			//if (SSPSTATbits.P == 1)
-				g_valueChanged = true;
+			g_state = value;
+			g_stateChanged = true;
 		}
 		else
 		{
-			g_commandValue = (g_commandValue << 8) | value;
-			//if (SSPSTATbits.P == 1)
-				g_commandRecieved = true;
+			g_commandValue = value;
+			g_commandRecieved = true;
 		}
 	}
 	else //isRead. I guess it will be always an address
@@ -98,7 +158,6 @@ void ProcessI2cInterrupt()
 				break;
 		}
 	}
-	
 	if (SEN)
 		CKP = 1;
 }

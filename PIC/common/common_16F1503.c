@@ -1,6 +1,6 @@
 #include "common_16F1503.h"
 
-void CommonInit()
+void Common16F1503Init()
 {
 	OSCCONbits.IRCF = 0b1111; //16MHz
 	while (!OSCSTATbits.HFIOFS);

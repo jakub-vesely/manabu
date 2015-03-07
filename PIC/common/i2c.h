@@ -9,8 +9,15 @@
 #define TRIS_SCL TRISCbits.TRISC0 
 #define TRIS_SDA TRISCbits.TRISC1 
 
-void I2cInit(unsigned char address);
+void I2cSlaveInit(unsigned char address);
+void I2cMasterInit(void);
+void I2cMasterStart(void);
+bool I2cMasterWrite(char byte);
+void I2cMasterStop(void);
+bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+
 void ProcessI2cInterrupt();
+
 
 
 #endif //_COMMON_I2C_H_
