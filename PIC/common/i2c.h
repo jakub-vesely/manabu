@@ -14,7 +14,7 @@ void I2cMasterInit(void);
 void I2cMasterStart(void);
 bool I2cMasterWrite(char byte);
 void I2cMasterStop(void);
-bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+void I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 
 void ProcessI2cInterrupt();

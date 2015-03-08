@@ -62,6 +62,7 @@ void I2cMasterInit(void)
 	SSPCON1 = 0; 
 	SSPCON2 = 0;
 	SSPCON3 = 0;
+	SSPSTAT = 0;
 
 	SSPADD = 39;		//100KHz
 	SSPM3 = 1;         //Enable I2C Master mode
@@ -70,6 +71,11 @@ void I2cMasterInit(void)
 
 void I2cMasterStart(void)
 {
+	/*SSPMSK = 0;
+	SSPCON2 = 0;
+	SSPCON3 = 0;
+	SSPSTAT = 0;
+	*/
 	SSPCON2bits.SEN=1;
 	while(SSPCON2bits.SEN);
 }
@@ -95,25 +101,38 @@ void I2cMasterStop(void){
 	while(SSPCON2bits.PEN);
 }
 
-bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+void I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char i = 0;
-	I2cMasterStart();
-
-	/*
-	 * because I will communicate always with one slave only I dont need send an
-	 * address so I will use this required byte for a message type
-	 * on the slave I will mask oall the address byte out
-	 */
-	I2cMasterWrite((command << 2) | (messageType << 1)); //lowest bite is read/write (write = 0)
-	for (; i < count; i++)
+	unsigned char try = 0;
+	for (; try < 10; try++)
 	{
-		if(I2cMasterWrite(data[i])) //FIXME: false when success
-			return false;
+		I2cMasterStart();
+
+		/*
+		 * because I will communicate always with one slave only I dont need send an
+		 * address so I will use this required byte for a message type
+		 * on the slave I will mask oall the address byte out
+		 */
+		if (I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
+		{
+			I2cMasterStop(); //there maight be a complete I2C restart
+			continue;
+		}
+
+		for (; i < count; i++)
+		{
+			if (I2cMasterWrite(data[i])) //FIXME: false when success
+			{
+				I2cMasterStop();
+				goto next_turn;
+			}
+		}
+		break;
+next_turn:continue;
 	}
 
 	I2cMasterStop();
-	return true;
 }
 
 unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
