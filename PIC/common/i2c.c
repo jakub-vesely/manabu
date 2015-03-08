@@ -2,7 +2,7 @@
 
 unsigned char g_stateFollowed = 0;
 
-void I2cSlaveInit(unsigned char address)
+void I2cSlaveInit()
 {
     SSPEN = 0;
 
@@ -82,8 +82,16 @@ bool I2cMasterWrite(char byte)
 	while(SSP1STATbits.R_nW);
 	return SSPCON2bits.ACKSTAT;
 }
+
+char I2cMasterRead()
+{
+	SSPCON2bits.RCEN = 1;
+	while(SSPCON2bits.RCEN);
+	return SSPBUF;
+}
+
 void I2cMasterStop(void){
-	SSPCON2bits.PEN = 1;             //Generate Stop Condition
+	SSPCON2bits.PEN = 1;           
 	while(SSPCON2bits.PEN);
 }
 
@@ -107,6 +115,21 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 	I2cMasterStop();
 	return true;
 }
+
+unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+{
+	unsigned char value = 0;
+
+	I2cMasterStart();
+	//for an explanation take alook to PutI2C
+	I2cMasterWrite((command << 2) | (messageType << 1) | 1); //lowest bite is read/write (write = 0)
+	
+	value = I2cMasterRead();
+	I2cMasterStop();
+	return value;
+}
+
+
 
 void ProcessI2cInterrupt()
 {
@@ -146,11 +169,11 @@ void ProcessI2cInterrupt()
 	else //isRead. I guess it will be always an address
 	{
 		g_stateFollowed = false; //read will be always called for commands only
-		switch (value << 2) 
+		switch (value >> 2)
 		{
 			case COMMAND_GET_CURRENT_MODE:
 				g_commandRecieved = false;
-				while(BF);      //wait while buffer is full
+				//while(BF);      //wait while buffer is full
 				SSPBUF = g_mode;
 				break;
 			default:
