@@ -28,7 +28,7 @@
         <itemPath>../../common/common.c</itemPath>
         <itemPath>../../common/common_16F1503.c</itemPath>
       </logicalFolder>
-      <itemPath>../RGB.c</itemPath>
+      <itemPath>../Rgb.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,7 +77,7 @@
       </makeCustomizationType>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
-        <property key="define-macros" value=""/>
+        <property key="define-macros" value="DONT_HAVE_OUTPUT"/>
         <property key="extra-include-directories"
                   value="../..;../../common;.;..\..\..\..\..\Program Files\Microchip\xc8\v1.33\include"/>
         <property key="identifier-length" value="255"/>
@@ -92,7 +92,7 @@
         <property key="optimization-level" value="9"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
-        <property key="preprocess-assembler" value="true"/>
+        <property key="preprocess-assembler" value="false"/>
         <property key="undefine-macros" value=""/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
