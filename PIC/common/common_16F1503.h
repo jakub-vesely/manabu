@@ -11,16 +11,26 @@
 void Common16F1503Init();
 void Wait(int delay);
 void SwitchControllerInit();
-void SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 void ProcessCommand();
 void ProcessStateChangedCommon();
+void SendToOutputIfReady();
 
 unsigned char g_mode = 0;
 unsigned char g_state = 0;
-unsigned char g_stateChanged = true;
+bool g_stateChanged = true;
 bool g_commandRecieved = false;
 unsigned char g_commandInstruction = 0;
 unsigned char g_commandValue = 0;
+
+#ifdef HAVE_OUTPUT
+struct
+{
+    bool isState:1;
+    bool isReady:1;
+    unsigned try:6;
+} g_toOutput;
+#endif
 
 #endif //_COMMON_COMMON_16F1503_H_

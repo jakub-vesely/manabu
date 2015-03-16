@@ -1,12 +1,6 @@
-#include <stdbool.h>
-#include <common/common.h>
-#include <common/common_16F1503.h>
 #include <common/pwm.h>
-#include <xc.h>
 
-__CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
-
-#define COMMON_ANODE 1
+#define COMMON_ANODE 0
 
 #define RED_TO_RED_PERIOD 85 //6 states
 #define RED_TO_PURPLE_PERIOD 102 //5 states
@@ -82,12 +76,7 @@ void SetBlue(unsigned char pwmPeriod)
 	SetDutyCyclePWM(0, 0, pwmPeriod -1);
 }
 
-void interrupt isr(void)
-{
-	ProcessI2cInterrupt();
-}
-
-void ChangeRgbState()
+void ProcessStateChangedModuleTypeSpecific()
 {
 	switch (g_mode)
 	{
@@ -103,20 +92,7 @@ void ChangeRgbState()
 	}
 }
 
-void main(void)
+void ModuleTypeSpecificInit()
 {
-	Common16F1503Init();
 	PwmInit();
-
-	while(1)
-	{
-		if (g_commandRecieved)
-			ProcessCommand();
-
-		if (g_stateChanged)
-		{
-			ChangeRgbState();
-			ProcessStateChangedCommon();
-		}
-	}
 }

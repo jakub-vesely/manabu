@@ -4,17 +4,14 @@
 #define _COMMON_I2C_H_
 
 #include <common/common.h>
-#include <common/common_16F1503.h>
-
-#define TRIS_SCL TRISCbits.TRISC0 
-#define TRIS_SDA TRISCbits.TRISC1 
+#include <common/common_16F1503.h> 
 
 void I2cSlaveInit();
 void I2cMasterInit(void);
 void I2cMasterStart(void);
 bool I2cMasterWrite(char byte);
 void I2cMasterStop(void);
-void I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 
 void ProcessI2cInterrupt();

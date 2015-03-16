@@ -4,13 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="common" displayName="common" projectFiles="true">
-        <itemPath>../../common/pwm.h</itemPath>
+      <logicalFolder name="f1" displayName="common" projectFiles="true">
         <itemPath>../../common/common.h</itemPath>
-        <itemPath>../../common/i2c.h</itemPath>
+        <itemPath>../../common/common_16F1503.h</itemPath>
         <itemPath>../../common/Flash.h</itemPath>
         <itemPath>../../common/HEFlash.h</itemPath>
-        <itemPath>../../common/common_16F1503.h</itemPath>
+        <itemPath>../../common/i2c.h</itemPath>
       </logicalFolder>
       <itemPath>../moduleTypeSpecific.h</itemPath>
     </logicalFolder>
@@ -21,13 +20,12 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="common" displayName="common" projectFiles="true">
-        <itemPath>../../common/HEFlash.c</itemPath>
+      <logicalFolder name="f1" displayName="common" projectFiles="true">
+        <itemPath>../../common/common_16F1503.c</itemPath>
         <itemPath>../../common/Flash.c</itemPath>
-        <itemPath>../../common/pwm.c</itemPath>
+        <itemPath>../../common/HEFlash.c</itemPath>
         <itemPath>../../common/i2c.c</itemPath>
         <itemPath>../../common/common.c</itemPath>
-        <itemPath>../../common/common_16F1503.c</itemPath>
         <itemPath>../../common/main.c</itemPath>
       </logicalFolder>
       <itemPath>../moduleTypeSpecific.c</itemPath>
@@ -79,9 +77,8 @@
       </makeCustomizationType>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
-        <property key="define-macros" value="DONT_HAVE_OUTPUT"/>
-        <property key="extra-include-directories"
-                  value="../..;..;.;..\..\..\..\..\Program Files\Microchip\xc8\v1.33\include"/>
+        <property key="define-macros" value="HAVE_OUTPUT"/>
+        <property key="extra-include-directories" value="../..;.."/>
         <property key="identifier-length" value="255"/>
         <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
@@ -94,7 +91,7 @@
         <property key="optimization-level" value="9"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
-        <property key="preprocess-assembler" value="false"/>
+        <property key="preprocess-assembler" value="true"/>
         <property key="undefine-macros" value=""/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
@@ -112,7 +109,7 @@
         <property key="additional-options-use-response-files" value="false"/>
         <property key="backup-reset-condition-flags" value="false"/>
         <property key="calibrate-oscillator" value="true"/>
-        <property key="calibrate-oscillator-value" value="0"/>
+        <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
         <property key="code-model-rom" value="default,-1f80-1fff"/>
@@ -127,7 +124,7 @@
         <property key="fill-flash-options-addr" value=""/>
         <property key="fill-flash-options-const" value=""/>
         <property key="fill-flash-options-how" value="0"/>
-        <property key="fill-flash-options-inc-const" value=""/>
+        <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
         <property key="fill-flash-options-seq" value=""/>
         <property key="fill-flash-options-what" value="0"/>
@@ -135,12 +132,12 @@
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
         <property key="link-in-c-library" value="true"/>
-        <property key="link-in-peripheral-library" value="false"/>
+        <property key="link-in-peripheral-library" value="true"/>
         <property key="managed-stack" value="false"/>
         <property key="opt-xc8-linker-file" value="false"/>
         <property key="opt-xc8-linker-link_startup" value="false"/>
         <property key="opt-xc8-linker-serial" value=""/>
-        <property key="program-the-device-with-default-config-words" value="false"/>
+        <property key="program-the-device-with-default-config-words" value="true"/>
         <appendMe value="--ROM=default,-1f80-1fff"/>
       </HI-TECH-LINK>
       <PICkit3PlatformTool>
@@ -186,11 +183,11 @@
         <property key="voltagevalue" value="4.75"/>
       </PICkit3PlatformTool>
       <XC8-config-global>
-        <property key="advanced-elf" value="false"/>
+        <property key="advanced-elf" value="true"/>
         <property key="output-file-format" value="-mcof,+elf"/>
-        <property key="stack-size-high" value=""/>
-        <property key="stack-size-low" value=""/>
-        <property key="stack-size-main" value=""/>
+        <property key="stack-size-high" value="auto"/>
+        <property key="stack-size-low" value="auto"/>
+        <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
       </XC8-config-global>
     </conf>
