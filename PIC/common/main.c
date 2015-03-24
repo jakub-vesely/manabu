@@ -6,11 +6,6 @@
 
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
-void interrupt isr(void)
-{
-	ProcessI2cInterrupt();
-}
-
 void main(void)
 {
 	Common16F1503Init();
@@ -18,6 +13,7 @@ void main(void)
 
 	while(1)
 	{
+		CheckI2C();
 		if (g_commandRecieved)
 			ProcessCommand();
 

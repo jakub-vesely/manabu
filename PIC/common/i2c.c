@@ -2,6 +2,9 @@
 
 unsigned char g_stateFollowed = 0;
 
+#define IS_DATA SSPSTATbits.D_nA
+#define IS_READ  SSPSTATbits.R_nW
+
 #define  I2C_COMMON_INIT\
 	SSPEN = 0;\
 	ANSC0 = 0;\
@@ -28,12 +31,6 @@ void I2cSlaveInit()
 //      SSPOV = 0; //clear receive overflow indicator
 //      CKP = 1; //releases clock stretching
 //      SSPM = 0b0110; //7-bit addressing slave mode
-
-	/* Enable interrupts */
-    SSP1IF  = 0; //Clear MSSP interrupt flag
-    SSP1IE  = 1; //I2C interrupt enable
-    PEIE    = 1; //Enable Peripheral interrupts
-    GIE     = 1; //Enable global interrupts
 
 	SSPEN = 1; //enable SSP and configures SDA & SCL pins
 }
@@ -148,29 +145,22 @@ void I2cSlaveInit()
 	}
 #endif //#ifdef HAVE_OUTPUT
 
-void ProcessI2cInterrupt()
+void CheckI2C()
 {
-	//FIXME: there is still one open isuue when I read a data Im not able to recieve broadcast data
-	//untill first non broadcast data are recieved. It looks then, I get a zero address and read data (not address)
-
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;
 
 	SSP1IF = 0;
 	
-	bool isData = SSPSTATbits.D_nA;
-	bool isRead = SSPSTATbits.R_nW;
-	unsigned char value;
-	if (0 != SSPSTATbits.BF) //BF FIXME:actually I dont solve the case there is not data prepared
-		value = SSPBUF;
+	unsigned char value = SSPBUF;
 
 	//FIXME: I should wait for processing last command or data
-	if (!isData && !isRead) //"address" byte in write mode
+	if (!IS_DATA && !IS_READ) //"address" byte in write mode
 	{	
 		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
 	}
-	else if (!isRead) //isData
+	else if (!IS_READ) //isData
 	{
 		if (g_stateFollowed)
 		{
@@ -201,5 +191,3 @@ void ProcessI2cInterrupt()
 	if (SEN)
 		CKP = 1;
 }
-
-
