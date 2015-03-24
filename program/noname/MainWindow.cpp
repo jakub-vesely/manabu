@@ -1,14 +1,15 @@
 #include "MainWindow.h"
-#include <QMessageBox>
 #include "SerialPort.h"
-#include <QString>
-#include <QSlider>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QtCore/QDebug>
-#include <QLineEdit>
-#include <QTabWidget>
+#include "BootLoader.h"
+
 #include <QComboBox>
+#include <QLineEdit>
+#include <QSlider>
+#include <QString>
+#include <QMessageBox>
+#include <QTabWidget>
+#include <QtCore/QDebug>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -17,10 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	setMinimumSize(200, 20);
 
 	_SetMainLayout();
-	if (!_AddInterfaceTab())
-		return;
+	if (_AddInterfaceTab())
+		_AddRgbTab();
 
-	_AddRgbTab();
+	_AddBootloaderTab();
 }
 
 void MainWindow::_SetMainLayout()
@@ -76,6 +77,12 @@ void MainWindow::_AddRgbTab()
 	mode->setCurrentIndex(m_serialPort->GetMode()-1);
 
 	connect(mode, SIGNAL(currentIndexChanged(int)), this, SLOT(modeChanged(int)));
+}
+
+void MainWindow::_AddBootloaderTab()
+{
+	BootLoader *bootLoader = new BootLoader(this);
+	m_tabWidget->addTab(bootLoader, tr("Bootloader"));
 }
 
 MainWindow::~MainWindow()

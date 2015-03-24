@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    SerialPort.cpp
+    SerialPort.cpp \
+    BootLoader.cpp
 
 HEADERS  += MainWindow.h \
-    SerialPort.h
+    SerialPort.h \
+    BootLoader.h
 
 FORMS    +=

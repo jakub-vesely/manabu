@@ -6,6 +6,7 @@
 class QTabWidget;
 class Qstring;
 class SerialPort;
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -13,6 +14,7 @@ class MainWindow : public QMainWindow
 	void _SetMainLayout();
 	bool _AddInterfaceTab();
 	void _AddRgbTab();
+	void _AddBootloaderTab();
 
 	SerialPort *m_serialPort;
 	QTabWidget *m_tabWidget;
