@@ -11,4 +11,16 @@ void ProcessStateChangedModuleTypeSpecific()
 
 void ModuleTypeSpecificInit()
 {
+	g_state = 1;
+}
+
+void ProcessModuleFunctionalit()
+{
+	
+	/*if (g_state == 254)
+		g_state = 1;
+	else
+		g_state = g_state + 1;
+	Wait(1);
+	g_stateChanged = true;*/
 }

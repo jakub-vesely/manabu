@@ -2,6 +2,8 @@
 #include "HEFlash.h"
 
 #define TO_OUTPUT_MAX_TRAY 10
+#define INVERT_OUTPUT RA4
+#define INnOUT RA5
 
 void Common16F1503Init()
 {
@@ -35,20 +37,37 @@ void SwitchControllerInit()
 	LATA5 = 0;
 	TRISAbits.TRISA4 = 0;
 	TRISAbits.TRISA5 = 0;
+
+#ifdef FOUR_PIN_INTERFACE
 	OUTPUT_SWITCH = 0;
 	INPUT_SWITCH = 1;
+#else
+	INnOUT = 1;
+#endif
+
 }
 
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	bool retVal;
+
+#ifdef FOUR_PIN_INTERFACE
 	INPUT_SWITCH = 0;
 	OUTPUT_SWITCH = 1;
+#else
+	INnOUT = 0;
+#endif
+
 	I2cMasterInit();
 	retVal = I2cMasterPut(messageType, command, data, count);
 	I2cSlaveInit();
+
+#ifdef FOUR_PIN_INTERFACE
 	OUTPUT_SWITCH = 0;
 	INPUT_SWITCH = 1;
+#else
+	INnOUT = 1;
+#endif
 
 	return retVal;
 }
@@ -56,13 +75,24 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char value;
+
+#ifdef FOUR_PIN_INTERFACE
 	INPUT_SWITCH = 0;
 	OUTPUT_SWITCH = 1;
+#else
+	INnOUT = 0;
+#endif
+
 	I2cMasterInit();
 	value = I2cMasterGet(messageType, command, data, count);
 	I2cSlaveInit();
+
+#ifdef FOUR_PIN_INTERFACE
 	OUTPUT_SWITCH = 0;
 	INPUT_SWITCH = 1;
+#else
+	INnOUT = 1;
+#endif
 
 	return value;
 }

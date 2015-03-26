@@ -78,6 +78,7 @@ void SetBlue(unsigned char pwmPeriod)
 
 void ProcessStateChangedModuleTypeSpecific()
 {
+	g_mode = 1;
 	switch (g_mode)
 	{
 		case MODE_RED_TO_RED:
@@ -95,4 +96,8 @@ void ProcessStateChangedModuleTypeSpecific()
 void ModuleTypeSpecificInit()
 {
 	PwmInit();
+}
+
+void ProcessModuleFunctionalit()
+{
 }

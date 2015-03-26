@@ -17,6 +17,8 @@ void main(void)
 		if (g_commandRecieved)
 			ProcessCommand();
 
+		ProcessModuleFunctionalit();
+
 		if (g_stateChanged)
 		{
 			ProcessStateChangedModuleTypeSpecific();

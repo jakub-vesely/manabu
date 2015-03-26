@@ -5,8 +5,10 @@
 #include <pic16f1503.h>
 #include <common/i2c.h>
 
-#define INPUT_SWITCH PORTAbits.RA5
-#define OUTPUT_SWITCH PORTAbits.RA4
+#ifdef FOUR_PIN_INTERFACE
+#   define INPUT_SWITCH PORTAbits.RA5
+#   define OUTPUT_SWITCH PORTAbits.RA4
+#endif //FOUR_PIN_INTERFACE
 
 void Common16F1503Init();
 void Wait(int delay);
