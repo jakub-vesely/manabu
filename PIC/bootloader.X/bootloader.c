@@ -1,6 +1,10 @@
-#include <common/i2c.h>
+#include <xc.h>
+#include <pic16f1503.h>
+//#include <common/i2c.h>
 
-#define IS_DATA SSPSTATbits.D_nA
+__CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
+
+/*#define IS_DATA SSPSTATbits.D_nA
 
 unsigned char sizeSet = 0;
 unsigned size;  
@@ -30,13 +34,33 @@ void ReadI2C()
 	if (SEN)
 		CKP = 1;	
 }
+*/
+void interrupt serrvice_isr()
+{
+	#asm
+		GOTO 0x204;
+	#endasm
+}
 
 int main()
 {
-	I2cSlaveInit();
+	/*#asm
+		goto 0x200;
+	#endasm
+	//I2cSlaveInit();
 	while (1)
 	{
 		
+	}*/
+
+	LATC5 = 0;
+	TRISC5 = 0;
+	
+	while(1)
+	{
+		PORTCbits.RC5 = 1;
+
 	}
+ 
 }
 
