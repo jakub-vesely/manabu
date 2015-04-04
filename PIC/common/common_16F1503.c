@@ -1,6 +1,7 @@
 #include "common_16F1503.h"
 #include "HEFlash.h"
 #include "common.h"
+#include "i2c.h"
 
 void Common16F1503Init()
 {
@@ -10,9 +11,10 @@ void Common16F1503Init()
 	ANSELA = 0x00;      //set analog pins to digital
     ANSELC = 0x00;
 
-	g_mode = HEFLASH_readByte (1, 0);
+	g_mode = HEFLASH_readByte (0, 0);
 	if (g_mode == 0xff) //default value
 		g_mode = 1;
+	
 #ifdef HAVE_OUTPUT
 	SwitchControllerInit();
 #endif
@@ -53,7 +55,7 @@ void ProcessCommand()
 		case COMMAND_CHANGE_MODE:
 			g_commandRecieved = false;
 			g_mode = g_commandValue;
-			HEFLASH_writeBlock(1, (void*)&g_mode, sizeof(g_mode)); //I dont understand why but radd = 0 doesn't work for me
+			HEFLASH_writeBlock(0, (void*)&g_mode, sizeof(g_mode));
 			g_stateChanged = true;
 			break;
 	}

@@ -5,13 +5,14 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../../common/common.h</itemPath>
-        <itemPath>../../common/common_16F1503.h</itemPath>
-        <itemPath>../../common/Flash.h</itemPath>
-        <itemPath>../../common/HEFlash.h</itemPath>
-        <itemPath>../../common/i2c.h</itemPath>
+        <itemPath>../common/common.h</itemPath>
+        <itemPath>../common/common_16F1503.h</itemPath>
+        <itemPath>../common/Flash.h</itemPath>
+        <itemPath>../common/HEFlash.h</itemPath>
+        <itemPath>../common/i2c.h</itemPath>
+        <itemPath>../common/pwm.h</itemPath>
       </logicalFolder>
-      <itemPath>../moduleTypeSpecific.h</itemPath>
+      <itemPath>moduleTypeSpecific.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -21,14 +22,15 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../../common/common_16F1503.c</itemPath>
-        <itemPath>../../common/Flash.c</itemPath>
-        <itemPath>../../common/HEFlash.c</itemPath>
-        <itemPath>../../common/i2c.c</itemPath>
-        <itemPath>../../common/common.c</itemPath>
-        <itemPath>../../common/main.c</itemPath>
+        <itemPath>../common/Flash.c</itemPath>
+        <itemPath>../common/HEFlash.c</itemPath>
+        <itemPath>../common/common.c</itemPath>
+        <itemPath>../common/common_16F1503.c</itemPath>
+        <itemPath>../common/i2c.c</itemPath>
+        <itemPath>../common/main.c</itemPath>
+        <itemPath>../common/pwm.c</itemPath>
       </logicalFolder>
-      <itemPath>../moduleTypeSpecific.c</itemPath>
+      <itemPath>moduleTypeSpecific.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -78,7 +80,7 @@
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
         <property key="define-macros" value="HAVE_OUTPUT"/>
-        <property key="extra-include-directories" value="../..;.."/>
+        <property key="extra-include-directories" value=".;.."/>
         <property key="identifier-length" value="255"/>
         <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>

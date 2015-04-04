@@ -18,7 +18,7 @@ char HEFLASH_writeBlock (char radd, char* data, char count)
     unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START;
     // 2. check input parameters
     if ((count > FLASH_ROWSIZE)||(radd >= HEFLASH_MAXROWS))
-    return -1;//return parameter error
+		return -1;//return parameter error
     // 3. erase the entire row
     FLASH_erase (add);
     // 4. fill the latches with data
