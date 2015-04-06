@@ -1,7 +1,7 @@
 #include <xc.h>
 #include <pic16f1503.h>
 //#include <common/i2c.h>
-
+#include <common/Flash.h>
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
 /*#define IS_DATA SSPSTATbits.D_nA
@@ -35,32 +35,35 @@ void ReadI2C()
 		CKP = 1;	
 }
 */
+#ifdef INTERUPT_REDIRECION
 void interrupt serrvice_isr()
 {
 	#asm
 		GOTO 0x204;
 	#endasm
 }
+#endif
 
 int main()
 {
-	/*#asm
+	unsigned const data[8] = {0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e , 0x2a07};
+	char i = 0;
+	unsigned add = 0x200;
+
+	unsigned buffer[8];
+	I2cSlaveInit();
+	FLASH_erase (add);
+
+	for (; i < 7; i++)
+		FLASH_write(add+i, data[i], 1);
+    FLASH_write(add+i, data[i], 0);
+
+	#asm
 		goto 0x200;
 	#endasm
-	//I2cSlaveInit();
 	while (1)
 	{
 		
-	}*/
-
-	LATC5 = 0;
-	TRISC5 = 0;
-	
-	while(1)
-	{
-		PORTCbits.RC5 = 1;
-
 	}
- 
 }
 

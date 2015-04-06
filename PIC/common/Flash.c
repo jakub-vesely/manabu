@@ -48,48 +48,57 @@ count--;
 void _unlock (void)
 {
 #asm
-BANKSEL PMCON2
-MOVLW 0x55
-MOVWF PMCON2 & 0x7F
-MOVLW 0xAA
-MOVWF PMCON2 & 0x7F
-BSF PMCON1 & 0x7F,1 ; set WR bit
-NOP
-NOP
+	BANKSEL PMCON2
+	MOVLW 0x55
+	MOVWF PMCON2 & 0x7F
+	MOVLW 0xAA
+	MOVWF PMCON2 & 0x7F
+	BSF PMCON1 & 0x7F,1 ; set WR bit
+	NOP
+	NOP
 #endasm
 }//unlock
 void FLASH_write (unsigned address, unsigned data, char latch)
 {
-// 1. disable interrupts (remember setting)
-char temp = INTCONbits.GIE;
-INTCONbits.GIE = 0;
-// 2. load the address pointers
-PMADR = address;
-PMDAT = data;
-PMCON1bits.LWLO = latch; // 1 = latch, 0 = write row
-PMCON1bits.CFGS = 0; // select the Flash address space
-PMCON1bits.FREE = 0; // next operation will be a write
-PMCON1bits.WREN = 1; // enable Flash memory write/erase
-// 3. perform unlock sequence
-_unlock();
-// 4. restore interrupts
-if (temp)
-INTCONbits.GIE = 1;
+#ifndef BOOTLOADER
+	// 1. disable interrupts (remember setting)
+	char temp = INTCONbits.GIE;
+	INTCONbits.GIE = 0;
+#endif
+	// 2. load the address pointers
+	PMADR = address;
+	PMDAT = data;
+	PMCON1bits.LWLO = latch; // 1 = latch, 0 = write row
+	PMCON1bits.CFGS = 0; // select the Flash address space
+	PMCON1bits.FREE = 0; // next operation will be a write
+	PMCON1bits.WREN = 1; // enable Flash memory write/erase
+	// 3. perform unlock sequence
+	_unlock();
+	// 4. restore interrupts
+#ifndef BOOTLOADER
+	if (temp)
+		INTCONbits.GIE = 1;
+#endif
 }//FLASH_write
 void FLASH_erase (unsigned address)
 {
-// 1. disable interrupts (remember setting)
-char temp = INTCONbits.GIE;
-INTCONbits.GIE = 0;
-// 2. load the address pointers
-PMADR = address;
-PMCON1bits.CFGS = 0; // select the Flash address space
-PMCON1bits.FREE = 1; // next operation will be an erase
-PMCON1bits.WREN = 1; // enable Flash memory write/erase
-// 3. perform unlock sequence and erase
-_unlock();
-// 4. disable writes and restore interrupts
-PMCON1bits.WREN = 0; // disable Flash memory write/erase
-if (temp)
-INTCONbits.GIE = 1;
+#ifndef BOOTLOADER
+	// 1. disable interrupts (remember setting)
+	char temp = INTCONbits.GIE;
+	INTCONbits.GIE = 0;
+#endif
+	// 2. load the address pointers
+	PMADR = address;
+	PMCON1bits.CFGS = 0; // select the Flash address space
+	PMCON1bits.FREE = 1; // next operation will be an erase
+	PMCON1bits.WREN = 1; // enable Flash memory write/erase
+	// 3. perform unlock sequence and erase
+	_unlock();
+	// 4. disable writes and restore interrupts
+	PMCON1bits.WREN = 0; // disable Flash memory write/erase
+
+#ifndef BOOTLOADER
+	if (temp)
+		INTCONbits.GIE = 1;
+#endif
 }//FLASH_erase
