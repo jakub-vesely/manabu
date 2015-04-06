@@ -136,7 +136,7 @@ unsigned int ADC_Read10bit(void)
 }
 
 
-void main(void)
+/*void main(void)
 {  
 	unsigned char potValue = 0;
 	unsigned char pressed = 0;
@@ -196,3 +196,41 @@ void main(void)
 		ProcessUSB(usbDataReaded);
     }
 }//end main
+*/
+
+//unsigned const g_data[8] = {0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e , 0x2a07};
+unsigned const g_data[30] =
+{
+	0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e, 0x30d0,
+	0x00f0, 0x3007, 0x00f1, 0x30ff, 0x07f0, 0x30ff, 0x3df1, 0x1ff1,
+	0x2a0b, 0x0020, 0x128e, 0x30d0, 0x00f0, 0x3007, 0x00f1, 0x30ff,
+	0x07f0, 0x30ff, 0x3df1, 0x1bf1, 0x2a05, 0x2a17
+};
+void main()
+{
+	unsigned address = 0x200;
+	unsigned i = 20000;
+	unsigned j = 100;
+	unsigned pos = 0;
+	unsigned count = sizeof(g_data)/sizeof(unsigned);
+	
+	I2CInit();
+	PutCommandI2C(COMMAND_FLASH_START, NULL, 0);
+	PutCommandI2C(COMMAND_FLASH_ADDRESS, &address, 2);
+
+	PORTC = 0b0001;
+	for (;pos < count; pos++)
+	{
+		if ((pos != count-1) && ((pos+ 1) % 16))
+			PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data[pos]), 2);
+		else
+		{
+			PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data[pos]), 2);
+			for (i = 0; i < 10000; i++); //wait aproximately 2ms
+		}
+	}
+	PORTC = 0b0011;
+	PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
+	while(1)
+	{}
+}

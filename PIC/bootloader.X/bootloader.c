@@ -1,40 +1,15 @@
 #include <xc.h>
 #include <pic16f1503.h>
-//#include <common/i2c.h>
+#include <common/i2c.h>
+#include <common/common_16F1503.h>
 #include <common/Flash.h>
+#include <stdbool.h>
+#include <CommonConstants.h>
+
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
-/*#define IS_DATA SSPSTATbits.D_nA
+#define IS_DATA SSPSTATbits.D_nA
 
-unsigned char sizeSet = 0;
-unsigned size;  
-unsigned counter = 0;
-
-void ReadI2C()
-{
-	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
-		return;
-
-	SSP1IF = 0;
-	
-	if (0 == sizeSet)
-	{
-		if (SSPSTATbits.D_nA)
-			size = (size << 8) + SSPBUF;
-		else
-			size = SSPBUF;
-
-		if (counter == size)
-		{
-			//finished
-		}
-
-		//write data
-	}
-	if (SEN)
-		CKP = 1;	
-}
-*/
 #ifdef INTERUPT_REDIRECION
 void interrupt serrvice_isr()
 {
@@ -44,26 +19,135 @@ void interrupt serrvice_isr()
 }
 #endif
 
+unsigned g_flashAddr;
+unsigned char g_command = 0;
+unsigned g_word;
+
+struct g_bitFiled
+{
+	bool wordReady:1;
+	bool lo:1;
+} g_bitFiled;
+
+#define FLASH_READ(address) \
+	PMADR = address; \
+	PMCON1bits.CFGS = 0; /*select the Flash address space*/ \
+	PMCON1bits.RD = 1; /*next operation will be a read*/ \
+	NOP(); \
+	NOP();
+
+void unlock (void)
+{
+#asm
+	BANKSEL PMCON2
+	MOVLW 0x55
+	MOVWF PMCON2 & 0x7F
+	MOVLW 0xAA
+	MOVWF PMCON2 & 0x7F
+	BSF PMCON1 & 0x7F,1 ; set WR bit
+	NOP
+	NOP
+#endasm
+}
+
+#define FLASH_WRITE(address, data, latch) \
+	PMADR = address; \
+	PMDAT = data; \
+	PMCON1bits.LWLO = latch; /* 1 = latch, 0 = write row*/ \
+	PMCON1bits.CFGS = 0; /* select the Flash address space*/ \
+	PMCON1bits.FREE = 0; /* next operation will be a write*/ \
+	PMCON1bits.WREN = 1; /* enable Flash memory write/erase*/ \
+	unlock();
+
+#define FLASH_ERASE(address) \
+	PMADR = address; \
+	PMCON1bits.CFGS = 0; /* select the Flash address space */ \
+	PMCON1bits.FREE = 1; /* next operation will be an erase*/ \
+	PMCON1bits.WREN = 1; /* enable Flash memory write/erase*/ \
+	unlock(); \
+	PMCON1bits.WREN = 0; /* disable Flash memory write/erase*/
+
+void ReadI2C()
+{
+	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
+		return;
+
+	SSP1IF = 0;
+
+	if (!IS_DATA)
+		g_command = SSPBUF >> 2;
+	else
+	{
+		if (COMMAND_FLASH_ADDRESS == g_command)
+		{
+			if (g_bitFiled.lo)
+				g_flashAddr = SSPBUF;
+			else
+			{
+				g_flashAddr |= (SSPBUF << 8);
+				FLASH_ERASE(g_flashAddr);
+			}
+			g_bitFiled.lo != g_bitFiled.lo;
+
+		}
+		else if (
+			COMMAND_FLASH_LATCH_WORD == g_command ||
+			COMMAND_FLASH_WRITE_WORD == g_command)
+		{
+			if (g_bitFiled.lo)
+				g_word = SSPBUF;
+			else
+			{
+				g_word |= (SSPBUF << 8);
+				g_bitFiled.wordReady = true;
+			}
+			g_bitFiled.lo != g_bitFiled.lo;
+		}
+	}
+	if (SEN)
+		CKP = 1;
+}
+
 int main()
 {
-	unsigned const data[8] = {0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e , 0x2a07};
-	char i = 0;
-	unsigned add = 0x200;
+	//OSCCONbits.IRCF = 0b1111; //16MHz
+	//while (!OSCSTATbits.HFIOFS);
 
-	unsigned buffer[8];
-	I2cSlaveInit();
-	FLASH_erase (add);
+	g_bitFiled.wordReady = false;
+	g_bitFiled.lo = true;
+	ANSELC = 0; //no analog pins
 
-	for (; i < 7; i++)
-		FLASH_write(add+i, data[i], 1);
-    FLASH_write(add+i, data[i], 0);
+	//swich is set to input
+	INnOUT_TRIS = 0;
+	INnOUT_PORT = 1;
 
-	#asm
-		goto 0x200;
-	#endasm
+	I2C_COMMON_INIT
+	I2C_SLAVE_SPECIFIC_INIT
+
 	while (1)
 	{
-		
+		if (g_command == COMMAND_FLASH_END)
+		{
+			FLASH_ERASE(0x7f0);
+			FLASH_WRITE(0x7f0, 0x1234, 0);
+		}
+
+		FLASH_READ(0x7f0);
+		if(0x1234 == PMDAT)
+		{
+#asm
+			goto 0x200;
+#endasm
+		}
+			
+		ReadI2C();
+
+		if (g_bitFiled.wordReady)
+		{
+			g_bitFiled.wordReady = false;
+			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_LATCH_WORD == g_command);
+			g_flashAddr++;
+		}
 	}
 }
 

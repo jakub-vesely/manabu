@@ -57,7 +57,7 @@ void PutI2C(unsigned char messageType, I2cCommand command, unsigned char const *
 		/*
 		 * because I will communicate always with one slave only I dont need send an
 		 * address so I will use this required byte for a message type
-		 * on the slave I will mask oall the address byte out
+		 * on the slave I will mask all the address byte out
 		 */
 		if (WriteI2C((command << 2) | (messageType << 1)) != 0) //lowest bite is read/write (write = 0)
 		{

@@ -7,15 +7,16 @@ void main(void)
 {
 	//LATC5 = 0;
 	TRISC5 = 0;
-	PORTCbits.RC5 = 1;
 	while(1)
 	{
-		//int i = 0;
+		PORTCbits.RC5 = 1;
+		int i = 2000;
 		
-		//for (;i < 2000; i++);
+		while( i-- > 0);
 
-		//PORTCbits.RC5 = 0;
-		//for (i = 0;i < 2000; i++);
+		PORTCbits.RC5 = 0;
+		i = 2000;
+		while( i-- > 0);
 
 	}
 }

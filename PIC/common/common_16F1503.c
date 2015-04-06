@@ -19,6 +19,10 @@ void Common16F1503Init()
 	SwitchControllerInit();
 #endif
 	I2cSlaveInit();
+
+#ifdef INTERUPTS_ENABLED
+	INTCONbits.GIE = 1;
+#endif
 }
 
 void Wait(int delay)
@@ -32,17 +36,19 @@ void Wait(int delay)
 
 void SwitchControllerInit()
 {
-	LATA4 = 0;
-	LATA5 = 0;
-	TRISAbits.TRISA4 = 0;
-	TRISAbits.TRISA5 = 0;
+#if defined HAVE_OUTPUT
+	INVERT_OUTPUT_TRIS = 0;
+#endif
+	INnOUT_TRIS = 0;
 
 #ifdef FOUR_PIN_INTERFACE
 	OUTPUT_SWITCH = 0;
 	INPUT_SWITCH = 1;
 #else
-	INnOUT = 1;
-	INVERT_OUTPUT = 0;
+	INnOUT_PORT = 1;
+#	ifdef HAVE_OUTPUT
+		INVERT_OUTPUT_PORT = 0;
+#	endif
 #endif
 
 }

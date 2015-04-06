@@ -6,34 +6,10 @@ unsigned char g_stateFollowed = 0;
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
-#define  I2C_COMMON_INIT\
-	SSPEN = 0;\
-	ANSC0 = 0;\
-	ANSC1 = 0;\
-	PORTCbits.RC0 = 0;\
-	PORTCbits.RC1 = 0;\
-	LATCbits.LATC0 = 0;\
-	LATCbits.LATC1 = 0;\
-	TRISCbits.TRISC0 = 1;\
-	TRISCbits.TRISC1 = 1;
-
 void I2cSlaveInit()
 {
 	I2C_COMMON_INIT
-
-	SSPCON2 = 0b00000001; //SEN is set to enable clock stretching
-//      SEN = 1; //Enable Clock Stretching
-	SSPCON3 = 0x00;
-	SSPMSK = 0; //all address bits will be ignored
-	SSPADD = 0;//address << 1; //7-bit address is stored in the 7 MSB's of the SSP1ADD register**********
-    SSPSTAT = 0x00;
-    SSPCON1 = 0b00010110;
-//      WCOL = 0; //clear write collisions
-//      SSPOV = 0; //clear receive overflow indicator
-//      CKP = 1; //releases clock stretching
-//      SSPM = 0b0110; //7-bit addressing slave mode
-
-	SSPEN = 1; //enable SSP and configures SDA & SCL pins
+	I2C_SLAVE_SPECIFIC_INIT
 }
 
 void I2cMasterInit(void)
@@ -177,7 +153,7 @@ unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsign
 	return value;
 }
 
-void CheckI2C()
+void CheckI2cAsSlave()
 {
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;
@@ -232,7 +208,7 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 	INPUT_SWITCH = 0;
 	OUTPUT_SWITCH = 1;
 #else
-	INnOUT = 0;
+	INnOUT_PORT = 0;
 #endif
 
 	I2cMasterInit();
@@ -243,7 +219,7 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 	OUTPUT_SWITCH = 0;
 	INPUT_SWITCH = 1;
 #else
-	INnOUT = 1;
+	INnOUT_PORT = 1;
 #endif
 
 	return retVal;
@@ -257,7 +233,7 @@ unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command
 	INPUT_SWITCH = 0;
 	OUTPUT_SWITCH = 1;
 #else
-	INnOUT = 0;
+	INnOUT_PORT = 0;
 #endif
 
 	I2cMasterInit();
@@ -268,7 +244,7 @@ unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command
 	OUTPUT_SWITCH = 0;
 	INPUT_SWITCH = 1;
 #else
-	INnOUT = 1;
+	INnOUT_PORT = 1;
 #endif
 
 	return value;
@@ -290,7 +266,7 @@ void SendToOutputIfReady()
 			if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1))
 				g_toOutput.isReady = false;
 			else //message was not send
-				INVERT_OUTPUT = !INVERT_OUTPUT; //output device may be connected by an oposite way
+				INVERT_OUTPUT_PORT = !INVERT_OUTPUT_PORT; //output device may be connected by an oposite way
 		}
 		else
 		{

@@ -14,34 +14,37 @@
 */
 unsigned FLASH_readConfig (unsigned address)
 {
-// 1. load the address pointers
-PMADR = address;
-PMCON1bits.CFGS = 1; //select the configuration Flash address space
-PMCON1bits.RD = 1; //next operation will be a read
-NOP();
-NOP();
-// 2. return value read
-return PMDAT;
+	// 1. load the address pointers
+	PMADR = address;
+	PMCON1bits.CFGS = 1; //select the configuration Flash address space
+	PMCON1bits.RD = 1; //next operation will be a read
+	NOP();
+	NOP();
+	// 2. return value read
+	return PMDAT;
 }//FLASH_config
+
 unsigned FLASH_read (unsigned address)
 {
-// 1. load the address pointers
-PMADR = address;
-PMCON1bits.CFGS = 0; //select the Flash address space
-PMCON1bits.RD = 1; //next operation will be a read
-NOP();
-NOP();
-// 2. return value read
-return PMDAT;
+	// 1. load the address pointers
+	PMADR = address;
+	PMCON1bits.CFGS = 0; //select the Flash address space
+	PMCON1bits.RD = 1; //next operation will be a read
+	NOP();
+	NOP();
+	// 2. return value read
+	return PMDAT;
 }//FLASH_read
+
 void FLASH_readBlock (unsigned *buffer, unsigned address, char count)
 {
-while (count > 0)
-{
-*buffer++ = FLASH_read (address++);
-count--;
-}
+	while (count > 0)
+	{
+		*buffer++ = FLASH_read (address++);
+		count--;
+	}
 }//FLASH_readBLock
+
 /**
 * unlock Flash Sequence
 */
@@ -58,9 +61,10 @@ void _unlock (void)
 	NOP
 #endasm
 }//unlock
+
 void FLASH_write (unsigned address, unsigned data, char latch)
 {
-#ifndef BOOTLOADER
+#ifndef INTERUPTS_ENABLED
 	// 1. disable interrupts (remember setting)
 	char temp = INTCONbits.GIE;
 	INTCONbits.GIE = 0;
@@ -75,14 +79,15 @@ void FLASH_write (unsigned address, unsigned data, char latch)
 	// 3. perform unlock sequence
 	_unlock();
 	// 4. restore interrupts
-#ifndef BOOTLOADER
+#ifndef INTERUPTS_ENABLED
 	if (temp)
 		INTCONbits.GIE = 1;
 #endif
 }//FLASH_write
+
 void FLASH_erase (unsigned address)
 {
-#ifndef BOOTLOADER
+#ifndef INTERUPTS_ENABLED
 	// 1. disable interrupts (remember setting)
 	char temp = INTCONbits.GIE;
 	INTCONbits.GIE = 0;
@@ -97,7 +102,7 @@ void FLASH_erase (unsigned address)
 	// 4. disable writes and restore interrupts
 	PMCON1bits.WREN = 0; // disable Flash memory write/erase
 
-#ifndef BOOTLOADER
+#ifndef INTERUPTS_ENABLED
 	if (temp)
 		INTCONbits.GIE = 1;
 #endif
