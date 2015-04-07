@@ -8,33 +8,20 @@
 
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
+#define VERSION 1
 #define IS_DATA SSPSTATbits.D_nA
-
-#ifdef INTERUPT_REDIRECION
-void interrupt serrvice_isr()
-{
-	#asm
-		GOTO 0x204;
-	#endasm
-}
-#endif
+#define IS_READ  SSPSTATbits.R_nW
 
 unsigned g_flashAddr;
 unsigned char g_command = 0;
 unsigned g_word;
-
+unsigned char timeout = 0xfe;
+unsigned checkSum = 0;
 struct g_bitFiled
 {
-	bool wordReady:1;
+	bool dataReady:1;
 	bool lo:1;
 } g_bitFiled;
-
-#define FLASH_READ(address) \
-	PMADR = address; \
-	PMCON1bits.CFGS = 0; /*select the Flash address space*/ \
-	PMCON1bits.RD = 1; /*next operation will be a read*/ \
-	NOP(); \
-	NOP();
 
 void unlock (void)
 {
@@ -74,46 +61,62 @@ void ReadI2C()
 
 	SSP1IF = 0;
 
+	unsigned char value = SSPBUF;
+
 	if (!IS_DATA)
-		g_command = SSPBUF >> 2;
+	{
+		g_command = value >> 2;
+
+		if (COMMAND_FLASH_START == g_command)
+		{
+			timeout = 0xff; //communication started
+			SSPBUF = VERSION;
+		}
+		else
+		if (COMMAND_FLASH_CHECKSUM == g_command)
+			SSPBUF = checkSum;
+	}
 	else
 	{
-		if (COMMAND_FLASH_ADDRESS == g_command)
+		checkSum += value;
+
+		if (g_bitFiled.lo)
 		{
-			if (g_bitFiled.lo)
-				g_flashAddr = SSPBUF;
-			else
+			g_bitFiled.lo = false;
+			g_word = value;
+		}
+		else
+		{
+			g_bitFiled.lo = true;
+			g_word |= (value << 8);
+
+			if (COMMAND_FLASH_ADDRESS == g_command)
 			{
-				g_flashAddr |= (SSPBUF << 8);
+				g_flashAddr = g_word;
 				FLASH_ERASE(g_flashAddr);
 			}
-			g_bitFiled.lo != g_bitFiled.lo;
-
-		}
-		else if (
-			COMMAND_FLASH_LATCH_WORD == g_command ||
-			COMMAND_FLASH_WRITE_WORD == g_command)
-		{
-			if (g_bitFiled.lo)
-				g_word = SSPBUF;
-			else
-			{
-				g_word |= (SSPBUF << 8);
-				g_bitFiled.wordReady = true;
-			}
-			g_bitFiled.lo != g_bitFiled.lo;
+			else /*COMMAND_FLASH_LATCH_WORD == g_command ||	COMMAND_FLASH_WRITE_WORD == g_command*/
+				g_bitFiled.dataReady = true;
 		}
 	}
 	if (SEN)
 		CKP = 1;
 }
 
+void interrupt serrvice_isr()
+{
+	#asm
+		GOTO 0x104;
+	#endasm
+}
+
 int main()
 {
+	INTCONbits.GIE = 0;
 	//OSCCONbits.IRCF = 0b1111; //16MHz
 	//while (!OSCSTATbits.HFIOFS);
-
-	g_bitFiled.wordReady = false;
+	
+	g_bitFiled.dataReady = false;
 	g_bitFiled.lo = true;
 	ANSELC = 0; //no analog pins
 
@@ -126,25 +129,21 @@ int main()
 
 	while (1)
 	{
-		if (g_command == COMMAND_FLASH_END)
-		{
-			FLASH_ERASE(0x7f0);
-			FLASH_WRITE(0x7f0, 0x1234, 0);
-		}
-
-		FLASH_READ(0x7f0);
-		if(0x1234 == PMDAT)
+		if(g_command == COMMAND_FLASH_END || timeout == 0)
 		{
 #asm
-			goto 0x200;
+			goto 0x100;
 #endasm
 		}
-			
+
+		if (timeout != 0xff)
+			timeout--;
+
 		ReadI2C();
 
-		if (g_bitFiled.wordReady)
+		if (g_bitFiled.dataReady)
 		{
-			g_bitFiled.wordReady = false;
+			g_bitFiled.dataReady = false;
 			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_LATCH_WORD == g_command);
 			g_flashAddr++;
 		}

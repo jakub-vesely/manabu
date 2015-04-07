@@ -198,38 +198,86 @@ unsigned int ADC_Read10bit(void)
 }//end main
 */
 
-//unsigned const g_data[8] = {0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e , 0x2a07};
-unsigned const g_data[30] =
+/*unsigned const g_data1[8] = {0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e , 0x2a07};
+unsigned const g_data2[30] =
 {
 	0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e, 0x30d0,
 	0x00f0, 0x3007, 0x00f1, 0x30ff, 0x07f0, 0x30ff, 0x3df1, 0x1ff1,
 	0x2a0b, 0x0020, 0x128e, 0x30d0, 0x00f0, 0x3007, 0x00f1, 0x30ff,
 	0x07f0, 0x30ff, 0x3df1, 0x1bf1, 0x2a05, 0x2a17
+};*/
+
+ unsigned const g_data1[8] = {0x107e, 0x0020, 0x2903, 0x0021, 0x128e, 0x0020, 0x168e , 0x2907};
+unsigned const g_data2[30] =
+{
+	0x107e, 0x0020, 0x2903, 0x0021, 0x128e, 0x0020, 0x168e, 0x30d0,
+	0x00f0, 0x3007, 0x00f1, 0x30ff, 0x07f0, 0x30ff, 0x3df1, 0x1ff1,
+	0x290b, 0x0020, 0x128e, 0x30d0, 0x00f0, 0x3007, 0x00f1, 0x30ff,
+	0x07f0, 0x30ff, 0x3df1, 0x1bf1, 0x2905, 0x2917
 };
+ 
 void main()
 {
-	unsigned address = 0x200;
+	unsigned address = 0x100;
 	unsigned i = 20000;
-	unsigned j = 100;
 	unsigned pos = 0;
-	unsigned count = sizeof(g_data)/sizeof(unsigned);
-	
+	unsigned count = (PORTAbits.RA3 == 0) ? sizeof(g_data1)/sizeof(unsigned) : sizeof(g_data2)/sizeof(unsigned);
+	unsigned char checkSum = 0;
+	unsigned version;
 	I2CInit();
-	PutCommandI2C(COMMAND_FLASH_START, NULL, 0);
-	PutCommandI2C(COMMAND_FLASH_ADDRESS, &address, 2);
 
 	PORTC = 0b0001;
+	version = GetCommandI2C(COMMAND_FLASH_START);
+
 	for (;pos < count; pos++)
 	{
-		if ((pos != count-1) && ((pos+ 1) % 16))
-			PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data[pos]), 2);
+		if (!(pos % 16))
+		{
+			PutCommandI2C(COMMAND_FLASH_ADDRESS, &address, 2);
+			checkSum += address & 0xff;
+			checkSum += address >> 8;
+			address += 16;
+		}
+		if (pos != count-1 && ((pos+ 1) % 16))
+		{
+			if (PORTAbits.RA3 == 0)
+			{
+				PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data1[pos]), 2);
+				checkSum += g_data1[pos] & 0xff;
+				checkSum += g_data1[pos] >> 8;
+			}
+			else
+			{
+				PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data2[pos]), 2);
+				checkSum += g_data2[pos] & 0xff;
+				checkSum += g_data2[pos] >> 8;
+			}
+		}
 		else
 		{
-			PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data[pos]), 2);
-			for (i = 0; i < 10000; i++); //wait aproximately 2ms
+			if (PORTAbits.RA3 == 0)
+			{
+				PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data1[pos]), 2);
+				checkSum += g_data1[pos] & 0xff;
+				checkSum += g_data1[pos] >> 8;
+			}
+			else
+			{
+				PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data2[pos]), 2);
+				checkSum += g_data2[pos] & 0xff;
+				checkSum += g_data2[pos] >> 8;
+			}
+			
+			for (i = 0; i < 10000; i++); //more then 2ms
+
 		}
 	}
 	PORTC = 0b0011;
+	//if (1 == GetCommandI2C(COMMAND_FLASH_START))
+	//	PORTC = 0b1111;
+
+	if (checkSum == GetCommandI2C(COMMAND_FLASH_CHECKSUM))
+		PORTC = 0b0111;
 	PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
 	while(1)
 	{}

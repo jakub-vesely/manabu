@@ -64,7 +64,7 @@ void _unlock (void)
 
 void FLASH_write (unsigned address, unsigned data, char latch)
 {
-#ifndef INTERUPTS_ENABLED
+#ifdef INTERUPTS_ENABLED
 	// 1. disable interrupts (remember setting)
 	char temp = INTCONbits.GIE;
 	INTCONbits.GIE = 0;
@@ -79,7 +79,7 @@ void FLASH_write (unsigned address, unsigned data, char latch)
 	// 3. perform unlock sequence
 	_unlock();
 	// 4. restore interrupts
-#ifndef INTERUPTS_ENABLED
+#ifdef INTERUPTS_ENABLED
 	if (temp)
 		INTCONbits.GIE = 1;
 #endif
@@ -87,7 +87,7 @@ void FLASH_write (unsigned address, unsigned data, char latch)
 
 void FLASH_erase (unsigned address)
 {
-#ifndef INTERUPTS_ENABLED
+#ifdef INTERUPTS_ENABLED
 	// 1. disable interrupts (remember setting)
 	char temp = INTCONbits.GIE;
 	INTCONbits.GIE = 0;
@@ -102,7 +102,7 @@ void FLASH_erase (unsigned address)
 	// 4. disable writes and restore interrupts
 	PMCON1bits.WREN = 0; // disable Flash memory write/erase
 
-#ifndef INTERUPTS_ENABLED
+#ifdef INTERUPTS_ENABLED
 	if (temp)
 		INTCONbits.GIE = 1;
 #endif

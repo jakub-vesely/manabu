@@ -92,7 +92,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="200-2ff"/>
+        <property key="code-model-rom" value="100-1ff"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
@@ -151,7 +151,7 @@
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveprogramrange" value="true"/>
-        <property key="programoptions.preserveprogramrange.end" value="0x1ff"/>
+        <property key="programoptions.preserveprogramrange.end" value="0xff"/>
         <property key="programoptions.preserveprogramrange.start" value="0x0"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programcalmem" value="false"/>
