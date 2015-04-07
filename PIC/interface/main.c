@@ -87,6 +87,7 @@ void GetState(unsigned char const *data)
 void usbDataReaded(unsigned char const *data, int size)
 {
 	FunctionId functionId;
+	unsigned char retVal;
 	
 	if (0 == size)
 		return;
@@ -112,7 +113,9 @@ void usbDataReaded(unsigned char const *data, int size)
 			GetState(data);
 			break;
 		case FID_GET_MODE:
-			ResponseChar(GetCommandI2C(COMMAND_GET_CURRENT_MODE));
+			if (!GetCommandI2C(COMMAND_GET_CURRENT_MODE, &retVal))
+				retVal = 0xff;
+			ResponseChar(retVal);
 			break;
 		case FID_SET_MODE:
 			SetDescendentMode(data[3]);
@@ -221,32 +224,40 @@ void main()
 	unsigned address = 0x100;
 	unsigned i = 20000;
 	unsigned pos = 0;
-	unsigned count = (PORTAbits.RA3 == 0) ? sizeof(g_data1)/sizeof(unsigned) : sizeof(g_data2)/sizeof(unsigned);
+	unsigned count = 
+	/*(PORTAbits.RA3 == 0) ? sizeof(g_data1)/sizeof(unsigned) :*/ sizeof(g_data2)/sizeof(unsigned);
 	unsigned char checkSum = 0;
-	unsigned version;
+	unsigned char slaveChecksum;
+	unsigned char version;
+
+	LATC=0;
+	TRISC = 0;
 	I2CInit();
+	IdleI2C();
+
+	while (PORTAbits.RA3 != 0);
 
 	PORTC = 0b0001;
-	version = GetCommandI2C(COMMAND_FLASH_START);
-
+	GetCommandI2C(COMMAND_FLASH_START, &version);
+	PORTC = 0b0011;
 	for (;pos < count; pos++)
 	{
 		if (!(pos % 16))
 		{
-			PutCommandI2C(COMMAND_FLASH_ADDRESS, &address, 2);
+			PutCommandI2C(COMMAND_FLASH_ADDRESS, (unsigned char const *)&address, 2);
 			checkSum += address & 0xff;
 			checkSum += address >> 8;
 			address += 16;
 		}
 		if (pos != count-1 && ((pos+ 1) % 16))
 		{
-			if (PORTAbits.RA3 == 0)
+			/*if (PORTAbits.RA3 == 0)
 			{
 				PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data1[pos]), 2);
 				checkSum += g_data1[pos] & 0xff;
 				checkSum += g_data1[pos] >> 8;
 			}
-			else
+			else*/
 			{
 				PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data2[pos]), 2);
 				checkSum += g_data2[pos] & 0xff;
@@ -255,13 +266,13 @@ void main()
 		}
 		else
 		{
-			if (PORTAbits.RA3 == 0)
+			/*if (PORTAbits.RA3 == 0)
 			{
 				PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data1[pos]), 2);
 				checkSum += g_data1[pos] & 0xff;
 				checkSum += g_data1[pos] >> 8;
 			}
-			else
+			else*/
 			{
 				PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data2[pos]), 2);
 				checkSum += g_data2[pos] & 0xff;
@@ -276,7 +287,8 @@ void main()
 	//if (1 == GetCommandI2C(COMMAND_FLASH_START))
 	//	PORTC = 0b1111;
 
-	if (checkSum == GetCommandI2C(COMMAND_FLASH_CHECKSUM))
+	GetCommandI2C(COMMAND_FLASH_CHECKSUM, &slaveChecksum);
+	if (checkSum == slaveChecksum)
 		PORTC = 0b0111;
 	PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
 	while(1)

@@ -24,9 +24,6 @@ void I2CInit(void)
 	TRIS_SCL = 0;
 	TRIS_SDA = 0;
 
-	LATC=0;
-	TRISC = 0;
-
 	SSPADD = (FREQ/(BITRATE*4))-1;
 	OpenI2C(MASTER, SLEW_OFF);  
 }
@@ -41,9 +38,9 @@ unsigned char PutCommandI2C(I2cCommand command, unsigned char const *data, unsig
 	return PutI2C(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
 }
 
-unsigned char GetCommandI2C(I2cCommand command)
+unsigned char GetCommandI2C(I2cCommand command, unsigned char *retVal)
 {
-	return GetI2C(I2C_MESSAGE_TYPE_COMMAND, command, 0, 0);
+	return GetI2C(I2C_MESSAGE_TYPE_COMMAND, command, 0, 0, retVal);
 }
 
 
@@ -85,22 +82,21 @@ continue2:
 	return 0;//(j == SEND_TRY);
 }
 
-//FIXME: I will nedd transfer value too because I ill have to specifie a modulle address
-unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
-{
-	unsigned char value;
 
-	IdleI2C();
+unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *retVal)
+{
+	unsigned timeout = 0xff;
 	StartI2C();
-	IdleI2C();
-	//for an explanation take alook to PutI2C
-	PORTC = 0b1000;
-	while (WriteI2C((command << 2) | (messageType << 1) | 1) != 0); //lowest bite is read/write (write = 0)
-	IdleI2C();
-	PORTC = 0b0100;
-	value = ReadI2C();
-	PORTC = 0b1100;
-	IdleI2C();
+	
+	while (WriteI2C((command << 2) | (messageType << 1) | 1) != 0)
+	{
+		if (0  == --timeout)
+		{
+			CloseI2C();
+			return 0;
+		}
+	}
+	*retVal = ReadI2C();
 	StopI2C();
-	return value;
+	return 1;
 }

@@ -72,7 +72,7 @@ char I2cMasterRead()
 	unsigned char counter = 0;
 
 	SSPCON2bits.RCEN = 1;
-	while(SSPCON2bits.RCEN)
+	while(SSPCON2bits.RCEN) //FIXME: may be ther should be !BF
 	{
 		if (255 == counter)
 			return false; //FIXME FIXME FIXME: it should be returned an error value

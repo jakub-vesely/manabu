@@ -120,8 +120,8 @@
         <property key="fill-flash-options-how" value="0"/>
         <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
-        <property key="fill-flash-options-seq" value="0x10"/>
-        <property key="fill-flash-options-what" value="0"/>
+        <property key="fill-flash-options-seq" value="0x01"/>
+        <property key="fill-flash-options-what" value="1"/>
         <property key="format-hex-file-for-download" value="false"/>
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
@@ -164,7 +164,7 @@
         <property key="programoptions.pgmspeed" value="2"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveprogramrange" value="true"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveprogramrange.end" value="0x7ff"/>
         <property key="programoptions.preserveprogramrange.start" value="0x100"/>
         <property key="programoptions.preserveuserid" value="false"/>
