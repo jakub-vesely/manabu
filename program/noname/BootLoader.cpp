@@ -50,8 +50,8 @@ void BootLoader::openHex()
 {
 	const unsigned wordSize = 2;
 	QString fileName = "C:/GitRepository/stavebnice03/program/arithmetic-logic.X.production.hex";
-	//QFileDialog::getOpenFileName(this,
-	//	 tr("Open Intel-Hex file"), "", tr("Intel-Hex file (*.hex)"));
+	fileName = QFileDialog::getOpenFileName(this,
+		 tr("Open Intel-Hex file"), "", tr("Intel-Hex file (*.hex)"));
 
 	m_hexPath->setText(fileName);
 

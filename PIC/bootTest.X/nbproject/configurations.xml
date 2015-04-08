@@ -4,12 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../common/i2c.h</itemPath>
-        <itemPath>../common/Flash.h</itemPath>
-        <itemPath>../common/common_16F1503.h</itemPath>
-        <itemPath>../../CommonConstants.h</itemPath>
-      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,12 +12,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../common/i2c.c</itemPath>
-        <itemPath>../common/Flash.c</itemPath>
-        <itemPath>../common/common_16F1503.c</itemPath>
-      </logicalFolder>
-      <itemPath>bootloader.c</itemPath>
+      <itemPath>bootTest.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -31,9 +20,6 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
-  <sourceRootList>
-    <Elem>../..</Elem>
-  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="default" type="2">
@@ -71,8 +57,8 @@
       </makeCustomizationType>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
-        <property key="define-macros" value="BOOTLOADER;INTERUPTS_DISABLED"/>
-        <property key="extra-include-directories" value="..;../.."/>
+        <property key="define-macros" value=""/>
+        <property key="extra-include-directories" value=""/>
         <property key="identifier-length" value="255"/>
         <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
@@ -106,7 +92,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="0-ff"/>
+        <property key="code-model-rom" value="100-1ff"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
@@ -120,8 +106,8 @@
         <property key="fill-flash-options-how" value="0"/>
         <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
-        <property key="fill-flash-options-seq" value="0x01"/>
-        <property key="fill-flash-options-what" value="1"/>
+        <property key="fill-flash-options-seq" value=""/>
+        <property key="fill-flash-options-what" value="0"/>
         <property key="format-hex-file-for-download" value="false"/>
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
@@ -164,9 +150,9 @@
         <property key="programoptions.pgmspeed" value="2"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.preserveprogramrange.end" value="0x7ff"/>
-        <property key="programoptions.preserveprogramrange.start" value="0x100"/>
+        <property key="programoptions.preserveprogramrange" value="true"/>
+        <property key="programoptions.preserveprogramrange.end" value="0xff"/>
+        <property key="programoptions.preserveprogramrange.start" value="0x0"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>

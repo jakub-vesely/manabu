@@ -13,7 +13,7 @@ void main(void)
 
 	while(1)
 	{
-		CheckI2C();
+		CheckI2cAsSlave();
 		if (g_commandRecieved)
 			ProcessCommand();
 

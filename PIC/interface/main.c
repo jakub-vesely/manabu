@@ -87,6 +87,7 @@ void GetState(unsigned char const *data)
 void usbDataReaded(unsigned char const *data, int size)
 {
 	FunctionId functionId;
+	unsigned char retVal;
 	
 	if (0 == size)
 		return;
@@ -112,7 +113,9 @@ void usbDataReaded(unsigned char const *data, int size)
 			GetState(data);
 			break;
 		case FID_GET_MODE:
-			ResponseChar(GetCommandI2C(COMMAND_GET_CURRENT_MODE));
+			if (!GetCommandI2C(COMMAND_GET_CURRENT_MODE, &retVal))
+				retVal = 0xff;
+			ResponseChar(retVal);
 			break;
 		case FID_SET_MODE:
 			SetDescendentMode(data[3]);
@@ -136,7 +139,7 @@ unsigned int ADC_Read10bit(void)
 }
 
 
-void main(void)
+/*void main(void)
 {  
 	unsigned char potValue = 0;
 	unsigned char pressed = 0;
@@ -196,3 +199,98 @@ void main(void)
 		ProcessUSB(usbDataReaded);
     }
 }//end main
+*/
+
+/*unsigned const g_data1[8] = {0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e , 0x2a07};
+unsigned const g_data2[30] =
+{
+	0x107e, 0x0020, 0x2a03, 0x0021, 0x128e, 0x0020, 0x168e, 0x30d0,
+	0x00f0, 0x3007, 0x00f1, 0x30ff, 0x07f0, 0x30ff, 0x3df1, 0x1ff1,
+	0x2a0b, 0x0020, 0x128e, 0x30d0, 0x00f0, 0x3007, 0x00f1, 0x30ff,
+	0x07f0, 0x30ff, 0x3df1, 0x1bf1, 0x2a05, 0x2a17
+};*/
+
+ unsigned const g_data1[8] = {0x107e, 0x0020, 0x2903, 0x0021, 0x128e, 0x0020, 0x168e , 0x2907};
+unsigned const g_data2[30] =
+{
+	0x107e, 0x0020, 0x2903, 0x0021, 0x128e, 0x0020, 0x168e, 0x30d0,
+	0x00f0, 0x3007, 0x00f1, 0x30ff, 0x07f0, 0x30ff, 0x3df1, 0x1ff1,
+	0x290b, 0x0020, 0x128e, 0x30d0, 0x00f0, 0x3007, 0x00f1, 0x30ff,
+	0x07f0, 0x30ff, 0x3df1, 0x1bf1, 0x2905, 0x2917
+};
+ 
+void main()
+{
+	unsigned address = 0x100;
+	unsigned i = 20000;
+	unsigned pos = 0;
+	unsigned count = 
+	/*(PORTAbits.RA3 == 0) ? sizeof(g_data1)/sizeof(unsigned) :*/ sizeof(g_data2)/sizeof(unsigned);
+	unsigned char checkSum = 0;
+	unsigned char slaveChecksum;
+	unsigned char version;
+
+	LATC=0;
+	TRISC = 0;
+	I2CInit();
+	IdleI2C();
+
+	while (PORTAbits.RA3 != 0);
+
+	PORTC = 0b0001;
+	GetCommandI2C(COMMAND_FLASH_START, &version);
+	PORTC = 0b0011;
+	for (;pos < count; pos++)
+	{
+		if (!(pos % 16))
+		{
+			PutCommandI2C(COMMAND_FLASH_ADDRESS, (unsigned char const *)&address, 2);
+			checkSum += address & 0xff;
+			checkSum += address >> 8;
+			address += 16;
+		}
+		if (pos != count-1 && ((pos+ 1) % 16))
+		{
+			/*if (PORTAbits.RA3 == 0)
+			{
+				PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data1[pos]), 2);
+				checkSum += g_data1[pos] & 0xff;
+				checkSum += g_data1[pos] >> 8;
+			}
+			else*/
+			{
+				PutCommandI2C(COMMAND_FLASH_LATCH_WORD, &(g_data2[pos]), 2);
+				checkSum += g_data2[pos] & 0xff;
+				checkSum += g_data2[pos] >> 8;
+			}
+		}
+		else
+		{
+			/*if (PORTAbits.RA3 == 0)
+			{
+				PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data1[pos]), 2);
+				checkSum += g_data1[pos] & 0xff;
+				checkSum += g_data1[pos] >> 8;
+			}
+			else*/
+			{
+				PutCommandI2C(COMMAND_FLASH_WRITE_WORD, &(g_data2[pos]), 2);
+				checkSum += g_data2[pos] & 0xff;
+				checkSum += g_data2[pos] >> 8;
+			}
+			
+			for (i = 0; i < 10000; i++); //more then 2ms
+
+		}
+	}
+	PORTC = 0b0011;
+	//if (1 == GetCommandI2C(COMMAND_FLASH_START))
+	//	PORTC = 0b1111;
+
+	GetCommandI2C(COMMAND_FLASH_CHECKSUM, &slaveChecksum);
+	if (checkSum == slaveChecksum)
+		PORTC = 0b0111;
+	PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
+	while(1)
+	{}
+}

@@ -4,12 +4,12 @@
 #include <common/common.h>
 
 void I2CInit(void);
-void PutStateI2C(unsigned char state);
-void PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
-unsigned char GetCommandI2C(I2cCommand command);
+unsigned char  PutStateI2C(unsigned char state);
+unsigned char PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
+unsigned char GetCommandI2C(I2cCommand command, unsigned char *retVal);
 
-void PutI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
-unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+unsigned char PutI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+unsigned char GetI2C(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *retVal);
 
 
 
