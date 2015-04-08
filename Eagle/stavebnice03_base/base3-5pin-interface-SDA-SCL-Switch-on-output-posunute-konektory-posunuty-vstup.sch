@@ -6053,9 +6053,9 @@ type RDH, grid 15 mm</description>
 <net name="N$17" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="RC4"/>
-<wire x1="121.92" y1="73.66" x2="124.46" y2="73.66" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="73.66" x2="121.92" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="U$9" gate="G$1" pin="2"/>
+<pinref part="U$9" gate="G$1" pin="3"/>
+<wire x1="124.46" y1="73.66" x2="116.84" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="116.84" y1="73.66" x2="116.84" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$12" class="0">
@@ -6064,14 +6064,6 @@ type RDH, grid 15 mm</description>
 <pinref part="U$9" gate="G$1" pin="4"/>
 <wire x1="124.46" y1="78.74" x2="111.76" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="78.74" x2="111.76" y2="43.18" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$16" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="RC3"/>
-<wire x1="124.46" y1="68.58" x2="116.84" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="116.84" y1="68.58" x2="116.84" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="U$9" gate="G$1" pin="3"/>
 </segment>
 </net>
 <net name="N$9" class="0">
@@ -6197,6 +6189,14 @@ type RDH, grid 15 mm</description>
 <wire x1="190.5" y1="134.62" x2="190.5" y2="78.74" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="RC0"/>
 <wire x1="190.5" y1="78.74" x2="165.1" y2="78.74" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="RC3"/>
+<pinref part="U$9" gate="G$1" pin="2"/>
+<wire x1="124.46" y1="68.58" x2="121.92" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="121.92" y1="68.58" x2="121.92" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
