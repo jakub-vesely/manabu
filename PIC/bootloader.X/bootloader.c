@@ -158,7 +158,8 @@ int main()
 		{
 			g_bitFiled.dataReady = false;
 			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_LATCH_WORD == g_command);
-			checkSum += PMCON1bits.WRERR; //0 write success, 1 write error
+			if (PMCON1bits.WRERR) //0 write success, 1 write error
+				++checkSum;
 			g_flashAddr++;
 		}
 	}
