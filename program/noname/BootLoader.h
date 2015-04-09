@@ -12,6 +12,7 @@ class BootLoader : public QWidget
 
 	QLineEdit *m_hexPath;
 	QTextEdit *m_textEdit;
+	QString m_directory;
 public:
 	explicit BootLoader(QWidget *parent = 0);
 	~BootLoader();

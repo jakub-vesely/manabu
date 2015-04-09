@@ -2,6 +2,7 @@
 #include <QHBoxLayout>
 #include <QFile>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QFontDatabase>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -14,7 +15,8 @@
 BootLoader::BootLoader(QWidget *parent) :
 	QWidget(parent),
 	m_hexPath(NULL),
-	m_textEdit(NULL)
+	m_textEdit(NULL),
+	m_directory("/")
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -38,6 +40,7 @@ BootLoader::BootLoader(QWidget *parent) :
 	font.setPointSize(10);
 	m_textEdit->setFont(font);
 	m_textEdit->setMinimumWidth(400);
+	m_textEdit->setReadOnly(true);
 	layout->addWidget(m_textEdit);
 }
 
@@ -51,7 +54,10 @@ void BootLoader::openHex()
 	const unsigned wordSize = 2;
 	QString fileName = "C:/GitRepository/stavebnice03/program/arithmetic-logic.X.production.hex";
 	fileName = QFileDialog::getOpenFileName(this,
-		 tr("Open Intel-Hex file"), "", tr("Intel-Hex file (*.hex)"));
+		 tr("Open Intel-Hex file"), m_directory, tr("Intel-Hex file (*.hex)"));
+
+	if ("" != fileName)
+		m_directory = QFileInfo(fileName).absoluteDir().absolutePath();
 
 	m_hexPath->setText(fileName);
 
@@ -91,9 +97,10 @@ void BootLoader::openHex()
 			 }
 		}
 
+		m_textEdit->clear();
 		for (int counter = 0; counter <  words.size(); counter += 8)
 		{
-			 QString outLine = QString("%1 | %2 %3 %4 %5 %6 %7 %8 %9").
+			 QString outLine = QString("%1 | 0x%2, 0x%3, 0x%4, 0x%5, 0x%6, 0x%7, 0x%8, 0x%9,").
 				arg(counter, 4, 16, QChar('0')).
 				arg(words[counter], 4, 16, QChar('0')).
 				arg(words[counter+1], 4, 16, QChar('0')).
@@ -106,9 +113,11 @@ void BootLoader::openHex()
 			 m_textEdit->append(outLine);
 		}
 	}
-	QTextCursor cursor;
-	cursor.setPosition(0);
-	m_textEdit->setTextCursor(cursor);
+	//QTextCursor cursor;
+	//cursor.setPosition(0);
+	//m_textEdit->setTextCursor(cursor);
+	m_textEdit->moveCursor(QTextCursor::Start) ;
+
 }
 
 void BootLoader::upload()
