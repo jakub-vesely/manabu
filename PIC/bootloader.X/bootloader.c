@@ -9,13 +9,15 @@
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
 #define VERSION 1
+#define MAIN_PROOGRAM_START 0x100
+#define RUN_PROGRAM_FLAG_POSITION HEFLASH_START
+#define RUN_PROGRAM_VALUE 0
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
 unsigned g_flashAddr;
 unsigned char g_command = 0;
 unsigned g_word;
-unsigned char timeout = 0xfe;
 unsigned checkSum = 0;
 struct g_bitFiled
 {
@@ -54,6 +56,13 @@ void unlock (void)
 	unlock(); \
 	PMCON1bits.WREN = 0; /* disable Flash memory write/erase*/
 
+#define FLASH_READ_BYTE(address) \
+	PMADR = address; \
+	PMCON1bits.CFGS = 0; /*select the Flash address space*/ \
+	PMCON1bits.RD = 1; /*next operation will be a read*/ \
+	NOP(); \
+	NOP();
+
 void ReadI2C()
 {
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
@@ -69,7 +78,6 @@ void ReadI2C()
 
 		if (COMMAND_FLASH_START == g_command)
 		{
-			timeout = 0xff; //communication started
 			SSPBUF = VERSION;
 		}
 		else
@@ -106,7 +114,7 @@ void ReadI2C()
 void interrupt serrvice_isr()
 {
 	#asm
-		GOTO 0x104;
+		GOTO (MAIN_PROOGRAM_START + 4);
 	#endasm
 }
 
@@ -115,7 +123,15 @@ int main()
 	INTCONbits.GIE = 0;
 	//OSCCONbits.IRCF = 0b1111; //16MHz
 	//while (!OSCSTATbits.HFIOFS);
-	
+
+	FLASH_READ_BYTE(RUN_PROGRAM_FLAG_POSITION)
+	if (RUN_PROGRAM_VALUE == PMDAT)
+	{
+#asm
+		GOTO MAIN_PROOGRAM_START;
+#endasm
+	}
+
 	g_bitFiled.dataReady = false;
 	g_bitFiled.lo = true;
 	ANSELC = 0; //no analog pins
@@ -129,15 +145,12 @@ int main()
 
 	while (1)
 	{
-		if(g_command == COMMAND_FLASH_END || timeout == 0)
+		if(g_command == COMMAND_FLASH_END)
 		{
 #asm
-			goto 0x100;
+			GOTO MAIN_PROOGRAM_START;
 #endasm
 		}
-
-		if (timeout != 0xff)
-			timeout--;
 
 		ReadI2C();
 
@@ -145,6 +158,8 @@ int main()
 		{
 			g_bitFiled.dataReady = false;
 			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_LATCH_WORD == g_command);
+			if (PMCON1bits.WRERR) //0 write success, 1 write error
+				++checkSum;
 			g_flashAddr++;
 		}
 	}
