@@ -101,6 +101,15 @@ void ReadI2C()
 			if (COMMAND_FLASH_ADDRESS == g_command)
 			{
 				g_flashAddr = g_word;
+
+				//I dont want to use flash protection in config flags because
+				//I would have to have booltloader sise 0x200 so I will protect
+				//it this way. I probabl shoud increase checksum but I will have
+				//to consume a more memory space. It will not happend by
+				//a correct way and checksum will not maptch anwway
+				if (g_flashAddr < MAIN_PROOGRAM_START)
+					g_flashAddr = MAIN_PROOGRAM_START;
+
 				FLASH_ERASE(g_flashAddr);
 			}
 			else /*COMMAND_FLASH_LATCH_WORD == g_command ||	COMMAND_FLASH_WRITE_WORD == g_command*/
