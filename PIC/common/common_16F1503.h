@@ -15,6 +15,10 @@
 #   define OUTPUT_SWITCH PORTAbits.RA4
 #endif //FOUR_PIN_INTERFACE
 
+#define RUN_PROGRAM_VALUE 0
+#define IS_DATA SSPSTATbits.D_nA
+#define IS_READ  SSPSTATbits.R_nW
+
 void Common16F1503Init();
 void Wait(int delay);
 void SwitchControllerInit();

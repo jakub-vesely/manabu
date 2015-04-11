@@ -1,6 +1,7 @@
 #include <xc.h>
 #include <pic16f1503.h>
 #include <common/i2c.h>
+#include <common/common.h>
 #include <common/common_16F1503.h>
 #include <common/Flash.h>
 #include <stdbool.h>
@@ -11,9 +12,6 @@ __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_
 #define VERSION 1
 #define MAIN_PROOGRAM_START 0x100
 #define RUN_PROGRAM_FLAG_POSITION HEFLASH_START
-#define RUN_PROGRAM_VALUE 0
-#define IS_DATA SSPSTATbits.D_nA
-#define IS_READ  SSPSTATbits.R_nW
 
 unsigned g_flashAddr;
 unsigned char g_command = 0;
@@ -76,7 +74,7 @@ void ReadI2C()
 	{
 		g_command = value >> 2;
 
-		if (COMMAND_FLASH_START == g_command)
+		if (COMMAND_FLASH_GET_VERSION == g_command)
 		{
 			SSPBUF = VERSION;
 		}
