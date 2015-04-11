@@ -164,7 +164,7 @@ int main()
 		if (g_bitFiled.dataReady)
 		{
 			g_bitFiled.dataReady = false;
-			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_LATCH_WORD == g_command);
+			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_WRITE_WORD != g_command); //for all other command will be process latch only, memory will be rewrite jut in the case the COMMAND_FLASH_WRITE_WORD will be send
 			if (PMCON1bits.WRERR) //0 write success, 1 write error
 				++checkSum;
 			g_flashAddr++;

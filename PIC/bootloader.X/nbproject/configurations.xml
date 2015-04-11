@@ -116,7 +116,7 @@
         <property key="display-overall-usage" value="true"/>
         <property key="display-psect-usage" value="false"/>
         <property key="fill-flash-options-addr" value=""/>
-        <property key="fill-flash-options-const" value=""/>
+        <property key="fill-flash-options-const" value="0x01"/>
         <property key="fill-flash-options-how" value="0"/>
         <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
