@@ -2,9 +2,12 @@
 #define BOOTLOADER_H
 
 #include <QWidget>
+#include <vector>
+#include <stdint.h>
 
 class QLineEdit;
 class QTextEdit;
+class SerialPort;
 
 class BootLoader : public QWidget
 {
@@ -13,8 +16,11 @@ class BootLoader : public QWidget
 	QLineEdit *m_hexPath;
 	QTextEdit *m_textEdit;
 	QString m_directory;
+	SerialPort *m_serialPort;
+	std::vector<uint16_t> m_words;
+
 public:
-	explicit BootLoader(QWidget *parent = 0);
+	BootLoader(QWidget *parent, SerialPort *serialPort);
 	~BootLoader();
 
 signals:

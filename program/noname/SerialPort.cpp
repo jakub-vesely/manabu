@@ -36,10 +36,7 @@ void SerialPort::readyRead()
 
 bool SerialPort::Open()
 {
-	if (!_OpenIfMyPotr())
-		return false;
-
-	return true;
+	return _OpenIfMyPotr();
 }
 
 void SerialPort::SetValue(int value)
@@ -57,6 +54,41 @@ int SerialPort::GetMode()
 
 	qDebug() << "mode: " << (int)(g_buffer[1]);
 	return g_buffer[1];
+}
+
+int SerialPort::GetFlashVersion()
+{
+	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
+
+	qDebug() << "flash version: " << (int)(g_buffer[1]);
+	return g_buffer[1];
+}
+
+void SerialPort::SetFlashAddress(uint16_t address)
+{
+	((uint16_t *)g_buffer)[0] = (uint16_t)address;
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_ADDRESS, 2, 2, false);
+	//_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
+}
+
+bool SerialPort::SetFlashWriteWord(uint16_t word)
+{
+	((uint16_t *)g_buffer)[0] = (uint16_t)word;
+	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_WRITE_WORD, 2, 2, false);
+	if (0 == size || size != g_buffer[0])
+		return false;
+
+	return true;
+}
+
+bool SerialPort::SetFlashLatchWord(uint16_t word)
+{
+	((uint16_t *)g_buffer)[0] = (uint16_t)word;
+	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LATCH_WORD, 2, 2, false);
+	if (0 == size || size != g_buffer[0])
+		return false;
+
+	return true;
 }
 
 void SerialPort::SetMode(int mode)
@@ -82,14 +114,25 @@ bool SerialPort::_OpenIfMyPotr()
 	{
 		if (info.manufacturer() == "Microchip Technology, Inc.")
 		{
+			qDebug() << info.portName() << "looks like my port";
 			m_serialPort.setPortName(info.portName());
 			m_serialPort.setBaudRate(115200);
 			if (m_serialPort.open(QIODevice::ReadWrite))
 			{
 				if (_IsMyDevice())
+				{
+					qDebug() << info.portName() << "is my port";
 					return true;
-
+				}
+				else
+				{
+					qDebug() << info.portName() << "is not my port";
+				}
 				m_serialPort.close();
+			}
+			else
+			{
+				qDebug() << info.portName() << "was not open";
 			}
 		}
 	}
@@ -99,12 +142,20 @@ bool SerialPort::_OpenIfMyPotr()
 
 bool SerialPort::_IsMyDevice()
 {
+	qDebug() << "is really my device?";
 	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_PROTOCOL_ID, 0, 0, true);
 
 	size_t pidSize = strlen(PROTOCOL_ID);
 	if (size != MESSAGE_LENGTH_BYTE_COUNT + pidSize || size != (unsigned)g_buffer[0])
+	{
+		qDebug() << "wrong returned size for FID_GET_PROTOCOL_ID:" << size;
+		qDebug() << "message is:" << g_buffer + MESSAGE_LENGTH_BYTE_COUNT;
 		return false;
-
+	}
+	else
+	{
+		qDebug() << "returned size is correct";
+	}
 	return (0 == strncmp(PROTOCOL_ID, g_buffer + MESSAGE_LENGTH_BYTE_COUNT, pidSize));
 }
 
@@ -112,8 +163,10 @@ unsigned SerialPort::_CallCubeFunction(
 		char moduleId, FunctionId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor)
 {
 	if (!m_serialPort.isOpen())
+	{
+		qDebug() << "Error: Hardware is unavailable. Please check if it is connected or another program instance is not running.";
 		throw std::runtime_error(tr("Hardware is unavailable. Please check if it is connected or another program instance is not running.").toStdString());
-
+	}
 	char messageLength = 3 + inDataSize; //1x messgeLength + 1x moduleId +1x functionId
 
 	std::string message;
@@ -123,7 +176,7 @@ unsigned SerialPort::_CallCubeFunction(
 	message.append(g_buffer, inDataSize);
 
 	m_serialPort.write(message.c_str(), messageLength);
-	m_serialPort.waitForBytesWritten(1000);
+	m_serialPort.waitForBytesWritten(10);
 
 	int size = _ReadData();
 
@@ -132,8 +185,10 @@ unsigned SerialPort::_CallCubeFunction(
 		!usbCubeLookingFor &&
 		(size == 0 || (requiredSize != 0 && size != requiredSize) || (requiredSize == 0 && size != (unsigned)g_buffer[0]))
 	)
+	{
+		qDebug() << "Error: Readed data are uncomplete. required_size:" << requiredSize << "size:" << size << " g_buffer[0]:" << (unsigned)g_buffer[0];
 		throw std::runtime_error(tr("Readed data are uncomplete.").toStdString());
-
+	}
 	return size;
 
 }
@@ -144,10 +199,8 @@ unsigned SerialPort::_ReadData()
 	QByteArray data = m_serialPort.readAll();
 
 	if (data.size() > 0)
-	{
 		strcpy(g_buffer, data.toStdString().c_str());
-		//qDebug() << "readed: " << g_buffer;
-	}
+
 	return data.size();
 }
 

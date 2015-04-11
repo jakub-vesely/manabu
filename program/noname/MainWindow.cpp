@@ -18,10 +18,26 @@ MainWindow::MainWindow(QWidget *parent) :
 	setMinimumSize(200, 20);
 
 	_SetMainLayout();
-	if (_AddInterfaceTab())
-		_AddRgbTab();
 
-	_AddBootloaderTab();
+	m_serialPort = new SerialPort(this);
+	if (!m_serialPort->Open())
+	{
+		QMessageBox::critical(this, "", tr("Device not connected."));
+
+	}
+	else
+	{
+		if (0 != m_serialPort->GetFlashVersion())
+		{
+			qDebug() << "module with a bootloader connected";
+		}
+		else
+		{
+			_AddInterfaceTab();
+			_AddRgbTab();
+		}
+		_AddBootloaderTab();
+	}
 }
 
 void MainWindow::_SetMainLayout()
@@ -32,12 +48,7 @@ void MainWindow::_SetMainLayout()
 
 bool MainWindow::_AddInterfaceTab()
 {
-	m_serialPort = new SerialPort(this);
-	if (!m_serialPort->Open())
-	{
-		QMessageBox::critical(this, "", tr("Device not connected."));
-		return false;
-	}
+
 
 	QWidget *widget = new QWidget(this);
 	m_tabWidget->addTab(widget, tr("Interface"));
@@ -49,6 +60,7 @@ bool MainWindow::_AddInterfaceTab()
 	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
 	layout->addWidget(slider);
 
+
 	int value;
 	if (m_serialPort->FillValue(value))
 	{
@@ -57,8 +69,7 @@ bool MainWindow::_AddInterfaceTab()
 	}
 	else
 	{
-		QMessageBox::critical(this, "", tr("Value was not read."));
-
+		QMessageBox::critical(this, "", tr("Value was not set."));
 	}
 
 	return true;
@@ -81,7 +92,7 @@ void MainWindow::_AddRgbTab()
 
 void MainWindow::_AddBootloaderTab()
 {
-	BootLoader *bootLoader = new BootLoader(this);
+	BootLoader *bootLoader = new BootLoader(this, m_serialPort);
 	m_tabWidget->addTab(bootLoader, tr("Bootloader"));
 }
 

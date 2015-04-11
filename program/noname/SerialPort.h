@@ -5,6 +5,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
+#include <stdint.h>
 
 #include "../../CommonConstants.h"
 
@@ -33,6 +34,11 @@ signals:
 public slots:
 	void SetValue(int value);
 	int GetMode();
+	int GetFlashVersion();
+	void SetFlashAddress(uint16_t address);
+	bool SetFlashWriteWord(uint16_t word);
+	bool SetFlashLatchWord(uint16_t word);
+
 	void SetMode(int mode);
 	bool FillValue(int &value);
 protected slots:
