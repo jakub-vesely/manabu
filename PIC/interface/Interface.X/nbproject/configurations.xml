@@ -35,9 +35,9 @@
         <itemPath>../../../../../Microchip Solutions v2012-07-18/Microchip/USB/CDC Device Driver/usb_function_cdc.c</itemPath>
       </logicalFolder>
       <itemPath>../usb_descriptors.c</itemPath>
-      <itemPath>../main.c</itemPath>
       <itemPath>../usb_connector.c</itemPath>
       <itemPath>../i2c_connector.c</itemPath>
+      <itemPath>../interface.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -122,7 +122,7 @@
       <C18-LD>
         <property key="cod-file" value="true"/>
         <property key="extra-lib-directories"
-                  value="../../../../../Program Files/Microchip/mplabc18/v3.41/lib;;."/>
+                  value="../../../../../Program Files/Microchip/mplabc18/v3.41/lib;."/>
         <property key="hex-output-format" value="INHX32"/>
         <property key="map-file" value="&quot;$(BINDIR_)$(TARGETBASE).map&quot;"/>
       </C18-LD>
@@ -136,12 +136,13 @@
         <property key="stack-analysis-mplink" value="false"/>
       </C18LanguageToolchain>
       <PICkit3PlatformTool>
-        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="AutoSelectMemRanges" value="manual"/>
         <property key="Freeze Peripherals" value="true"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -165,7 +166,7 @@
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmspeed" value="2"/>
         <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom" value="true"/>
         <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveprogramrange.end" value="0x3fff"/>
         <property key="programoptions.preserveprogramrange.start" value="0x0"/>
@@ -175,7 +176,7 @@
         <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
         <property key="programoptions.usehighvoltageonmclr" value="false"/>
         <property key="programoptions.uselvpprogramming" value="false"/>
-        <property key="voltagevalue" value="3.25"/>
+        <property key="voltagevalue" value="4.75"/>
       </PICkit3PlatformTool>
     </conf>
   </confs>
