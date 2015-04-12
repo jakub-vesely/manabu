@@ -67,8 +67,6 @@ void ProcessCommand()
 		case COMMAND_FLASH_LOAD_CHECK:
 			FLASH_erase(RUN_PROGRAM_FLAG_POSITION);
 
-			//ještě je potřeba dod2lat dvě věci, zařídít aby se mazal správný flag z HEF
-			//ukládat ho jako celek, aby nedocházelo ke vzájemnému přepisu, mělo by to být jako struct
 			FLASH_write(RUN_PROGRAM_FLAG_POSITION, g_commandValue, 0);
 			if (0 !=  g_commandValue)
 			{
