@@ -170,15 +170,20 @@ void CheckI2cAsSlave()
 	}
 	else if (!IS_READ) //isData
 	{
-		if (g_stateFollowed)
-		{
-			g_state = value;
-			g_stateChanged = true;
-		}
+		if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
+				SSPBUF = 0; //I'm in program so i dont have a bootloader version
 		else
 		{
-			g_commandValue = value;
-			g_commandRecieved = true;
+			if (g_stateFollowed)
+			{
+				g_state = value;
+				g_stateChanged = true;
+			}
+			else
+			{
+				g_commandValue = value;
+				g_commandRecieved = true;
+			}
 		}
 	}
 	else //isRead. I guess it will be always an address
