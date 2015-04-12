@@ -64,6 +64,17 @@ void ProcessCommand()
 			HEFLASH_writeBlock(0, (void*)&g_mode, sizeof(g_mode));
 			g_stateChanged = true;
 			break;
+		case COMMAND_FLASH_LOAD_CHECK:
+			FLASH_erase(RUN_PROGRAM_FLAG_POSITION);
+
+			FLASH_write(RUN_PROGRAM_FLAG_POSITION, g_commandValue, 0);
+			if (0 !=  g_commandValue)
+			{
+#asm
+	RESET
+#endasm
+			}
+			break;
 	}
 }
 
