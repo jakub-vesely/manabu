@@ -36,9 +36,11 @@ public slots:
 	int GetMode();
 	int GetFlashVersion();
 	void SetFlashAddress(uint16_t address);
-	bool SetFlashWriteWord(uint16_t word);
-	bool SetFlashLatchWord(uint16_t word);
-
+	void SetFlashWriteWord(uint16_t word);
+	void SetFlashLatchWord(uint16_t word);
+	int GetFlashCheckSum();
+	void SetFlashEnd();
+	void SetFlashLoadCheck(unsigned char byte);
 	void SetMode(int mode);
 	bool FillValue(int &value);
 protected slots:

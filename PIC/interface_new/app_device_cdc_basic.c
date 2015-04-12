@@ -32,21 +32,6 @@
 #include <app_device_cdc_basic.h>
 #include <usb_config.h>
 
-/** VARIABLES ******************************************************/
-
-//static bool buttonPressed;
-//static char buttonMessage[] = "Button pressed.\r\n";
-static uint8_t Out_Buffer[CDC_DATA_OUT_EP_SIZE];
-static uint8_t In_Buffer[CDC_DATA_IN_EP_SIZE];
-
-/*unsigned char  NextUSBOut;
-unsigned char    NextUSBOut;
-unsigned char    LastRS232Out;  // Number of characters in the buffer
-unsigned char    RS232cp;       // current position within the buffer
-unsigned char RS232_Out_Data_Rdy = 0;
-USB_HANDLE  lastTransmission;*/
-
-
 /*********************************************************************
 * Function: void APP_DeviceCDCEmulatorInitialize(void);
 *
@@ -69,47 +54,4 @@ void APP_DeviceCDCEmulatorInitialize()
     line_coding.dwDTERate = 19200;
 
     unsigned char i;
-
-// 	 Initialize the arrays
-	for (i=0; i<sizeof(Out_Buffer); i++)
-    {
-		Out_Buffer[i] = 0;
-    }
-}
-
-/*********************************************************************
-* Function: void APP_DeviceCDCEmulatorTasks(void);
-*
-* Overview: Keeps the demo running.
-*
-* PreCondition: The demo should have been initialized and started via
-*   the APP_DeviceCDCEmulatorInitialize() and APP_DeviceCDCEmulatorStart() demos
-*   respectively.
-*
-* Input: None
-*
-* Output: None
-*
-********************************************************************/
-void APP_DeviceCDCEmulatorTasks()
-{
-	
-    if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1))
-		return;
-	
-
-	unsigned char length = getsUSBUSART(In_Buffer,1);
-	if(length > 0)
-	{
-		Out_Buffer[0] = 5;
-		Out_Buffer[1] = 'C';
-		Out_Buffer[2] = 'U';
-		Out_Buffer[3] = 'B';
-		Out_Buffer[4] = 'O';
-		putUSBUSART(&Out_Buffer[0], 5);
-
-		PORTC = 0b0100;
-	}
-
-    CDCTxService();
 }

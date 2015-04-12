@@ -54,37 +54,6 @@
 #pragma config EBTR1  = OFF
 #pragma config EBTRB  = OFF
 
-/*********************************************************************
-* Function: void SYSTEM_Initialize( SYSTEM_STATE state )
-*
-* Overview: Initializes the system.
-*
-* PreCondition: None
-*
-* Input:  SYSTEM_STATE - the state to initialize the system into
-*
-* Output: None
-*
-********************************************************************/
-void SYSTEM_Initialize( SYSTEM_STATE state )
-{
-    switch(state)
-    {
-        case SYSTEM_STATE_USB_START:
-            LED_Enable(LED_USB_DEVICE_STATE);
-            BUTTON_Enable(BUTTON_DEVICE_CDC_BASIC_DEMO);
-            break;
-            
-        case SYSTEM_STATE_USB_SUSPEND: 
-            break;
-            
-        case SYSTEM_STATE_USB_RESUME:
-            break;
-    }
-}
-
-			
-			
 #if defined(__XC8)
 void interrupt SYS_InterruptHigh(void)
 {

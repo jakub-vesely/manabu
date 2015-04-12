@@ -58,7 +58,7 @@ int SerialPort::GetMode()
 
 int SerialPort::GetFlashVersion()
 {
-	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
 
 	qDebug() << "flash version: " << (int)(g_buffer[1]);
 	return g_buffer[1];
@@ -66,29 +66,37 @@ int SerialPort::GetFlashVersion()
 
 void SerialPort::SetFlashAddress(uint16_t address)
 {
-	((uint16_t *)g_buffer)[0] = (uint16_t)address;
+	((uint16_t *)g_buffer)[0] = address;
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_ADDRESS, 2, 2, false);
-	//_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
 }
 
-bool SerialPort::SetFlashWriteWord(uint16_t word)
+void SerialPort::SetFlashWriteWord(uint16_t word)
 {
-	((uint16_t *)g_buffer)[0] = (uint16_t)word;
-	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_WRITE_WORD, 2, 2, false);
-	if (0 == size || size != g_buffer[0])
-		return false;
-
-	return true;
+	((uint16_t *)g_buffer)[0] = word;
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_WRITE_WORD, 2, 2, false);
 }
 
-bool SerialPort::SetFlashLatchWord(uint16_t word)
+void SerialPort::SetFlashLatchWord(uint16_t word)
 {
-	((uint16_t *)g_buffer)[0] = (uint16_t)word;
-	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LATCH_WORD, 2, 2, false);
-	if (0 == size || size != g_buffer[0])
-		return false;
+	((uint16_t *)g_buffer)[0] = word;
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LATCH_WORD, 2, 2, false);
+}
 
-	return true;
+int SerialPort::GetFlashCheckSum()
+{
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_CHECKSUM, 0, 2, false);
+	return g_buffer[1];
+}
+
+void SerialPort::SetFlashEnd()
+{
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_END, 0, 2, false);
+}
+
+void SerialPort::SetFlashLoadCheck(unsigned char byte)
+{
+	g_buffer[0] = byte;
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LOAD_CHECK, 1, 2, false);
 }
 
 void SerialPort::SetMode(int mode)
@@ -195,7 +203,7 @@ unsigned SerialPort::_CallCubeFunction(
 
 unsigned SerialPort::_ReadData()
 {
-	m_serialPort.waitForReadyRead(100);
+	m_serialPort.waitForReadyRead(10);
 	QByteArray data = m_serialPort.readAll();
 
 	if (data.size() > 0)

@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 		}
 		else
 		{
-			_AddInterfaceTab();
-			_AddRgbTab();
+			//_AddInterfaceTab();
+			//_AddRgbTab();
 		}
 		_AddBootloaderTab();
 	}

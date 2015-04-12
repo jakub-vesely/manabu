@@ -4,9 +4,11 @@
 #include <common/common.h>
 #include <common/common_16F1503.h>
 #include <common/Flash.h>
+
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
 #define FLASH_VERSION 0
+
 void unlock (void)
 {
 #asm
@@ -21,7 +23,7 @@ void unlock (void)
 #endasm
 }
 
-#define FLASH_WRITE(address, data, latch)
+#define FLASH_WRITE(address, data, latch) \
 	PMADR = address; \
 	PMDAT = data; \
 	PMCON1bits.LWLO = latch; /* 1 = latch, 0 = write row*/ \
@@ -43,9 +45,11 @@ void unlock (void)
 
 void main(void)
 {
-	//INTCONbits.GIE = 0;
-	//TRISC5 = 0;
-	//PORTCbits.RC5 = 0;
+	unsigned char value;
+
+	INTCONbits.GIE = 0;
+	TRISC5 = 0;
+	PORTCbits.RC5 = 1;
 
 	ANSELC = 0; //no analog pins
 	//swich is set to input
@@ -61,20 +65,29 @@ void main(void)
 		if (SSP1IF) //MSSP interupt flag (SPI or I2C)
 		{
 			SSP1IF = 0;
-		
-			if (0xf == SSPBUF)
+			value = SSPBUF;
+			if (!IS_DATA)
 			{
-					SSPBUF = FLASH_VERSION;
+				if (COMMAND_FLASH_GET_VERSION == (value >> 2))
+						SSPBUF = FLASH_VERSION;
+						
+				CKP = 1;
 			}
 			else
 			{
+				CKP = 1;
 				FLASH_ERASE(RUN_PROGRAM_FLAG_POSITION);
-				FLASH_WRITE(RUN_PROGRAM_FLAG_POSITION, SSPBUF, 0);
-				//PORTCbits.RC5 = 1;
-			}
+				FLASH_WRITE(RUN_PROGRAM_FLAG_POSITION, value, 0);
 
-			CKP = 1;
+				if (0 != value)
+				{
+#asm
+	RESET
+#endasm
+				}
+			}
 		}
+
 
 
 		/*int i = 2000;

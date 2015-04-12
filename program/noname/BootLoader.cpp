@@ -22,7 +22,7 @@ BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort) :
 	m_textEdit(NULL),
 	m_directory("/"),
 	m_serialPort(serialPort),
-	m_words(2048, 0x3fff)
+	m_words(0x800, 0x3fff)
 
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -106,7 +106,7 @@ void BootLoader::openHex()
 		m_textEdit->clear();
 		for (int counter = 0; counter <  m_words.size(); counter += 8)
 		{
-			 QString outLine = QString("%1 | 0x%2, 0x%3, 0x%4, 0x%5, 0x%6, 0x%7, 0x%8, 0x%9,").
+			 QString outLine = QString("%1 | %2 %3 %4 %5 %6 %7 %8 %9").
 				arg(counter, 4, 16, QChar('0')).
 				arg(m_words[counter], 4, 16, QChar('0')).
 				arg(m_words[counter+1], 4, 16, QChar('0')).
@@ -128,59 +128,53 @@ void BootLoader::openHex()
 
 void BootLoader::upload()
 {
-	if (0 != m_serialPort->GetFlashVersion())
-	{
-		qDebug() << "module with a bootloader connected";
-	}
-	QThread::msleep (40);
-
 	unsigned version = m_serialPort->GetFlashVersion();
 	if (0 == version)
-		qDebug() << "a program already present";
-
-	QThread::msleep (40);
+	{	qDebug() << "a program already present";
+		m_serialPort->SetFlashLoadCheck(0xff);
+		QThread::msleep(500);
+	}
 
 	unsigned char checkSum = 0;
-	for (uint16_t address = 0x100; address< m_words.size(); address++)
+	for (uint16_t address = 0x100; address <  m_words.size(); address++)
 	{
-		if (0 == address % 16)
+		if (0 == (address % 16))
 		{
-			qDebug() << "send address:" << address;
 			m_serialPort->SetFlashAddress(address);
 			checkSum += address & 0xff;
 			checkSum += address >> 8;
-
-			QThread::msleep (40);
 		}
 
-/*		if ((address-1) %16 || address = m_word.size()-1)
+		if (address != m_words.size()-1 && ((address + 1) % 16))
 		{
-			m_serialPort->SetFlashWriteWord(m_words[address]);
-			QThread::msleep (4);
-		}else
 			m_serialPort->SetFlashLatchWord(m_words[address]);
 
-		checkSum += m_words[address] & 0xff;
-		checkSum += m_words[address] >> 8;
-	*/
-		/*
-GetCommandI2C(COMMAND_FLASH_CHECKSUM, &slaveChecksum);
-		if (checkSum == slaveChecksum)
-			PORTC = 0b0100;
-		PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
-		{
-			counter = 0xfff;
-			while (0 != --counter);
+			checkSum += m_words[address] & 0xff;
+			checkSum += m_words[address] >> 8;
 		}
-		while (!GetCommandI2C(COMMAND_FLASH_GET_VERSION, &version));
-		PORTC = 0b0101;
-		if (0 == version)
+		else
 		{
-			unsigned char value = 0;
-			PutCommandI2C(COMMAND_FLASH_LOAD_CHECK, value, 1);
-			PORTC = 0b0111;
-		}
-*/
+			m_serialPort->SetFlashWriteWord(m_words[address]);
 
+			checkSum += m_words[address] & 0xff;
+			checkSum += m_words[address] >> 8;
+
+		}
 	}
+
+	unsigned char deviceCheckSum = m_serialPort->GetFlashCheckSum();
+	if (checkSum == deviceCheckSum)
+	{
+		qDebug() << "checksum match";
+		m_serialPort->SetFlashEnd();
+
+		unsigned version = m_serialPort->GetFlashVersion();
+		if (0 == version)
+			qDebug() << "program run";
+
+		m_serialPort->SetFlashLoadCheck(0);
+		qDebug() << "programming finished";
+	}
+	else
+		qDebug() << "checksum doesn't match. my checksum is:" << (unsigned char) checkSum << "device checksum is:" << (unsigned char) deviceCheckSum;
 }
