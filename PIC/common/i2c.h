@@ -14,7 +14,7 @@ bool I2cMasterStop(void);
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 
-void CheckI2cAsSlave();
+void CheckI2cAsSlave(void);
 
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);

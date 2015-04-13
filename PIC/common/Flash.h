@@ -2,6 +2,7 @@
 #define _COMMON_FLASH_H_
 
 /*copied from http://ww1.microchip.com/downloads/en/AppNotes/00001673A.pdf*/
+/*changed to be a little bit more memory effective*/
 /*
 * Flash.h
 *
@@ -49,7 +50,13 @@ defined(_PIC16F1718_H_)||defined(_PIC16F1719_H_)
 * @param address source address (absolute Flash memory address)
 * @return word retrieved from Flash memory
 */
-unsigned FLASH_read (unsigned address);
+#define FLASH_READ_BYTE(address) \
+    PMADR = address; \
+    PMCON1bits.CFGS = 0; /*select the Flash address space*/ \
+    PMCON1bits.RD = 1; /*next operation will be a read*/ \
+    NOP(); \
+    NOP();
+
 /**
 * Read a word from configuration Flash memory
 *
@@ -73,12 +80,50 @@ void FLASH_readBlock (unsigned* buffer, unsigned address, char count);
 * @param data word of data to be written (latched)
 * @param latch 1 = latch, 0 = write
 */
-void FLASH_write (unsigned address, unsigned data, char latch);
+#define FLASH_WRITE_BODY(address, data, latch) \
+    PMADR = address; \
+    PMDAT = data; \
+    PMCON1bits.LWLO = latch; /* 1 = latch, 0 = write row*/ \
+    PMCON1bits.CFGS = 0; /* select the Flash address space*/ \
+    PMCON1bits.FREE = 0; /* next operation will be a write*/ \
+    PMCON1bits.WREN = 1; /* enable Flash memory write/erase*/ \
+    _unlock();
+
+#ifndef INTERUPTS_DISABLED
+#define FLASH_WRITE(address, data, latch) \
+	char temp = INTCONbits.GIE; \
+	INTCONbits.GIE = 0; \
+	FLASH_WRITE_BODY(address, data, latch) \
+	if (temp) \
+		INTCONbits.GIE = 1;
+#else
+#define FLASH_WRITE(address, data, latch)\
+	FLASH_WRITE_BODY(address, data, latch)
+#endif
+
 /**
 * Erase a row of Flash memory
 *
 * @param address absolute address in Flash contained in selected row
 */
-void FLASH_erase (unsigned address);
+#define FLASH_ERASE_BODY(address) \
+    PMADR = address; \
+    PMCON1bits.CFGS = 0; /* select the Flash address space */ \
+    PMCON1bits.FREE = 1; /* next operation will be an erase*/ \
+    PMCON1bits.WREN = 1; /* enable Flash memory write/erase*/ \
+    _unlock(); \
+    PMCON1bits.WREN = 0; /* disable Flash memory write/erase*/
+
+#ifndef INTERUPTS_DISABLED
+#   define FLASH_ERASE(address) \
+	char temp = INTCONbits.GIE; \
+	INTCONbits.GIE = 0; \
+	FLASH_ERASE_BODY(address) \
+	if (temp) \
+            INTCONbits.GIE = 1;
+#else
+#define FLASH_ERASE(address)\
+    FLASH_ERASE_BODY(address)
+#endif
 
 #endif //_COMMON_FLASH_H_

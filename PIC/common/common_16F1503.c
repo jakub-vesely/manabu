@@ -3,6 +3,7 @@
 #include "common.h"
 #include "i2c.h"
 
+
 void Common16F1503Init()
 {
 	OSCCONbits.IRCF = 0b1111; //16MHz
@@ -11,9 +12,11 @@ void Common16F1503Init()
 	ANSELA = 0x00;      //set analog pins to digital
     ANSELC = 0x00;
 
-	g_mode = HEFLASH_readByte (0, 0);
-	if (g_mode == 0xff) //default value
-		g_mode = 1;
+	HEFLASH_readBlock((char *)&g_persistant, 0, sizeof(g_persistant));
+	
+	
+	//if (g_persistant.g_mode == 0xff) //default value
+	//	g_mode = 1;
 	
 #ifdef HAVE_OUTPUT
 	SwitchControllerInit();
@@ -60,14 +63,12 @@ void ProcessCommand()
 	{
 		case COMMAND_CHANGE_MODE:
 			g_commandRecieved = false;
-			g_mode = g_commandValue;
-			HEFLASH_writeBlock(0, (void*)&g_mode, sizeof(g_mode));
+			g_persistant.mode = g_commandValue;
+			HEFLASH_writeBlock(0, (void*)&g_persistant, sizeof(g_persistant));
 			g_stateChanged = true;
 			break;
 		case COMMAND_FLASH_LOAD_CHECK:
-			FLASH_erase(RUN_PROGRAM_FLAG_POSITION);
-
-			FLASH_write(RUN_PROGRAM_FLAG_POSITION, g_commandValue, 0);
+			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
 			if (0 !=  g_commandValue)
 			{
 #asm

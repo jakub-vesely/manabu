@@ -19,9 +19,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../common/i2c.c</itemPath>
         <itemPath>../common/Flash.c</itemPath>
-        <itemPath>../common/common_16F1503.c</itemPath>
       </logicalFolder>
       <itemPath>bootloader.c</itemPath>
     </logicalFolder>
@@ -121,7 +119,7 @@
         <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
         <property key="fill-flash-options-seq" value="0x01"/>
-        <property key="fill-flash-options-what" value="1"/>
+        <property key="fill-flash-options-what" value="0"/>
         <property key="format-hex-file-for-download" value="false"/>
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
@@ -140,7 +138,6 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

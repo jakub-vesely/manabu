@@ -153,7 +153,7 @@ unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsign
 	return value;
 }
 
-void CheckI2cAsSlave()
+void CheckI2cAsSlave(void)
 {
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;
@@ -194,7 +194,7 @@ void CheckI2cAsSlave()
 			case COMMAND_GET_CURRENT_MODE:
 				g_commandRecieved = false;
 				//while(BF);      //wait while buffer is full
-				SSPBUF = g_mode;
+				SSPBUF = g_persistant.mode;
 				break;
 			default:
 				SSPBUF = 0; //FIXME: it should not happend I don't it cause probably something wrong

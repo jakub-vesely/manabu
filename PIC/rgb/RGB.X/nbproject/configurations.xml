@@ -79,7 +79,8 @@
       </makeCustomizationType>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
-        <property key="define-macros" value="DONT_HAVE_OUTPUT;FOUR_PIN_INTERFACE"/>
+        <property key="define-macros"
+                  value="DONT_HAVE_OUTPUT;FOUR_PIN_INTERFACE;INTERUPTS_DISABLED"/>
         <property key="extra-include-directories"
                   value="../..;..;.;..\..\..\..\..\Program Files\Microchip\xc8\v1.33\include"/>
         <property key="identifier-length" value="255"/>

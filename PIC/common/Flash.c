@@ -1,4 +1,5 @@
 /*copied from http://ww1.microchip.com/downloads/en/AppNotes/00001673A.pdf*/
+/*changed to be a little bit more memory effective*/
 /*
 * File: Flash.c
 *
@@ -24,23 +25,11 @@ unsigned FLASH_readConfig (unsigned address)
 	return PMDAT;
 }//FLASH_config
 
-unsigned FLASH_read (unsigned address)
-{
-	// 1. load the address pointers
-	PMADR = address;
-	PMCON1bits.CFGS = 0; //select the Flash address space
-	PMCON1bits.RD = 1; //next operation will be a read
-	NOP();
-	NOP();
-	// 2. return value read
-	return PMDAT;
-}//FLASH_read
-
 void FLASH_readBlock (unsigned *buffer, unsigned address, char count)
 {
 	while (count > 0)
 	{
-		*buffer++ = FLASH_read (address++);
+		*buffer++ = FLASH_READ_BYTE (address++);
 		count--;
 	}
 }//FLASH_readBLock
@@ -61,49 +50,3 @@ void _unlock (void)
 	NOP
 #endasm
 }//unlock
-
-void FLASH_write (unsigned address, unsigned data, char latch)
-{
-#ifdef INTERUPTS_ENABLED
-	// 1. disable interrupts (remember setting)
-	char temp = INTCONbits.GIE;
-	INTCONbits.GIE = 0;
-#endif
-	// 2. load the address pointers
-	PMADR = address;
-	PMDAT = data;
-	PMCON1bits.LWLO = latch; // 1 = latch, 0 = write row
-	PMCON1bits.CFGS = 0; // select the Flash address space
-	PMCON1bits.FREE = 0; // next operation will be a write
-	PMCON1bits.WREN = 1; // enable Flash memory write/erase
-	// 3. perform unlock sequence
-	_unlock();
-	// 4. restore interrupts
-#ifdef INTERUPTS_ENABLED
-	if (temp)
-		INTCONbits.GIE = 1;
-#endif
-}//FLASH_write
-
-void FLASH_erase (unsigned address)
-{
-#ifdef INTERUPTS_ENABLED
-	// 1. disable interrupts (remember setting)
-	char temp = INTCONbits.GIE;
-	INTCONbits.GIE = 0;
-#endif
-	// 2. load the address pointers
-	PMADR = address;
-	PMCON1bits.CFGS = 0; // select the Flash address space
-	PMCON1bits.FREE = 1; // next operation will be an erase
-	PMCON1bits.WREN = 1; // enable Flash memory write/erase
-	// 3. perform unlock sequence and erase
-	_unlock();
-	// 4. disable writes and restore interrupts
-	PMCON1bits.WREN = 0; // disable Flash memory write/erase
-
-#ifdef INTERUPTS_ENABLED
-	if (temp)
-		INTCONbits.GIE = 1;
-#endif
-}//FLASH_erase

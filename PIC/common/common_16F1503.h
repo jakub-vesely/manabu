@@ -25,7 +25,13 @@ void SwitchControllerInit();
 void ProcessCommand();
 void ProcessStateChangedCommon();
 
-unsigned char g_mode = 0;
+#ifndef BOOTLOADER
+struct
+{
+    unsigned char bootLoaderCheck;
+    unsigned char mode;
+} g_persistant;
+
 unsigned char g_state = 0;
 bool g_stateChanged = true;
 bool g_commandRecieved = false;
@@ -38,6 +44,6 @@ struct
     bool isReady:1;
     unsigned try:6;
 } g_toOutput;
-
+#endif //BOOTLOADER
 
 #endif //_COMMON_COMMON_16F1503_H_

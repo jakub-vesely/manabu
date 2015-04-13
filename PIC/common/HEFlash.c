@@ -20,17 +20,17 @@ char HEFLASH_writeBlock (char radd, char* data, char count)
     if ((count > FLASH_ROWSIZE)||(radd >= HEFLASH_MAXROWS))
 		return -1;//return parameter error
     // 3. erase the entire row
-    FLASH_erase (add);
+    FLASH_ERASE (add);
     // 4. fill the latches with data
     while (count > 1)
     {
         //load data in latches without writing
-        FLASH_write (add++, (unsigned) *data++, 1);
+        FLASH_WRITE (add++, (unsigned) *data++, 1);
         count--;
     }
     // no delay here!!!
     // 5. last byte of data -> write
-    FLASH_write (add, (unsigned) *data, 0);
+    FLASH_WRITE (add, (unsigned) *data, 0);
     // NOTE: 2ms typ. delay here!!!
     // 6. return success
     return PMCON1bits.WRERR; //0 success, 1 = write error
@@ -45,7 +45,8 @@ char HEFLASH_readBlock (char *buffer, char radd, char count)
     // 3. read content
     while (count > 0)
     {
-        *buffer++ = (char) FLASH_read (add++);
+		FLASH_READ_BYTE (add++);
+        *buffer++ = (char)PMDAT;
         count--;
     }
     // 4. success
@@ -56,5 +57,6 @@ char HEFLASH_readByte (char radd, char offset)
     // 1. add offset into HE Flash memory
     unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START + offset;
     // 2. read content
-    return (char) FLASH_read (add);
+	FLASH_READ_BYTE (add);
+    return (char)PMDAT;
 } //HEFLASH_read
