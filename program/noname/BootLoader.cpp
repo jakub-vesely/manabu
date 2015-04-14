@@ -20,7 +20,7 @@ BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort) :
 	QWidget(parent),
 	m_hexPath(NULL),
 	m_textEdit(NULL),
-	m_directory("/"),
+	m_directory("/GitRepository/stavebnice03/PIC"),
 	m_serialPort(serialPort),
 	m_words(0x800, 0x3fff)
 
@@ -59,7 +59,7 @@ BootLoader::~BootLoader()
 void BootLoader::openHex()
 {
 	const unsigned wordSize = 2;
-	QString fileName = "C:/GitRepository/stavebnice03/program/arithmetic-logic.X.production.hex";
+	QString fileName;
 	fileName = QFileDialog::getOpenFileName(this,
 		 tr("Open Intel-Hex file"), m_directory, tr("Intel-Hex file (*.hex)"));
 
@@ -73,12 +73,13 @@ void BootLoader::openHex()
 	{
 		QTextStream stream(&file);
 
+		unsigned segment = 0;
 		while(!stream.atEnd())
 		{
 			 QString inLine = stream.readLine();
 			 //m_textEdit->append(line);
 			 unsigned dataLength = inLine.mid(1, 2).toInt(0, 16) /wordSize;
-			 unsigned address = inLine.mid(3, 4).toInt(0, 16) / wordSize;
+			 unsigned address = segment + inLine.mid(3, 4).toInt(0, 16) / wordSize;
 			 unsigned type =  inLine.mid(7, 2).toInt(0, 16);
 
 			 switch (type)
@@ -88,15 +89,14 @@ void BootLoader::openHex()
 					{
 						unsigned value = inLine.mid(9 + i*4, 2).toInt(0, 16);
 						value += (inLine.mid(9 + i*4 + 2, 2).toInt(0, 16)) << 8;
-						if (address + i >= m_words.size())
-						{
-							QMessageBox::critical(this, "", tr("address out of range."));
-							return;
-						}
-						m_words[address + i] = value;
+						if (address + i < m_words.size()) //configuration flag will not be stored
+							m_words[address + i] = value;
 					}
 					break;
 				case 1: //end of file
+					break;
+				case 4:
+					segment = 0x10000;
 					break;
 				default:
 				 QMessageBox::critical(this, "", tr("unsuported record type."));
@@ -173,8 +173,11 @@ void BootLoader::upload()
 			qDebug() << "program run";
 
 		m_serialPort->SetFlashLoadCheck(0);
-		qDebug() << "programming finished";
+		QMessageBox::information(this, "", tr("programming finished"));
 	}
 	else
+	{
+		QMessageBox::critical(this, "", tr("Checksum doesn't match"));
 		qDebug() << "checksum doesn't match. my checksum is:" << (unsigned char) checkSum << "device checksum is:" << (unsigned char) deviceCheckSum;
+	}
 }

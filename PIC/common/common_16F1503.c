@@ -12,11 +12,9 @@ void Common16F1503Init()
 	ANSELA = 0x00;      //set analog pins to digital
     ANSELC = 0x00;
 
-	HEFLASH_readBlock((char *)&g_persistant, 0, sizeof(g_persistant));
+	if (0 == HEFLASH_readByte(0, 0)) //is not the first time run after the program loading
+		HEFLASH_readBlock((char *)&g_persistant, 0, sizeof(g_persistant));
 	
-	
-	//if (g_persistant.g_mode == 0xff) //default value
-	//	g_mode = 1;
 	
 #ifdef HAVE_OUTPUT
 	SwitchControllerInit();
@@ -68,8 +66,9 @@ void ProcessCommand()
 			g_stateChanged = true;
 			break;
 		case COMMAND_FLASH_LOAD_CHECK:
+			g_persistant.bootLoaderCheck = g_commandValue;
 			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
-			if (0 !=  g_commandValue)
+			if (0 !=  g_persistant.bootLoaderCheck)
 			{
 #asm
 	RESET

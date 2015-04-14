@@ -1,5 +1,6 @@
 #include "SerialPort.h"
 #include <stdexcept>
+#include <QMessageBox>
 #include <QThread>
 #include <QtCore/QDebug>
 
@@ -184,7 +185,7 @@ unsigned SerialPort::_CallCubeFunction(
 	message.append(g_buffer, inDataSize);
 
 	m_serialPort.write(message.c_str(), messageLength);
-	m_serialPort.waitForBytesWritten(10);
+	m_serialPort.waitForBytesWritten(50);
 
 	int size = _ReadData();
 
@@ -194,6 +195,7 @@ unsigned SerialPort::_CallCubeFunction(
 		(size == 0 || (requiredSize != 0 && size != requiredSize) || (requiredSize == 0 && size != (unsigned)g_buffer[0]))
 	)
 	{
+		QMessageBox::critical(NULL, "", tr("Readed data are uncomplete"));
 		qDebug() << "Error: Readed data are uncomplete. required_size:" << requiredSize << "size:" << size << " g_buffer[0]:" << (unsigned)g_buffer[0];
 		throw std::runtime_error(tr("Readed data are uncomplete.").toStdString());
 	}
@@ -203,7 +205,7 @@ unsigned SerialPort::_CallCubeFunction(
 
 unsigned SerialPort::_ReadData()
 {
-	m_serialPort.waitForReadyRead(10);
+	m_serialPort.waitForReadyRead(50);
 	QByteArray data = m_serialPort.readAll();
 
 	if (data.size() > 0)
