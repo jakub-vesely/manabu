@@ -8,39 +8,6 @@
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
 #define FLASH_VERSION 0
-
-void unlock (void)
-{
-#asm
-	BANKSEL PMCON2
-	MOVLW 0x55
-	MOVWF PMCON2 & 0x7F
-	MOVLW 0xAA
-	MOVWF PMCON2 & 0x7F
-	BSF PMCON1 & 0x7F,1 ; set WR bit
-	NOP
-	NOP
-#endasm
-}
-
-#define FLASH_WRITE(address, data, latch) \
-	PMADR = address; \
-	PMDAT = data; \
-	PMCON1bits.LWLO = latch; /* 1 = latch, 0 = write row*/ \
-	PMCON1bits.CFGS = 0; /* select the Flash address space*/ \
-	PMCON1bits.FREE = 0; /* next operation will be a write*/ \
-	PMCON1bits.WREN = 1; /* enable Flash memory write/erase*/ \
-	unlock();
-
-#define FLASH_ERASE(address) \
-	PMADR = address; \
-	PMCON1bits.CFGS = 0; /* select the Flash address space */ \
-	PMCON1bits.FREE = 1; /* next operation will be an erase*/ \
-	PMCON1bits.WREN = 1; /* enable Flash memory write/erase*/ \
-	unlock(); \
-	PMCON1bits.WREN = 0; /* disable Flash memory write/erase*/
-
-
 #define RUN_PROGRAM_FLAG_POSITION HEFLASH_START
 
 void main(void)
