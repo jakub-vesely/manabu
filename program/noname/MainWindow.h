@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QVector>
 
 class QTabWidget;
 class Qstring;
@@ -15,6 +16,7 @@ class MainWindow : public QMainWindow
 	bool _AddInterfaceTab();
 	void _AddRgbTab();
 	void _AddBootloaderTab();
+	void _AddPlotTab();
 
 	SerialPort *m_serialPort;
 	QTabWidget *m_tabWidget;

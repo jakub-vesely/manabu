@@ -6,7 +6,7 @@
 
 QT       += core gui serialport
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = noname
 TEMPLATE = app
@@ -15,10 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         MainWindow.cpp \
     SerialPort.cpp \
-    BootLoader.cpp
+    BootLoader.cpp \
+    ../extern/qcustomplot/qcustomplot.cpp \
+    Plot.cpp
 
 HEADERS  += MainWindow.h \
     SerialPort.h \
-    BootLoader.h
+    BootLoader.h \
+    ../extern/qcustomplot/qcustomplot.h \
+    Plot.h
 
 FORMS    +=

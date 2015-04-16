@@ -10,12 +10,14 @@
 #include <QTabWidget>
 #include <QtCore/QDebug>
 #include <QVBoxLayout>
+#include <QThread>
+#include <Plot.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	m_serialPort(NULL)
 {
-	setMinimumSize(200, 20);
+	setMinimumSize(400, 300);
 
 	_SetMainLayout();
 
@@ -38,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 		}
 		_AddBootloaderTab();
 	}
+	_AddPlotTab();
 }
 
 void MainWindow::_SetMainLayout()
@@ -94,6 +97,12 @@ void MainWindow::_AddBootloaderTab()
 {
 	BootLoader *bootLoader = new BootLoader(this, m_serialPort);
 	m_tabWidget->addTab(bootLoader, tr("Bootloader"));
+}
+
+void MainWindow::_AddPlotTab()
+{
+	Plot *plot = new Plot(this);
+	m_tabWidget->addTab(plot, tr("Plot"));
 }
 
 MainWindow::~MainWindow()
