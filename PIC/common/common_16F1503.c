@@ -65,7 +65,7 @@ void ProcessCommand()
 			HEFLASH_writeBlock(0, (void*)&g_persistant, sizeof(g_persistant));
 			g_stateChanged = true;
 			break;
-		case COMMAND_FLASH_LOAD_CHECK:
+		case COMMAND_FLASH_SET_BOOT_FLAG:
 			g_persistant.bootLoaderCheck = g_commandValue;
 			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
 			if (0 !=  g_persistant.bootLoaderCheck)

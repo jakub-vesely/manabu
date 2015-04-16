@@ -3,7 +3,7 @@
 
 typedef enum
 {
-    COMMAND_PING = 0,
+    COMMAND_NONE = 0,
     COMMAND_CHANGE_MODE = 1,
     COMMAND_GET_CURRENT_MODE = 2,
     COMMAND_FLASH_GET_VERSION = 3,
@@ -12,8 +12,8 @@ typedef enum
     COMMAND_FLASH_LATCH_WORD = 6,
     COMMAND_FLASH_WRITE_WORD = 7,
     COMMAND_FLASH_CHECKSUM = 8,
-    COMMAND_FLASH_LOAD_CHECK = 9
-    
+    COMMAND_FLASH_SET_BOOT_FLAG = 9,
+    COMMAND_PING = 10
 } I2cCommand;
 
 typedef enum

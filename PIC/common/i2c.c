@@ -6,6 +6,7 @@ unsigned char g_stateFollowed = 0;
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
+unsigned char  g_bootloaderPolicy = 0;
 void I2cSlaveInit()
 {
 	I2C_COMMON_INIT
@@ -94,19 +95,6 @@ bool I2cMasterStop(void){
 	}
 	return true;
 }
-/*
- tady to zasekava spis by bylo dobry vratit se do zakadniho cyklu a pri dalsim
- * pruchodu to zkusit znovu. Neni mozne ukladat zpráv do fronty, protože budou
- * příliš dlouhé a RAM příliš maplá. ono b to ani nemělo být uné stav se bude
- * přenášet vždy jen jeden a zpráva od remote zařízení taky. Bude ted jeden byte
- * pro každého následovníka kam se boude ukládat počet pokusů o odeslání.
- * pokud se mu to nepovede prohlásí zprávu za neodeslanou.
- * jeden bit by mohla být informace o tom, zda se snaží odeslat data nebo stav.
- * to b mělo tu výhodu,že b mohl přijmou příkazový řetězec i kdž se aktuálně
- * snaží poslat stav tak b tím blo zajištěno, že vždck pošle aktuální stav když
- * se v průběhu odesílacích pokusů stav změní.
- *
- */
 
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
@@ -167,13 +155,27 @@ void CheckI2cAsSlave(void)
 	{	
 		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
+
+		//I want to be sure this insrtuction didn't come by a mistake
+		//It is very important because after this isnstuction is chip set to
+		//a bootloader state and the program is not accessible an more
+		if (g_commandInstruction == COMMAND_FLASH_SET_BOOT_FLAG &&
+			0 == g_bootloaderPolicy)
+		{
+			g_commandInstruction = COMMAND_NONE; //set boot flag sequence is not complete. I don't want to risk bootloader state
+		}
+		g_bootloaderPolicy = 0;
 	}
 	else if (!IS_READ) //isData
 	{
 		if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
-				SSPBUF = 0; //I'm in program so i dont have a bootloader version
+		{
+			SSPBUF = 0; //I'm in program so i dont have a bootloader version
+			g_bootloaderPolicy = 1;
+		}
 		else
 		{
+			g_bootloaderPolicy = 0;
 			if (g_stateFollowed)
 			{
 				g_state = value;
