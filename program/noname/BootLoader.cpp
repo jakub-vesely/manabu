@@ -19,7 +19,7 @@
 BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort) :
 	QWidget(parent),
 	m_hexPath(NULL),
-	m_textEdit(NULL),
+	m_hexView(NULL),
 	m_directory("/GitRepository/stavebnice03/PIC"),
 	m_serialPort(serialPort),
 	m_words(0x800, 0x3fff)
@@ -42,13 +42,19 @@ BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort) :
 	hexPathLaout->addWidget(uploadButton);
 	connect(uploadButton, SIGNAL(clicked()), this, SLOT(upload()));
 
-	m_textEdit = new QTextEdit(this);
+	m_hexView = new QTextEdit(this);
 	QFont font(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 	font.setPointSize(10);
-	m_textEdit->setFont(font);
-	m_textEdit->setMinimumWidth(400);
-	m_textEdit->setReadOnly(true);
-	layout->addWidget(m_textEdit);
+	m_hexView->setFont(font);
+	m_hexView->setMinimumWidth(400);
+	m_hexView->setReadOnly(true);
+	layout->addWidget(m_hexView);
+
+	m_status = new QTextEdit(this);
+	m_status->setReadOnly(true);
+	m_status->setFixedHeight(100);
+	layout->addWidget(m_status);
+
 }
 
 BootLoader::~BootLoader()
@@ -66,6 +72,7 @@ void BootLoader::openHex()
 	if ("" != fileName)
 		m_directory = QFileInfo(fileName).absoluteDir().absolutePath();
 
+	m_status->append(QString(tr("hex file:%1 has been loaded")).arg(fileName));
 	m_hexPath->setText(fileName);
 
 	QFile file(fileName);
@@ -103,8 +110,8 @@ void BootLoader::openHex()
 			 }
 		}
 
-		m_textEdit->clear();
-		for (int counter = 0; counter <  m_words.size(); counter += 8)
+		m_hexView->clear();
+		for (int counter = 0x100; counter <  m_words.size(); counter += 8)
 		{
 			 QString outLine = QString("%1 | %2 %3 %4 %5 %6 %7 %8 %9").
 				arg(counter, 4, 16, QChar('0')).
@@ -116,23 +123,25 @@ void BootLoader::openHex()
 				arg(m_words[counter+5], 4, 16, QChar('0')).
 				arg(m_words[counter+6], 4, 16, QChar('0')).
 				arg(m_words[counter+7], 4, 16, QChar('0'));
-			 m_textEdit->append(outLine);
+			 m_hexView->append(outLine);
 		}
 	}
 	//QTextCursor cursor;
 	//cursor.setPosition(0);
 	//m_textEdit->setTextCursor(cursor);
-	m_textEdit->moveCursor(QTextCursor::Start) ;
+	m_hexView->moveCursor(QTextCursor::Start) ;
 
 }
 
 void BootLoader::upload()
 {
+	m_status->append(tr("programing started..."));
 	unsigned version = m_serialPort->GetFlashVersion();
 	if (0 == version)
-	{	qDebug() << "a program already present";
+	{
+		m_status->append(tr("a program already present"));
 		m_serialPort->SetFlashLoadCheck(0xff);
-		QThread::msleep(500);
+		QThread::msleep(500); //wait for reset
 	}
 
 	unsigned char checkSum = 0;
@@ -165,19 +174,21 @@ void BootLoader::upload()
 	unsigned char deviceCheckSum = m_serialPort->GetFlashCheckSum();
 	if (checkSum == deviceCheckSum)
 	{
-		qDebug() << "checksum match";
+		m_status->append(tr("checksum match"));
 		m_serialPort->SetFlashEnd();
+
+		QThread::msleep(500); //wait for oscilator is stable
 
 		unsigned version = m_serialPort->GetFlashVersion();
 		if (0 == version)
-			qDebug() << "program run";
+			m_status->append(tr("program run"));
 
 		m_serialPort->SetFlashLoadCheck(0);
-		QMessageBox::information(this, "", tr("programming finished"));
+		m_status->append(tr("programming finished"));
 	}
 	else
 	{
-		QMessageBox::critical(this, "", tr("Checksum doesn't match"));
+		m_status->append(tr("Checksum doesn't match, unplug a device and plug it again and try it again"));
 		qDebug() << "checksum doesn't match. my checksum is:" << (unsigned char) checkSum << "device checksum is:" << (unsigned char) deviceCheckSum;
 	}
 }

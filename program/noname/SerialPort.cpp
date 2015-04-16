@@ -97,7 +97,7 @@ void SerialPort::SetFlashEnd()
 void SerialPort::SetFlashLoadCheck(unsigned char byte)
 {
 	g_buffer[0] = byte;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LOAD_CHECK, 1, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, false);
 }
 
 void SerialPort::SetMode(int mode)

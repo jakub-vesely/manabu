@@ -162,9 +162,11 @@ void UsbDataRead()
 			GetCommandI2C(COMMAND_FLASH_CHECKSUM, &retVal);
 			ResponseChar(retVal);
 			break;
-		case FID_COMMAND_FLASH_LOAD_CHECK:
-			PutCommandI2C(COMMAND_FLASH_LOAD_CHECK, buffer+3, 1);
+		case FID_COMMAND_FLASH_SET_BOOT_FLAG:
+			PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
 			ResponseChar(0);
+			if (buffer[3] == 0)
+				PORTC = 0b1000;
 			break;
 		}
 	}
