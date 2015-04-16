@@ -11,6 +11,7 @@ __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_
 
 #define VERSION 1
 #define MAIN_PROOGRAM_START 0x100
+#define MAIN_PROOGRAM_MAX 0x7FF
 #define RUN_PROGRAM_FLAG_POSITION HEFLASH_START
 
 unsigned g_flashAddr;
@@ -71,7 +72,7 @@ void ReadI2C()
 				//it this way. I probabl shoud increase checksum but I will have
 				//to consume a more memory space. It will not happend by
 				//a correct way and checksum will not maptch anwway
-				if (g_flashAddr < MAIN_PROOGRAM_START)
+				if (g_flashAddr < MAIN_PROOGRAM_START || g_flashAddr > MAIN_PROOGRAM_MAX)
 					g_flashAddr = MAIN_PROOGRAM_START;
 
 				FLASH_ERASE(g_flashAddr);
