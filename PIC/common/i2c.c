@@ -143,64 +143,52 @@ unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsign
 
 void CheckI2cAsSlave(void)
 {
+	unsigned char value;
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;
 
 	SSP1IF = 0;
 	
-	unsigned char value = SSPBUF;
+	value = SSPBUF;
 
 	//FIXME: I should wait for processing last command or data
-	if (!IS_DATA && !IS_READ) //"address" byte in write mode
+	if (!IS_DATA) //"address" byte in write mode
 	{	
 		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
 
+		if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
+		{
+			g_bootloaderPolicy = 1;
+			SSPBUF = 0; //I'm in program so i dont have a bootloader version
+		}
+		else if (COMMAND_GET_CURRENT_MODE == g_commandInstruction)
+			SSPBUF = g_persistant.mode;
+
 		//I want to be sure this insrtuction didn't come by a mistake
 		//It is very important because after this isnstuction is chip set to
 		//a bootloader state and the program is not accessible an more
-		if (g_commandInstruction == COMMAND_FLASH_SET_BOOT_FLAG &&
+		/*else if (COMMAND_FLASH_SET_BOOT_FLAG == g_commandInstruction &&
 			0 == g_bootloaderPolicy)
 		{
-			g_commandInstruction = COMMAND_NONE; //set boot flag sequence is not complete. I don't want to risk bootloader state
-		}
-		g_bootloaderPolicy = 0;
+			//g_commandInstruction = COMMAND_NONE; //set boot flag sequence is not complete. I don't want to risk bootloader state
+		}*/
+
+		if (COMMAND_FLASH_GET_VERSION != g_commandInstruction)
+			g_bootloaderPolicy = 0;
 	}
-	else if (!IS_READ) //isData
+	else
 	{
-		if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
+		g_bootloaderPolicy = 0;
+		if (g_stateFollowed)
 		{
-			SSPBUF = 0; //I'm in program so i dont have a bootloader version
-			g_bootloaderPolicy = 1;
+			g_state = value;
+			g_stateChanged = true;
 		}
 		else
 		{
-			g_bootloaderPolicy = 0;
-			if (g_stateFollowed)
-			{
-				g_state = value;
-				g_stateChanged = true;
-			}
-			else
-			{
-				g_commandValue = value;
-				g_commandRecieved = true;
-			}
-		}
-	}
-	else //isRead. I guess it will be always an address
-	{
-		g_stateFollowed = false; //read will be always called for commands only
-		switch (value >> 2)
-		{
-			case COMMAND_GET_CURRENT_MODE:
-				g_commandRecieved = false;
-				//while(BF);      //wait while buffer is full
-				SSPBUF = g_persistant.mode;
-				break;
-			default:
-				SSPBUF = 0; //FIXME: it should not happend I don't it cause probably something wrong
-				break;
+			g_commandValue = value;
+			g_commandRecieved = true;
 		}
 	}
 	if (SEN)
