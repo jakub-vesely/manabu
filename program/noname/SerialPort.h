@@ -33,6 +33,7 @@ signals:
 
 public slots:
 	void SetValue(int value);
+	unsigned char GetValue();
 	int GetMode();
 	int GetFlashVersion();
 	void SetFlashAddress(uint16_t address);

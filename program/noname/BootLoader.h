@@ -14,7 +14,8 @@ class BootLoader : public QWidget
 	Q_OBJECT
 
 	QLineEdit *m_hexPath;
-	QTextEdit *m_textEdit;
+	QTextEdit *m_hexView;
+	QTextEdit *m_status;
 	QString m_directory;
 	SerialPort *m_serialPort;
 	std::vector<uint16_t> m_words;

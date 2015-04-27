@@ -47,6 +47,14 @@ void SerialPort::SetValue(int value)
 	qDebug() << "value has been set to: " << value;
 }
 
+unsigned char SerialPort::GetValue()
+{
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_STATE, 0, 2, false);
+
+	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
+	return g_buffer[1];
+}
+
 int SerialPort::GetMode()
 {
 	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_MODE, 0, 1, true);
@@ -97,7 +105,7 @@ void SerialPort::SetFlashEnd()
 void SerialPort::SetFlashLoadCheck(unsigned char byte)
 {
 	g_buffer[0] = byte;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LOAD_CHECK, 1, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, false);
 }
 
 void SerialPort::SetMode(int mode)

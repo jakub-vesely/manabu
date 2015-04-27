@@ -33,6 +33,7 @@
 #include <CommonConstants.h>
 static uint8_t buffer[CDC_DATA_OUT_EP_SIZE];
 static const char protocolId[] = PROTOCOL_ID;
+unsigned char g_state = 0;
 /********************************************************************
  * Function:        void main(void)
  *
@@ -125,8 +126,7 @@ void UsbDataRead()
 			ResponseChar(0);
 			break;
 		case FID_GET_STATE:
-			//GetState(data);
-			ResponseChar(0); //FIXME
+			ResponseChar(g_state);
 			break;
 		case FID_GET_MODE:
 			//if (!GetCommandI2C(COMMAND_GET_CURRENT_MODE, &retVal))
@@ -162,9 +162,11 @@ void UsbDataRead()
 			GetCommandI2C(COMMAND_FLASH_CHECKSUM, &retVal);
 			ResponseChar(retVal);
 			break;
-		case FID_COMMAND_FLASH_LOAD_CHECK:
-			PutCommandI2C(COMMAND_FLASH_LOAD_CHECK, buffer+3, 1);
+		case FID_COMMAND_FLASH_SET_BOOT_FLAG:
+			PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
 			ResponseChar(0);
+			if (buffer[3] == 0)
+				PORTC = 0b1000;
 			break;
 		}
 	}
@@ -172,8 +174,25 @@ void UsbDataRead()
 	CDCTxService();
 }
 
+unsigned int ADC_Read10bit1(void)
+{
+    unsigned int result;
+
+	ADCON0bits.CHS = 9;
+    ADCON0bits.GO = 1;              // Start AD conversion
+    while(ADCON0bits.NOT_DONE);     // Wait for conversion
+
+    result = ADRESH;
+    result <<=8;
+    result |= ADRESL;
+
+    return result;
+}
+
 MAIN_RETURN main(void)
 {
+	unsigned char potValue = 0;
+
 	TRISC = 0;
 	LATC = 0;
 
@@ -181,9 +200,24 @@ MAIN_RETURN main(void)
 	USBDeviceInit();
 	USBDeviceAttach();
 
+	TRISC7 = 1;
+	ANSELHbits.ANS9 = 1;
+
+	ADCON0bits.CHS = 9;
+	ADCON0bits.ADON = 1;
+	ADCON1=0;
+	ADCON2=0x3E;
+	ADCON2bits.ADFM = 1;
+
 	while(1)
 	{
-		
+		unsigned int potValue10 = ADC_Read10bit1();
+		if (potValue10 / 4 != potValue)
+		{
+			potValue = potValue10 / 4;
+			g_state = potValue;
+		}
+
 		SYSTEM_Tasks();
 		if (Continue())
 			continue;

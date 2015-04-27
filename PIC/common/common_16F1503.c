@@ -56,25 +56,25 @@ void SwitchControllerInit()
 
 void ProcessCommand()
 {
+	g_commandRecieved = false;
 	//unsigned char deleteme;
-	switch(g_commandInstruction)
+	if (COMMAND_CHANGE_MODE == g_commandInstruction )
 	{
-		case COMMAND_CHANGE_MODE:
-			g_commandRecieved = false;
+			
 			g_persistant.mode = g_commandValue;
 			HEFLASH_writeBlock(0, (void*)&g_persistant, sizeof(g_persistant));
 			g_stateChanged = true;
-			break;
-		case COMMAND_FLASH_LOAD_CHECK:
-			g_persistant.bootLoaderCheck = g_commandValue;
-			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
-			if (0 !=  g_persistant.bootLoaderCheck)
-			{
+	}
+	else if (COMMAND_FLASH_SET_BOOT_FLAG == g_commandInstruction)
+	{
+		g_persistant.bootLoaderCheck = g_commandValue;
+		HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
+		//if (0 !=  g_persistant.bootLoaderCheck)
+		{
 #asm
-	RESET
+			RESET
 #endasm
-			}
-			break;
+		}
 	}
 }
 
