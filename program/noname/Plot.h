@@ -5,6 +5,7 @@
 
 class QCustomPlot;
 class QTimer;
+class SerialPort;
 
 class Plot : public QWidget
 {
@@ -16,8 +17,10 @@ class Plot : public QWidget
 	QVector<double> m_y;
 
 	QTimer *m_timer;
+	SerialPort *m_serialPort;
+
 public:
-	explicit Plot(QWidget *parent = 0);
+	explicit Plot(QWidget *parent, SerialPort *serialPort);
 	~Plot();
 
 signals:

@@ -37,10 +37,12 @@ MainWindow::MainWindow(QWidget *parent) :
 		{
 			//_AddInterfaceTab();
 			//_AddRgbTab();
+
 		}
+		_AddPlotTab();
 		_AddBootloaderTab();
+		m_serialPort->GetValue();
 	}
-	_AddPlotTab();
 }
 
 void MainWindow::_SetMainLayout()
@@ -51,8 +53,6 @@ void MainWindow::_SetMainLayout()
 
 bool MainWindow::_AddInterfaceTab()
 {
-
-
 	QWidget *widget = new QWidget(this);
 	m_tabWidget->addTab(widget, tr("Interface"));
 	QVBoxLayout *layout = new QVBoxLayout(widget);
@@ -101,7 +101,7 @@ void MainWindow::_AddBootloaderTab()
 
 void MainWindow::_AddPlotTab()
 {
-	Plot *plot = new Plot(this);
+	Plot *plot = new Plot(this, m_serialPort);
 	m_tabWidget->addTab(plot, tr("Plot"));
 }
 

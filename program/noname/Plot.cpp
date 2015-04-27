@@ -5,10 +5,12 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include "SerialPort.h"
 
-Plot::Plot(QWidget *parent) :
+Plot::Plot(QWidget *parent, SerialPort *serialPort) :
 	QWidget(parent),
-	m_customPlot(NULL)
+	m_customPlot(NULL),
+	m_serialPort(serialPort)
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -19,7 +21,7 @@ Plot::Plot(QWidget *parent) :
 	m_customPlot->xAxis->setLabel("x");
 	m_customPlot->yAxis->setLabel("y");
 	m_customPlot->xAxis->setRange(0, 1);
-	m_customPlot->yAxis->setRange(-1, 1);
+	m_customPlot->yAxis->setRange(0, 255);
 
 	QHBoxLayout *buttons = new QHBoxLayout(this);
 	layout->addLayout(buttons);
@@ -43,7 +45,7 @@ void Plot::draw()
 	m_y.resize(size + 1);
 
 	m_x[size] = size; // x goes from -1 to 1
-	m_y[size] = sin(size/10);  // let's plot a quadratic function
+	m_y[size] = m_serialPort->GetValue();  // let's plot a quadratic function
 
 	m_customPlot->xAxis->setRange(0, m_x[size]);
 	//m_customPlot->yAxis->setRange(0, m_y[size]);
@@ -53,7 +55,9 @@ void Plot::draw()
 
 void Plot::start()
 {
-	m_timer->start(100);
+	m_x.clear();
+	m_y.clear();
+	m_timer->start(200);
 }
 
 void Plot::stop()

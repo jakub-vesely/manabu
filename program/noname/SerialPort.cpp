@@ -47,6 +47,14 @@ void SerialPort::SetValue(int value)
 	qDebug() << "value has been set to: " << value;
 }
 
+unsigned char SerialPort::GetValue()
+{
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_STATE, 0, 2, false);
+
+	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
+	return g_buffer[1];
+}
+
 int SerialPort::GetMode()
 {
 	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_MODE, 0, 1, true);
