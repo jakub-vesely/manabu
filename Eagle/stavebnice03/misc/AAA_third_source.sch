@@ -54,6 +54,7 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="no" active="no"/>
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
@@ -159,11 +160,19 @@
 <wire x1="7" y1="5" x2="7" y2="-5" width="0.127" layer="21"/>
 <wire x1="7" y1="-5" x2="-7" y2="-5" width="0.127" layer="21"/>
 <wire x1="-7" y1="-5" x2="-7" y2="5" width="0.127" layer="21"/>
-<smd name="P$1" x="-4.5" y="0" dx="8" dy="6" layer="1"/>
-<smd name="P$2" x="4.5" y="0" dx="8" dy="6" layer="1"/>
+<smd name="P$1" x="-7" y="0" dx="3" dy="6" layer="16" roundness="100" rot="R180"/>
+<smd name="P$2" x="7" y="0" dx="3" dy="6" layer="16" roundness="100" rot="R180"/>
 <wire x1="-5.5" y1="4.5" x2="-5.5" y2="3.5" width="0.127" layer="21"/>
 <wire x1="-6" y1="4" x2="-5" y2="4" width="0.127" layer="21"/>
 <wire x1="5.5" y1="4" x2="6.5" y2="4" width="0.127" layer="21"/>
+<wire x1="-6.5" y1="1.5" x2="-6.5" y2="-1.5" width="0.127" layer="45"/>
+<wire x1="-7.5" y1="-1.5" x2="-7.5" y2="1.5" width="0.127" layer="45"/>
+<wire x1="-6.5" y1="1.5" x2="-7.5" y2="1.5" width="0.127" layer="45" curve="180"/>
+<wire x1="-6.5" y1="-1.5" x2="-7.5" y2="-1.5" width="0.127" layer="45" curve="-180"/>
+<wire x1="7.5" y1="1.5" x2="7.5" y2="-1.5" width="0.127" layer="45"/>
+<wire x1="6.5" y1="-1.5" x2="6.5" y2="1.5" width="0.127" layer="45"/>
+<wire x1="7.5" y1="1.5" x2="6.5" y2="1.5" width="0.127" layer="45" curve="180"/>
+<wire x1="7.5" y1="-1.5" x2="6.5" y2="-1.5" width="0.127" layer="45" curve="-180"/>
 </package>
 </packages>
 <symbols>
