@@ -29,7 +29,7 @@ void I2cMasterInit(void)
 	SSPSTAT = 0;
 
 	SSPADD = 39;		//100KHz
-	SSPM3 = 1;         //Enable I2C Master mode
+	ENABLE_I2C_MASTER_MODE_bit = 1;         //Enable I2C Master mode
 	SSPEN = 1;         //Enable SSP module - I2C Initialized
  }
 
@@ -199,23 +199,13 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 {
 	bool retVal;
 
-#ifdef FOUR_PIN_INTERFACE
-	INPUT_SWITCH = 0;
-	OUTPUT_SWITCH = 1;
-#else
 	INnOUT_PORT = 0;
-#endif
 
 	I2cMasterInit();
 	retVal = I2cMasterPut(messageType, command, data, count);
 	I2cSlaveInit();
 
-#ifdef FOUR_PIN_INTERFACE
-	OUTPUT_SWITCH = 0;
-	INPUT_SWITCH = 1;
-#else
 	INnOUT_PORT = 1;
-#endif
 
 	return retVal;
 }
@@ -224,23 +214,13 @@ unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command
 {
 	unsigned char value;
 
-#ifdef FOUR_PIN_INTERFACE
-	INPUT_SWITCH = 0;
-	OUTPUT_SWITCH = 1;
-#else
 	INnOUT_PORT = 0;
-#endif
 
 	I2cMasterInit();
 	value = I2cMasterGet(messageType, command, data, count);
 	I2cSlaveInit();
 
-#ifdef FOUR_PIN_INTERFACE
-	OUTPUT_SWITCH = 0;
-	INPUT_SWITCH = 1;
-#else
 	INnOUT_PORT = 1;
-#endif
 
 	return value;
 }

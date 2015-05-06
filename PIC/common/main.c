@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include <common/common.h>
-#include <common/common_16F1503.h>
+#include <system_common.h>
 #include <common/i2c.h>
 #include <xc.h>
 #include <moduleTypeSpecific.h>
@@ -10,8 +10,9 @@ __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_
 void main(void)
 {
 	INTCONbits.GIE = 0;
-	//TRISC5 = 0;
-	//PORTCbits.RC5 = 1;
+
+	OSCCONbits.IRCF = 0b1111; //16MHz
+	while (!OSCSTATbits.HFIOFS);
 	
 	g_persistant.mode = 1;
 	g_persistant.bootLoaderCheck = RUN_PROGRAM_VALUE;

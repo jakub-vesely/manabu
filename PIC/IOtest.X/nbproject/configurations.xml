@@ -16,7 +16,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../common/common_16F1503.c</itemPath>
+        <itemPath>../common/common.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>

@@ -21,7 +21,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
-        <itemPath>../../common/common_16F1503.c</itemPath>
         <itemPath>../../common/Flash.c</itemPath>
         <itemPath>../../common/HEFlash.c</itemPath>
         <itemPath>../../common/i2c.c</itemPath>

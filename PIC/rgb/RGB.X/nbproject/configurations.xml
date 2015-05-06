@@ -27,7 +27,6 @@
         <itemPath>../../common/pwm.c</itemPath>
         <itemPath>../../common/i2c.c</itemPath>
         <itemPath>../../common/common.c</itemPath>
-        <itemPath>../../common/common_16F1503.c</itemPath>
         <itemPath>../../common/main.c</itemPath>
       </logicalFolder>
       <itemPath>../moduleTypeSpecific.c</itemPath>

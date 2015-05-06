@@ -1,4 +1,4 @@
 build
 funclist
-.map
+dist
 *.obj

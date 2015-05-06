@@ -4,6 +4,7 @@
 #include <p18F14K50.h>
 
 #define SEND_TRY  100
+
 #define FREQ 48000000
 #define BITRATE 100000
 
@@ -13,7 +14,7 @@
 #define PORT_SCL PORTBbits.RB6 
 #define PORT_SDA PORTBbits.RB4 
 
-#define LEDS PORTC
+
 
 void I2CInit(void)
 {

@@ -3,13 +3,12 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
             <name>Interface</name>
-            <creation-uuid>7a5cd247-a5b1-4b85-b8f4-9744d1b0e45c</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
             <header-extensions>h</header-extensions>
-            <asminc-extensions/>
             <sourceEncoding>UTF-8</sourceEncoding>
+            <asminc-extensions/>
             <make-dep-projects/>
         </data>
     </configuration>

@@ -10,20 +10,11 @@
 #define INVERT_OUTPUT_TRIS TRISA4
 #define INnOUT_TRIS TRISA5
 
-#ifdef FOUR_PIN_INTERFACE
-#   define INPUT_SWITCH PORTAbits.RA5
-#   define OUTPUT_SWITCH PORTAbits.RA4
-#endif //FOUR_PIN_INTERFACE
-
 #define RUN_PROGRAM_VALUE 0
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
-void Common16F1503Init();
-void Wait(int delay);
-void SwitchControllerInit();
-void ProcessCommand();
-void ProcessStateChangedCommon();
+#define ENABLE_I2C_MASTER_MODE_bit SSPM3
 
 #ifndef BOOTLOADER
 struct

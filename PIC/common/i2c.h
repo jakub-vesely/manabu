@@ -4,7 +4,7 @@
 #define _COMMON_I2C_H_
 
 #include <common/common.h>
-#include <common/common_16F1503.h> 
+#include <system_common.h>
 
 void I2cSlaveInit();
 void I2cMasterInit(void);
