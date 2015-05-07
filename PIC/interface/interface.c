@@ -30,12 +30,9 @@
 
 #include <CommonConstants.h>
 
-#ifdef LPCDEVKIT
-#include <i2c_connector.h>
-#else
 #include <common/common.h>
 #include <common/i2c.h>
-#endif
+
 static uint8_t buffer[CDC_DATA_OUT_EP_SIZE];
 static const char protocolId[] = PROTOCOL_ID;
 
@@ -68,7 +65,6 @@ void UsbDataRead()
 		{
 		case FID_GET_PROTOCOL_ID:
 			Response((unsigned char *)protocolId, sizeof(protocolId)-1);
-			PORTC = 0b0111;
 			break;
 		case FID_SET_STATE:
 			//SetState(data[3]);
@@ -78,9 +74,9 @@ void UsbDataRead()
 			ResponseChar(g_state);
 			break;
 		case FID_GET_MODE:
-			//if (!GetCommandI2C(COMMAND_GET_CURRENT_MODE, &retVal))
-			//	retVal = 0xff;
-			//ResponseChar(retVal);
+			if (!GetCommandI2C(COMMAND_GET_CURRENT_MODE, &retVal))
+				retVal = 0xff;
+			ResponseChar(retVal);
 			break;
 		case FID_SET_MODE:
 			//SetDescendentMode(data[3]);
@@ -88,34 +84,34 @@ void UsbDataRead()
 			break;
 
 		case FID_COMMAND_FLASH_GET_VERSION:
-			//GetCommandI2C(COMMAND_FLASH_GET_VERSION, &retVal);
+			if (!GetCommandI2C(COMMAND_FLASH_GET_VERSION, &retVal))
+				retVal = 0xff;
 			ResponseChar(retVal);
 			break;
 		case FID_COMMAND_FLASH_END:
-			//PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
+			PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
 			ResponseChar(0);
 			break;
 		case FID_COMMAND_FLASH_ADDRESS:
-			//PutCommandI2C(COMMAND_FLASH_ADDRESS, buffer+3, 2);
+			PutCommandI2C(COMMAND_FLASH_ADDRESS, buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case FID_COMMAND_FLASH_LATCH_WORD:
-			//PutCommandI2C(COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
+			PutCommandI2C(COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case FID_COMMAND_FLASH_WRITE_WORD:
-			//PutCommandI2C(COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
+			PutCommandI2C(COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case FID_COMMAND_FLASH_CHECKSUM:
-			//GetCommandI2C(COMMAND_FLASH_CHECKSUM, &retVal);
+			if (!GetCommandI2C(COMMAND_FLASH_CHECKSUM, &retVal))
+				retVal = 0xff;
 			ResponseChar(retVal);
 			break;
 		case FID_COMMAND_FLASH_SET_BOOT_FLAG:
-			//PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
+			PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
 			ResponseChar(0);
-			if (buffer[3] == 0)
-				PORTC = 0b1000;
 			break;
 		}
 	}
@@ -129,7 +125,11 @@ MAIN_RETURN main(void)
 		OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
 		ACTCON = 0x90;  //Active clock tuning enabled for USB
     #endif
+		ANSELC = 0;
+		TRISC = 0;
 
+	I2cMasterInit();
+	
     USBDeviceInit();
     USBDeviceAttach();
     

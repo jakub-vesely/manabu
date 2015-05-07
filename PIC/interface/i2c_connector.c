@@ -16,7 +16,7 @@
 
 
 
-void I2CInit(void)
+void I2cMasterInit(void)
 {
 	OSCCONbits.IRCF = 7;
 	ANSELHbits.ANS10 = 0;

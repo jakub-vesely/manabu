@@ -8,16 +8,13 @@
 
 void I2cSlaveInit();
 void I2cMasterInit(void);
-bool I2cMasterStart(void);
-bool I2cMasterWrite(char byte);
-bool I2cMasterStop(void);
-bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
-unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
-
+bool PutStateI2C(unsigned char state);
+bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
+bool GetCommandI2C(I2cCommand command, unsigned char *retVal);
 void CheckI2cAsSlave(void);
 
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
-unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *value);
 void SendToOutputIfReady();
 
 #define  I2C_COMMON_INIT\

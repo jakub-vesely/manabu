@@ -6,6 +6,8 @@ unsigned char g_stateFollowed = 0;
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
+#define SEND_TRY  100
+
 unsigned char  g_bootloaderPolicy = 0;
 void I2cSlaveInit()
 {
@@ -35,6 +37,10 @@ void I2cMasterInit(void)
 
 bool I2cMasterStart(void)
 {
+#if defined(_PIC18F14K50_H_)
+	StartI2C();
+	return true;
+#else
 	/*SSPMSK = 0;
 	SSPCON2 = 0;
 	SSPCON3 = 0;
@@ -44,46 +50,61 @@ bool I2cMasterStart(void)
 	SSPCON2bits.SEN=1;
 	while(SSPCON2bits.SEN)
 	{
-		if (255 == counter)
+		if (SEND_TRY == counter)
 			return false;
 
 		counter = counter + 1;
 	}
 	return true;
+#endif
 }
 /*
 FIXME: legacy - returns false when success
 */
 bool I2cMasterWrite(char byte)
 {
+#if defined(_PIC18F14K50_H_)
+	return 0 == WriteI2C(byte);
+#else
 	unsigned char counter = 0;
 	SSPBUF = byte;
 	while(SSP1STATbits.R_nW)
 	{
-		if (255 == counter)
+		if (SEND_TRY == counter)
 			return false;
 		
 		counter = counter + 1;
 	}
 	return 0 == SSPCON2bits.ACKSTAT;
+#endif
 }
 
-char I2cMasterRead()
+bool I2cMasterRead(unsigned char *retVal)
 {
+#if defined(_PIC18F14K50_H_)
+	return ReadI2C();
+#else
 	unsigned char counter = 0;
 
 	SSPCON2bits.RCEN = 1;
 	while(SSPCON2bits.RCEN) //FIXME: may be ther should be !BF
 	{
 		if (255 == counter)
-			return false; //FIXME FIXME FIXME: it should be returned an error value
+			return false;
 
 		counter = counter + 1;
 	}
-	return SSPBUF;
+	*retVal = SSPBUF;
+	return true;
+#endif
 }
 
-bool I2cMasterStop(void){
+bool I2cMasterStop(void)
+{
+#if defined(_PIC18F14K50_H_)
+	StopI2C();
+	return true;
+#else
 	unsigned char counter = 0;
 	SSPCON2bits.PEN = 1;
 	while(SSPCON2bits.PEN)
@@ -94,51 +115,96 @@ bool I2cMasterStop(void){
 		counter = counter + 1;
 	}
 	return true;
+#endif
+}
+
+void I2cMasterIdle()
+{
+#if defined(_PIC18F14K50_H_)
+	IdleI2C();
+#else
+	while ((SSPCON2 & 0x1F) | (SSPSTATbits.R_nW));
+#endif
 }
 
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char i = 0;
-
-	if (!I2cMasterStart())
-		return false;
-
-	/*
-	 * because I will communicate always with one slave only I dont need send an
-	 * address so I will use this required byte for a message type
-	 * on the slave I will mask oall the address byte out
-	 */
-	if (!I2cMasterWrite((command << 2) | (messageType << 1)))
+	unsigned char j = 0;
+	I2cMasterIdle();
+	for (; j < SEND_TRY; j++)
 	{
-		I2cMasterStop(); //there may be a complete I2C restart
-		return false;
+		I2cMasterStart();
+
+		/*
+		 * because I will communicate always with one slave only I dont need send an
+		 * address so I will use this required byte for a message type
+		 * on the slave I will mask all the address byte out
+		 */
+		if (!I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
+		{
+			I2cMasterStop();
+			continue;
+		}
+
+		for (; i < count; i++)
+		{
+			if(!I2cMasterWrite(data[i]))
+			{
+				I2cMasterStop();
+				goto continue2;
+			}
+		}
+		break;
+continue2:
+;
 	}
+	if (i == SEND_TRY)
+		LATC = 0b0000;
+	I2cMasterStop();
 
-	for (; i < count; i++)
+	//FIXME: doesnt work, when slave is not connected WriteI2C finish correctly
+	return (i == SEND_TRY);
+}
+
+
+bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *retVal)
+{
+	unsigned timeout = 0xff;
+	I2cMasterStart();
+	
+	while (!I2cMasterWrite((command << 2) | (messageType << 1) | 1))
 	{
-		if (!I2cMasterWrite(data[i])) //FIXME: false when success
+		if (0  == --timeout)
 		{
 			I2cMasterStop();
 			return false;
 		}
 	}
-
-	return I2cMasterStop();
+	if(!I2cMasterRead(retVal))
+	{
+		I2cMasterStop();
+		LATC = 0b0000;
+		return false;
+	}
+	I2cMasterStop();
+	LATC = 0b1111;
+	return true;
 }
 
-unsigned char I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+bool PutStateI2C(unsigned char state)
 {
-	unsigned char value = 0;
+	return I2cMasterPut(I2C_MESSAGE_TYPE_DATA, 0,  &state, 1);
+}
 
-	if (!I2cMasterStart())
-		return 0; //FIXME FIXME FIXME: it should not be returned valid value
+bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count)
+{
+	return I2cMasterPut(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
+}
 
-	//for an explanation take alook to PutI2C
-	I2cMasterWrite((command << 2) | (messageType << 1) | 1); //lowest bite is read/write (write = 0)
-
-	value = I2cMasterRead();
-	I2cMasterStop();
-	return value;
+bool GetCommandI2C(I2cCommand command, unsigned char *retVal)
+{
+	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, 0, 0, retVal);
 }
 
 void CheckI2cAsSlave(void)
@@ -210,19 +276,20 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 	return retVal;
 }
 
-unsigned char GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *value)
 {
-	unsigned char value;
+	bool retVal;
 
 	INnOUT_PORT = 0;
 
 	I2cMasterInit();
-	value = I2cMasterGet(messageType, command, data, count);
+	retVal = I2cMasterGet(messageType, command, data, count, value);
+
 	I2cSlaveInit();
 
 	INnOUT_PORT = 1;
 
-	return value;
+	return retVal;
 }
 
 void SendToOutputIfReady()
