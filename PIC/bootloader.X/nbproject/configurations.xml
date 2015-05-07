@@ -5,9 +5,11 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
+        <logicalFolder name="16F1503" displayName="16F1503" projectFiles="true">
+          <itemPath>../common/16F1503/system_common.h</itemPath>
+        </logicalFolder>
         <itemPath>../common/i2c.h</itemPath>
         <itemPath>../common/Flash.h</itemPath>
-        <itemPath>../common/common_16F1503.h</itemPath>
         <itemPath>../../CommonConstants.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -70,7 +72,7 @@
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
         <property key="define-macros" value="BOOTLOADER;INTERUPTS_DISABLED"/>
-        <property key="extra-include-directories" value="..;../.."/>
+        <property key="extra-include-directories" value="..;../..;../common/16F1503"/>
         <property key="identifier-length" value="255"/>
         <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>

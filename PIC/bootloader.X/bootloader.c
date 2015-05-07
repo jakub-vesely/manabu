@@ -2,7 +2,7 @@
 #include <pic16f1503.h>
 #include <common/i2c.h>
 #include <common/common.h>
-#include <common/common_16F1503.h>
+#include <system_common.h>
 #include <common/Flash.h>
 #include <stdbool.h>
 #include <CommonConstants.h>
