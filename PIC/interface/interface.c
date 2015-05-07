@@ -121,6 +121,9 @@ void UsbDataRead()
 
 MAIN_RETURN main(void)
 {
+	OSCCONbits.IRCF = 0b1111; //16MHz
+	while (!OSCSTATbits.HFIOFS);
+	
 	#if defined(USE_INTERNAL_OSC)
 		OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
 		ACTCON = 0x90;  //Active clock tuning enabled for USB
