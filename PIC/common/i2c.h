@@ -12,10 +12,9 @@ bool PutStateI2C(unsigned char state);
 bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
 bool GetCommandI2C(I2cCommand command, unsigned char *retVal);
 void CheckI2cAsSlave(void);
+bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
+bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal);
 
-bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
-bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *value);
-void SendToOutputIfReady();
 
 #define  I2C_COMMON_INIT\
     SSPEN = 0;\

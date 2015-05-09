@@ -1,4 +1,5 @@
 #include "pwm.h"
+#include <system_common.h>
 void PwmInit()
 {
     TRISC5 = 1; //disconnect PWM1 output

@@ -4,7 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="common" projectFiles="true">
+      <logicalFolder name="common" displayName="common" projectFiles="true">
         <logicalFolder name="16F1503" displayName="16F1503" projectFiles="true">
           <itemPath>../common/16F1503/system_common.h</itemPath>
         </logicalFolder>
@@ -23,10 +23,10 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="common" projectFiles="true">
+      <logicalFolder name="common" displayName="common" projectFiles="true">
+        <itemPath>../common/common.c</itemPath>
         <itemPath>../common/Flash.c</itemPath>
         <itemPath>../common/HEFlash.c</itemPath>
-        <itemPath>../common/common.c</itemPath>
         <itemPath>../common/i2c.c</itemPath>
         <itemPath>../common/main.c</itemPath>
         <itemPath>../common/pwm.c</itemPath>
@@ -81,7 +81,7 @@
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
         <property key="define-macros" value="HAVE_OUTPUT;INTERUPTS_DISABLED"/>
-        <property key="extra-include-directories" value=".;..;../common/16F1503"/>
+        <property key="extra-include-directories" value=".;..;../..;../common/16F1503"/>
         <property key="identifier-length" value="255"/>
         <property key="operation-mode" value="free"/>
         <property key="opt-xc8-compiler-strict_ansi" value="false"/>
@@ -104,7 +104,7 @@
       </HI-TECH-COMP>
       <HI-TECH-LINK>
         <property key="additional-options-checksum" value=""/>
-        <property key="additional-options-code-offset" value="100"/>
+        <property key="additional-options-code-offset" value=""/>
         <property key="additional-options-command-line" value=""/>
         <property key="additional-options-errata" value=""/>
         <property key="additional-options-extend-address" value="false"/>
@@ -115,7 +115,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="default,-780-7ff"/>
+        <property key="code-model-rom" value="default,-1f80-1fff"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
@@ -129,7 +129,7 @@
         <property key="fill-flash-options-how" value="0"/>
         <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
-        <property key="fill-flash-options-seq" value="1"/>
+        <property key="fill-flash-options-seq" value=""/>
         <property key="fill-flash-options-what" value="0"/>
         <property key="format-hex-file-for-download" value="false"/>
         <property key="initialize-data" value="true"/>
@@ -141,6 +141,7 @@
         <property key="opt-xc8-linker-link_startup" value="false"/>
         <property key="opt-xc8-linker-serial" value=""/>
         <property key="program-the-device-with-default-config-words" value="true"/>
+        <appendMe value="--ROM=default,-0780-0790"/>
       </HI-TECH-LINK>
       <PICkit3PlatformTool>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -173,8 +174,8 @@
         <property key="programoptions.pgmspeed" value="2"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveprogramrange" value="true"/>
-        <property key="programoptions.preserveprogramrange.end" value="0xff"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveprogramrange.end" value="0x7ff"/>
         <property key="programoptions.preserveprogramrange.start" value="0x0"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programcalmem" value="false"/>

@@ -1,22 +1,40 @@
-#include "i2c.h"
+#include <common/i2c.h>
+#include <system_common.h>
+
+#if defined(_PIC18F14K50_H_)
+#include <i2c.h>
+#endif
 
 unsigned char g_stateFollowed = 0;
 
-#define TO_OUTPUT_MAX_TRAY 10
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
-#define SEND_TRY  100
+#define SEND_TRY_COUNT  10000
+#define BITRATE 100000
 
 unsigned char  g_bootloaderPolicy = 0;
 void I2cSlaveInit()
 {
+#ifndef _PIC18F14K50_H_
 	I2C_COMMON_INIT
 	I2C_SLAVE_SPECIFIC_INIT
+#endif
 }
 
 void I2cMasterInit(void)
 {
+#if defined(_PIC18F14K50_H_)
+	OSCCONbits.IRCF = 7;
+	ANSELHbits.ANS10 = 0;
+
+	LATB=0;
+	TRIS_SCL = 0;
+	TRIS_SDA = 0;
+
+	SSPADD = (FREQ/(BITRATE*4))-1;
+	OpenI2C(MASTER, SLEW_OFF);
+#else
 	I2C_COMMON_INIT
 
 	//I2C master mode setting
@@ -30,9 +48,10 @@ void I2cMasterInit(void)
 	SSPCON3 = 0;
 	SSPSTAT = 0;
 
-	SSPADD = 39;		//100KHz
+	SSPADD = (FREQ/(BITRATE*4))-1;
 	ENABLE_I2C_MASTER_MODE_bit = 1;         //Enable I2C Master mode
 	SSPEN = 1;         //Enable SSP module - I2C Initialized
+#endif
  }
 
 bool I2cMasterStart(void)
@@ -46,14 +65,12 @@ bool I2cMasterStart(void)
 	SSPCON3 = 0;
 	SSPSTAT = 0;
 	*/
-	unsigned char counter = 0;
+	unsigned counter = SEND_TRY_COUNT;
 	SSPCON2bits.SEN=1;
 	while(SSPCON2bits.SEN)
 	{
-		if (SEND_TRY == counter)
+		if (0 == counter--)
 			return false;
-
-		counter = counter + 1;
 	}
 	return true;
 #endif
@@ -66,14 +83,12 @@ bool I2cMasterWrite(char byte)
 #if defined(_PIC18F14K50_H_)
 	return 0 == WriteI2C(byte);
 #else
-	unsigned char counter = 0;
+	unsigned counter = SEND_TRY_COUNT;
 	SSPBUF = byte;
 	while(SSP1STATbits.R_nW)
 	{
-		if (SEND_TRY == counter)
+		if (0 == counter--)
 			return false;
-		
-		counter = counter + 1;
 	}
 	return 0 == SSPCON2bits.ACKSTAT;
 #endif
@@ -82,17 +97,16 @@ bool I2cMasterWrite(char byte)
 bool I2cMasterRead(unsigned char *retVal)
 {
 #if defined(_PIC18F14K50_H_)
-	return ReadI2C();
+	*retVal = ReadI2C();
+	return true;
 #else
-	unsigned char counter = 0;
+	unsigned counter = SEND_TRY_COUNT;
 
 	SSPCON2bits.RCEN = 1;
 	while(SSPCON2bits.RCEN) //FIXME: may be ther should be !BF
 	{
-		if (255 == counter)
+		if (0 == counter--)
 			return false;
-
-		counter = counter + 1;
 	}
 	*retVal = SSPBUF;
 	return true;
@@ -105,14 +119,12 @@ bool I2cMasterStop(void)
 	StopI2C();
 	return true;
 #else
-	unsigned char counter = 0;
+	unsigned counter = SEND_TRY_COUNT;
 	SSPCON2bits.PEN = 1;
 	while(SSPCON2bits.PEN)
 	{
-		if (255 == counter)
+		if (0 == counter--)
 			return false;
-		
-		counter = counter + 1;
 	}
 	return true;
 #endif
@@ -130,65 +142,52 @@ void I2cMasterIdle()
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char i = 0;
-	unsigned char j = 0;
-	I2cMasterIdle();
-	for (; j < SEND_TRY; j++)
-	{
-		I2cMasterStart();
-
-		/*
-		 * because I will communicate always with one slave only I dont need send an
-		 * address so I will use this required byte for a message type
-		 * on the slave I will mask all the address byte out
-		 */
-		if (!I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
-		{
-			I2cMasterStop();
-			continue;
-		}
-
-		for (; i < count; i++)
-		{
-			if(!I2cMasterWrite(data[i]))
-			{
-				I2cMasterStop();
-				goto continue2;
-			}
-		}
-		break;
-continue2:
-;
-	}
-	if (i == SEND_TRY)
-		LATC = 0b0000;
-	I2cMasterStop();
-
-	//FIXME: doesnt work, when slave is not connected WriteI2C finish correctly
-	return (i == SEND_TRY);
-}
-
-
-bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *retVal)
-{
-	unsigned timeout = 0xff;
-	I2cMasterStart();
 	
-	while (!I2cMasterWrite((command << 2) | (messageType << 1) | 1))
+	I2cMasterIdle();
+	I2cMasterStart();
+
+	/*
+	 * because I will communicate always with one slave only I dont need send an
+	 * address so I will use this required byte for a message type
+	 * on the slave I will mask all the address byte out
+	 */
+	if (!I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
 	{
-		if (0  == --timeout)
+		I2cMasterStop();
+		return false;
+	}
+
+	for (; i < count; i++)
+	{
+		if(!I2cMasterWrite(data[i]))
 		{
 			I2cMasterStop();
 			return false;
 		}
 	}
-	if(!I2cMasterRead(retVal))
+
+	I2cMasterStop();
+	return true;
+}
+
+
+bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal)
+{
+	unsigned timeout = 0xff;
+	I2cMasterStart();
+	
+	if (!I2cMasterWrite((command << 2) | (messageType << 1) | 1))
 	{
 		I2cMasterStop();
-		LATC = 0b0000;
+		return false;
+	}
+
+	if (!I2cMasterRead(retVal))
+	{
+		I2cMasterStop();
 		return false;
 	}
 	I2cMasterStop();
-	LATC = 0b1111;
 	return true;
 }
 
@@ -204,11 +203,12 @@ bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char 
 
 bool GetCommandI2C(I2cCommand command, unsigned char *retVal)
 {
-	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, 0, 0, retVal);
+	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, retVal);
 }
 
 void CheckI2cAsSlave(void)
 {
+#ifndef _PIC18F14K50_H_
 	unsigned char value;
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;
@@ -233,7 +233,7 @@ void CheckI2cAsSlave(void)
 
 		//I want to be sure this insrtuction didn't come by a mistake
 		//It is very important because after this isnstuction is chip set to
-		//a bootloader state and the program is not accessible an more
+		//a bootloader state and the program is not accessible any more
 		/*else if (COMMAND_FLASH_SET_BOOT_FLAG == g_commandInstruction &&
 			0 == g_bootloaderPolicy)
 		{
@@ -259,61 +259,5 @@ void CheckI2cAsSlave(void)
 	}
 	if (SEN)
 		CKP = 1;
-}
-
-bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
-{
-	bool retVal;
-
-	INnOUT_PORT = 0;
-
-	I2cMasterInit();
-	retVal = I2cMasterPut(messageType, command, data, count);
-	I2cSlaveInit();
-
-	INnOUT_PORT = 1;
-
-	return retVal;
-}
-
-bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *value)
-{
-	bool retVal;
-
-	INnOUT_PORT = 0;
-
-	I2cMasterInit();
-	retVal = I2cMasterGet(messageType, command, data, count, value);
-
-	I2cSlaveInit();
-
-	INnOUT_PORT = 1;
-
-	return retVal;
-}
-
-void SendToOutputIfReady()
-{
-	if (g_toOutput.isReady)
-	{
-		if (TO_OUTPUT_MAX_TRAY == g_toOutput.try)
-		{
-			g_toOutput.isReady = false;
-			//TODO: solve module on output is not connected an more
-			return;
-		}
-		g_toOutput.try = g_toOutput.try + 1;
-		if (g_toOutput.isState)
-		{
-			if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1))
-				g_toOutput.isReady = false;
-			else //message was not send
-				INVERT_OUTPUT_PORT = !INVERT_OUTPUT_PORT; //output device may be connected by an oposite way
-		}
-		else
-		{
-			//TODO: command send
-		}
-
-	}
+#endif
 }

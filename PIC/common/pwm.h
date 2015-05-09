@@ -4,7 +4,6 @@
 #define _COMMON_PWM_H_
 
 #include <common/common.h>
-#include <common/common_16F1503.h>
 
 volatile unsigned char PWM1DCL @ 0x611;
 volatile unsigned char PWM1DCH @ 0x612;

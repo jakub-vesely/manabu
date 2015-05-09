@@ -3,6 +3,7 @@
 #ifndef LPCDEVKIT
 #	include <system_common.h>
 #	include <common/HEFlash.h>
+#	include <common/i2c.h>
 #endif
 void Wait(int delay)
 {

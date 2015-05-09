@@ -8,7 +8,8 @@
 *
 * Created on August 28, 2013
 */
-#include "HEFlash.h"
+#include <common/HEFlash.h>
+#include <common/Flash.h>
 /******************************************************************************
 * High Endurance Flash functions
 */
@@ -20,7 +21,7 @@ char HEFLASH_writeBlock (char radd, char* data, char count)
     if ((count > FLASH_ROWSIZE)||(radd >= HEFLASH_MAXROWS))
 		return -1;//return parameter error
     // 3. erase the entire row
-    FLASH_ERASE (add);
+    FLASH_ERASE(add);
     // 4. fill the latches with data
     while (count > 1)
     {

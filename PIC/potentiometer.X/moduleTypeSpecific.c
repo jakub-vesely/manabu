@@ -1,4 +1,5 @@
-#include "common/common_16F1503.h"
+#include <system_common.h>
+#include <common/common.h>
 
 unsigned char g_potValue = 0;
 void ProcessStateChangedModuleTypeSpecific()
