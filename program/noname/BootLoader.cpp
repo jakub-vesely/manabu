@@ -135,14 +135,29 @@ void BootLoader::openHex()
 
 void BootLoader::upload()
 {
-	m_status->append(tr("programing started..."));
 	unsigned version = m_serialPort->GetFlashVersion();
 	if (0 == version)
 	{
-		m_status->append(tr("a program already present"));
+		m_status->append(tr("a program already present - going to bootloader..."));
+		m_status->repaint();
 		m_serialPort->SetFlashLoadCheck(0xff);
 		QThread::msleep(500); //wait for reset
 	}
+	if (~0 == version)
+	{
+		m_status->append(tr("no module connected - programming terminated."));
+		m_status->repaint();
+		return;
+
+	}
+	else
+	{
+		m_status->append(tr("no program present yet"));
+		m_status->repaint();
+	}
+
+	m_status->append(tr("programing started..."));
+	m_status->repaint();
 
 	unsigned char checkSum = 0;
 	for (uint16_t address = 0x100; address <  m_words.size(); address++)
@@ -175,20 +190,25 @@ void BootLoader::upload()
 	if (checkSum == deviceCheckSum)
 	{
 		m_status->append(tr("checksum match"));
+		m_status->repaint();
 		m_serialPort->SetFlashEnd();
 
 		QThread::msleep(500); //wait for oscilator is stable
 
 		unsigned version = m_serialPort->GetFlashVersion();
 		if (0 == version)
-			m_status->append(tr("program run"));
-
+		{
+			m_status->append(tr("the program is runnimg"));
+			m_status->repaint();
+		}
 		m_serialPort->SetFlashLoadCheck(0);
 		m_status->append(tr("programming finished"));
+		m_status->repaint();
 	}
 	else
 	{
 		m_status->append(tr("Checksum doesn't match, unplug a device and plug it again and try it again"));
+		m_status->repaint();
 		qDebug() << "checksum doesn't match. my checksum is:" << (unsigned char) checkSum << "device checksum is:" << (unsigned char) deviceCheckSum;
 	}
 }
