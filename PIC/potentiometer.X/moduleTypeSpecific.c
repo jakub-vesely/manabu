@@ -4,20 +4,24 @@
 unsigned char g_potValue = 0;
 void ProcessStateChangedModuleTypeSpecific()
 {
-	TRISCbits.TRISC3 = 1;
-	ANSELCbits.ANSC3 = 1;
-
-	ADCON0bits.CHS = 0b00111;
-
-	ADCON1= 0b11100000;
-	ADCON2=0;
-
-	ADCON0bits.ADON = 1;
+	
 }
 
 void ModuleTypeSpecificInit()
 {
 	g_state = 1;
+	TRISC5 = 0; //for diode
+
+	//for potentiometer
+	TRISCbits.TRISC3 = 1;
+	ANSELCbits.ANSC3 = 1;
+
+	ADCON0bits.CHS = 0b00111;
+
+	ADCON1 = 0b11100000;
+	ADCON2 = 0;
+
+	ADCON0bits.ADON = 1;
 }
 
 unsigned int ADC_Read10bit(void)
