@@ -61,7 +61,7 @@ void SendToOutputIfReady()
 		if (TO_OUTPUT_MAX_TRAY == g_toOutput.try)
 		{
 			g_toOutput.isReady = false;
-			//TODO: solve module on output is not connected an more
+			//TODO: solve module on output is not connected any more
 			return;
 		}
 		g_toOutput.try = g_toOutput.try + 1;
@@ -70,11 +70,12 @@ void SendToOutputIfReady()
 			if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1))
 			{
 				g_toOutput.isReady = false;
-				TRISC5 = 0;
-				PORTCbits.RC5 = 1;
 			}
 			else //message was not send
+			{
 				INVERT_OUTPUT_PORT = !INVERT_OUTPUT_PORT; //output device may be connected by an oposite way
+				PORTCbits.RC5 = 1;
+			}
 		}
 		else
 		{
@@ -98,7 +99,6 @@ void main(void)
 
 	while(1)
 	{
-
 		CheckI2cAsSlave();
 		if (g_commandRecieved)
 			ProcessCommand();
@@ -110,7 +110,7 @@ void main(void)
 			ProcessStateChangedModuleTypeSpecific();
 			ProcessStateChangedCommon();
 		}
-#ifdef HAVE_OUTPUT
+#if defined (HAVE_OUTPUT)
 		SendToOutputIfReady();
 #endif //#ifdef HAVE_OUTPUT
 	}
