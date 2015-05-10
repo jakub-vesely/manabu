@@ -1,7 +1,7 @@
 
 
 Microchip Technology PIC LITE Macro Assembler V1.33 build 59893 
-                                                                                               Sat May 09 21:45:55 2015
+                                                                                               Sun May 10 11:01:15 2015
 
 Microchip Technology Omniscient Code Generator (Lite mode) build 59893
      1                           	processor	16F1503
@@ -1298,42 +1298,42 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1292                           
   1293                           ;main.c: 97: ModuleTypeSpecificInit();
   1294  0515  24CB               	fcall	_ModuleTypeSpecificInit
-  1295  0516                     l1877:	
+  1295  0516                     l1869:	
   1296                           ;main.c: 99: while(1)
   1297                           
   1298                           
   1299                           ;main.c: 100: {
-  1300                           ;main.c: 102: CheckI2cAsSlave();
+  1300                           ;main.c: 101: CheckI2cAsSlave();
   1301  0516  2648               	fcall	_CheckI2cAsSlave
   1302                           
-  1303                           ;main.c: 103: if (g_commandRecieved)
+  1303                           ;main.c: 102: if (g_commandRecieved)
   1304  0517  0020               	movlb	0	; select bank0
   1305  0518  0822               	movf	_g_commandRecieved,w
   1306  0519  1903               	btfsc	3,2
-  1307  051A  2D1D               	goto	l1883
+  1307  051A  2D1D               	goto	l1875
   1308                           
-  1309                           ;main.c: 104: ProcessCommand();
+  1309                           ;main.c: 103: ProcessCommand();
   1310  051B  25B2               	fcall	_ProcessCommand
   1311  051C  0020               	movlb	0	; select bank0
-  1312  051D                     l1883:	
+  1312  051D                     l1875:	
   1313                           
-  1314                           ;main.c: 106: ProcessModuleFunctionalit();
+  1314                           ;main.c: 105: ProcessModuleFunctionalit();
   1315  051D  24C9               	fcall	_ProcessModuleFunctionalit
   1316                           
-  1317                           ;main.c: 108: if (g_stateChanged)
+  1317                           ;main.c: 107: if (g_stateChanged)
   1318  051E  0020               	movlb	0	; select bank0
   1319  051F  0831               	movf	_g_stateChanged,w
   1320  0520  1903               	btfsc	3,2
-  1321  0521  2D16               	goto	l1877
+  1321  0521  2D16               	goto	l1869
   1322                           
-  1323                           ;main.c: 109: {
-  1324                           ;main.c: 110: ProcessStateChangedModuleTypeSpecific();
+  1323                           ;main.c: 108: {
+  1324                           ;main.c: 109: ProcessStateChangedModuleTypeSpecific();
   1325  0522  2563               	fcall	_ProcessStateChangedModuleTypeSpecific
   1326                           
-  1327                           ;main.c: 111: ProcessStateChangedCommon();
+  1327                           ;main.c: 110: ProcessStateChangedCommon();
   1328  0523  24CD               	fcall	_ProcessStateChangedCommon
   1329  0524  0020               	movlb	0	; select bank0
-  1330  0525  2D16               	goto	l1877
+  1330  0525  2D16               	goto	l1869
   1331  0526                     __end_of_main:	
   1332                           
   1333                           	psect	text1
@@ -1373,7 +1373,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1367                           ;psect for function _ProcessStateChangedModuleTypeSpecific
   1368  0563                     _ProcessStateChangedModuleTypeSpecific:	
   1369                           
-  1370                           ;moduleTypeSpecific.c: 81: unsigned char g_mode = 1;
+  1370                           ;moduleTypeSpecific.c: 81: unsigned char g_mode = MODE_RED_TO_RED;
   1371                           
   1372                           ;incstack = 0
   1373                           ; Regs used in _ProcessStateChangedModuleTypeSpecific: [wreg-fsr0h+status,2+status,0+pcl
@@ -1383,8 +1383,8 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1376  0565  0AB0               	incf	ProcessStateChangedModuleTypeSpecific@g_mode,f
   1377                           
   1378                           ;moduleTypeSpecific.c: 82: switch (g_mode)
-  1379  0566  2D7E               	goto	l1711
-  1380  0567                     l1703:	
+  1379  0566  2D7E               	goto	l1707
+  1380  0567                     l1699:	
   1381                           ;moduleTypeSpecific.c: 83: {
   1382                           ;moduleTypeSpecific.c: 84: case MODE_RED_TO_RED:
   1383                           
@@ -1401,7 +1401,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1394                           
   1395                           ;moduleTypeSpecific.c: 86: break;
   1396  056F  0008               	return
-  1397  0570                     l1705:	
+  1397  0570                     l1701:	
   1398                           ;moduleTypeSpecific.c: 87: case MODE_RED_TO_PURPLE:
   1399                           
   1400                           
@@ -1418,7 +1418,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1411                           
   1412                           ;moduleTypeSpecific.c: 89: break;
   1413  0579  0008               	return
-  1414  057A                     l1707:	
+  1414  057A                     l1703:	
   1415                           ;moduleTypeSpecific.c: 90: default:
   1416                           
   1417                           
@@ -1431,7 +1431,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1424                           
   1425                           ;moduleTypeSpecific.c: 92: break;
   1426  057D  0008               	return
-  1427  057E                     l1711:	
+  1427  057E                     l1707:	
   1428  057E  0020               	movlb	0	; select bank0
   1429  057F  0830               	movf	ProcessStateChangedModuleTypeSpecific@g_mode,w
   1430                           
@@ -1445,11 +1445,11 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1438                           ;	Chosen strategy is simple_byte
   1439  0580  3A01               	xorlw	1	; case 1
   1440  0581  1903               	skipnz
-  1441  0582  2D67               	goto	l1703
+  1441  0582  2D67               	goto	l1699
   1442  0583  3A03               	xorlw	3	; case 2
   1443  0584  1903               	skipnz
-  1444  0585  2D70               	goto	l1705
-  1445  0586  2D7A               	goto	l1707
+  1444  0585  2D70               	goto	l1701
+  1445  0586  2D7A               	goto	l1703
   1446  0587  0008               	return
   1447  0588                     __end_of_ProcessStateChangedModuleTypeSpecific:	
   1448                           
@@ -1572,13 +1572,13 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1565                           ;moduleTypeSpecific.c: 25: if (i == 0)
   1566  0708  08AC               	movf	SetColor@i,f
   1567  0709  1D03               	skipz
-  1568  070A  2F13               	goto	l1495
+  1568  070A  2F13               	goto	l1491
   1569                           
   1570                           ;moduleTypeSpecific.c: 26: {
   1571                           ;moduleTypeSpecific.c: 27: if (blackAndWhite)
   1572  070B  087C               	movf	SetColor@blackAndWhite,w
   1573  070C  1903               	btfsc	3,2
-  1574  070D  2F13               	goto	l1495
+  1574  070D  2F13               	goto	l1491
   1575                           
   1576                           ;moduleTypeSpecific.c: 28: {
   1577                           ;moduleTypeSpecific.c: 29: SetDutyCyclePWM(0, 0, 0);
@@ -1589,7 +1589,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1582                           
   1583                           ;moduleTypeSpecific.c: 30: return;
   1584  0712  0008               	return
-  1585  0713                     l1495:	
+  1585  0713                     l1491:	
   1586                           
   1587                           ;moduleTypeSpecific.c: 31: }
   1588                           ;moduleTypeSpecific.c: 32: }
@@ -1598,7 +1598,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1591  0714  0020               	movlb	0	; select bank0
   1592  0715  022C               	subwf	SetColor@i,w
   1593  0716  1803               	skipnc
-  1594  0717  2F23               	goto	l1501
+  1594  0717  2F23               	goto	l1497
   1595                           
   1596                           ;moduleTypeSpecific.c: 35: {
   1597                           ;moduleTypeSpecific.c: 37: SetDutyCyclePWM(pwmPeriod -1 - value, value, 0);
@@ -1615,7 +1615,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1608                           
   1609                           ;moduleTypeSpecific.c: 38: return;
   1610  0722  0008               	return
-  1611  0723                     l1501:	
+  1611  0723                     l1497:	
   1612                           
   1613                           ;moduleTypeSpecific.c: 39: }
   1614                           ;moduleTypeSpecific.c: 41: if (i < pwmPeriod * 2)
@@ -1634,7 +1634,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1627  072F  022C               	subwf	SetColor@i,w
   1628  0730                     u735:	
   1629  0730  1803               	skipnc
-  1630  0731  2F41               	goto	l1507
+  1630  0731  2F41               	goto	l1503
   1631                           
   1632                           ;moduleTypeSpecific.c: 42: {
   1633                           ;moduleTypeSpecific.c: 43: SetDutyCyclePWM(0, pwmPeriod -1 - value, value);
@@ -1655,7 +1655,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1648                           
   1649                           ;moduleTypeSpecific.c: 44: return;
   1650  0740  0008               	return
-  1651  0741                     l1507:	
+  1651  0741                     l1503:	
   1652                           
   1653                           ;moduleTypeSpecific.c: 45: }
   1654                           ;moduleTypeSpecific.c: 47: if (i < 255 || !blackAndWhite)
@@ -1663,25 +1663,25 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1656  0742  082C               	movf	SetColor@i,w
   1657  0743  3AFF               	xorlw	255
   1658  0744  1D03               	skipz
-  1659  0745  2F49               	goto	l1511
+  1659  0745  2F49               	goto	l1507
   1660  0746  08FC               	movf	SetColor@blackAndWhite,f
   1661  0747  1D03               	skipz
-  1662  0748  2F66               	goto	l1523
-  1663  0749                     l1511:	
+  1662  0748  2F66               	goto	l1519
+  1663  0749                     l1507:	
   1664                           
   1665                           ;moduleTypeSpecific.c: 48: {
   1666                           ;moduleTypeSpecific.c: 49: if (!blackAndWhite && i == 255 && value == 0)
   1667  0749  08FC               	movf	SetColor@blackAndWhite,f
   1668  074A  1D03               	skipz
-  1669  074B  2F5B               	goto	l1519
+  1669  074B  2F5B               	goto	l1515
   1670  074C  082C               	movf	SetColor@i,w
   1671  074D  3AFF               	xorlw	255
   1672  074E  1D03               	skipz
-  1673  074F  2F5B               	goto	l1519
+  1673  074F  2F5B               	goto	l1515
   1674  0750  082E               	movf	SetColor@value+1,w
   1675  0751  042D               	iorwf	SetColor@value,w
   1676  0752  1D03               	skipz
-  1677  0753  2F5B               	goto	l1519
+  1677  0753  2F5B               	goto	l1515
   1678                           
   1679                           ;moduleTypeSpecific.c: 50: value = pwmPeriod-1;
   1680  0754  087B               	movf	SetColor@pwmPeriod,w
@@ -1691,7 +1691,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1684  0758  1803               	skipnc
   1685  0759  3000               	movlw	0
   1686  075A  00AE               	movwf	SetColor@value+1
-  1687  075B                     l1519:	
+  1687  075B                     l1515:	
   1688                           
   1689                           ;moduleTypeSpecific.c: 52: SetDutyCyclePWM(value, 0, pwmPeriod -1 - value);
   1690  075B  01F0               	clrf	SetDutyCyclePWM@green
@@ -1707,7 +1707,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1700                           
   1701                           ;moduleTypeSpecific.c: 53: return;
   1702  0765  0008               	return
-  1703  0766                     l1523:	
+  1703  0766                     l1519:	
   1704                           
   1705                           ;moduleTypeSpecific.c: 54: }
   1706                           ;moduleTypeSpecific.c: 56: SetDutyCyclePWM(28, 28, 28);
@@ -1772,7 +1772,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1765  0547  0871               	movf	??___lbmod,w
   1766  0548  00F4               	movwf	___lbmod@counter
   1767  0549  01F5               	clrf	___lbmod@rem
-  1768  054A                     l1473:	
+  1768  054A                     l1469:	
   1769  054A  0873               	movf	___lbmod@dividend,w
   1770  054B  00F1               	movwf	??___lbmod
   1771  054C  3007               	movlw	7
@@ -1797,7 +1797,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   1790  055D  3001               	movlw	1
   1791  055E  02F4               	subwf	___lbmod@counter,f
   1792  055F  1D03               	btfss	3,2
-  1793  0560  2D4A               	goto	l1473
+  1793  0560  2D4A               	goto	l1469
   1794  0561  0875               	movf	___lbmod@rem,w
   1795  0562  0008               	return
   1796  0563                     __end_of___lbmod:	
@@ -2013,7 +2013,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2006  05B4  0821               	movf	_g_commandInstruction,w
   2007  05B5  3A01               	xorlw	1
   2008  05B6  1D03               	skipz
-  2009  05B7  2DCA               	goto	l1725
+  2009  05B7  2DCA               	goto	l1721
   2010                           
   2011                           ;common.c: 39: {
   2012                           ;common.c: 40: g_persistant.mode = g_commandValue;
@@ -2041,7 +2041,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2034                           
   2035                           ;common.c: 45: }
   2036  05C9  0008               	return
-  2037  05CA                     l1725:	
+  2037  05CA                     l1721:	
   2038                           
   2039                           ;common.c: 46: else if (COMMAND_FLASH_SET_BOOT_FLAG == g_commandInstruction)
   2040  05CA  0821               	movf	_g_commandInstruction,w
@@ -2164,13 +2164,13 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2156  06B8  24D0               	fcall	__unlock
   2157  06B9  0023               	movlb	3	; select bank3
   2158  06BA  1115               	bcf	21,2	;volatile
-  2159  06BB                     l1585:	
+  2159  06BB                     l1581:	
   2160                           ;HEFlash.c: 26: while (count > 1)
   2161                           
   2162  06BB  3002               	movlw	2
   2163  06BC  0271               	subwf	HEFLASH_writeBlock@count,w
   2164  06BD  1C03               	btfss	3,0
-  2165  06BE  2EE0               	goto	l1587
+  2165  06BE  2EE0               	goto	l1583
   2166                           
   2167                           ;HEFlash.c: 27: {
   2168                           ;HEFlash.c: 29: PMADR = add++; PMDAT = (unsigned) *data++; PMCON1bits.LWLO = 1; PMCON1bi
@@ -2209,8 +2209,8 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2200                           ;HEFlash.c: 30: count--;
   2201  06DD  3001               	movlw	1
   2202  06DE  02F1               	subwf	HEFLASH_writeBlock@count,f
-  2203  06DF  2EBB               	goto	l1585
-  2204  06E0                     l1587:	
+  2203  06DF  2EBB               	goto	l1581
+  2204  06E0                     l1583:	
   2205                           
   2206                           ;HEFlash.c: 31: }
   2207                           ;HEFlash.c: 34: PMADR = add; PMDAT = (unsigned) *data; PMCON1bits.LWLO = 0; PMCON1bits.C
@@ -2549,7 +2549,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2539  04EA  2588               	fcall	_HEFLASH_readByte
   2540  04EB  3800               	iorlw	0
   2541  04EC  1D03               	skipz
-  2542  04ED  2CF5               	goto	l1739
+  2542  04ED  2CF5               	goto	l1735
   2543                           
   2544                           ;common.c: 79: HEFLASH_readBlock((char *)&g_persistant, 0, sizeof(g_persistant));
   2545  04EE  01F0               	clrf	HEFLASH_readBlock@radd
@@ -2559,7 +2559,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2549  04F2  00F1               	movwf	HEFLASH_readBlock@count
   2550  04F3  3026               	movlw	_g_persistant& (0+255)
   2551  04F4  260C               	fcall	_HEFLASH_readBlock
-  2552  04F5                     l1739:	
+  2552  04F5                     l1735:	
   2553                           
   2554                           ;common.c: 87: I2cSlaveInit();
   2555  04F5  24F7               	fcall	_I2cSlaveInit
@@ -2796,7 +2796,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2784  0624  0270               	subwf	HEFLASH_readBlock@radd,w
   2785  0625  1803               	btfsc	3,0
   2786  0626  0008               	return
-  2787  0627                     l1643:	
+  2787  0627                     l1639:	
   2788  0627  08F1               	movf	HEFLASH_readBlock@count,f
   2789  0628  1903               	btfsc	3,2
   2790  0629  0008               	return
@@ -2842,7 +2842,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2829                           ;HEFlash.c: 51: count--;
   2830  0645  3001               	movlw	1
   2831  0646  02F1               	subwf	HEFLASH_readBlock@count,f
-  2832  0647  2E27               	goto	l1643
+  2832  0647  2E27               	goto	l1639
   2833  0648                     __end_of_HEFLASH_readBlock:	
   2834                           ;HEFlash.c: 52: }
   2835                           ;HEFlash.c: 54: return 0;
@@ -2853,7 +2853,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2840  0648                     __ptext17:	
   2841 ;; *************** function _CheckI2cAsSlave *****************
   2842 ;; Defined at:
-  2843 ;;		line 209 in file "../common/i2c.c"
+  2843 ;;		line 208 in file "../common/i2c.c"
   2844 ;; Parameters:    Size  Location     Type
   2845 ;;		None
   2846 ;; Auto vars:     Size  Location     Type
@@ -2884,8 +2884,8 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2871                           ;psect for function _CheckI2cAsSlave
   2872  0648                     _CheckI2cAsSlave:	
   2873                           
-  2874                           ;i2c.c: 212: unsigned char value;
-  2875                           ;i2c.c: 213: if (!SSP1IF)
+  2874                           ;i2c.c: 211: unsigned char value;
+  2875                           ;i2c.c: 212: if (!SSP1IF)
   2876                           
   2877                           ;incstack = 0
   2878                           ; Regs used in _CheckI2cAsSlave: [wreg+status,2+status,0]
@@ -2893,24 +2893,24 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2880  0649  1D91               	btfss	17,3	;volatile
   2881  064A  0008               	return
   2882                           
-  2883                           ;i2c.c: 216: SSP1IF = 0;
+  2883                           ;i2c.c: 215: SSP1IF = 0;
   2884                           
-  2885                           ;i2c.c: 214: return;
+  2885                           ;i2c.c: 213: return;
   2886  064B  1191               	bcf	17,3	;volatile
   2887                           
-  2888                           ;i2c.c: 218: value = SSPBUF;
+  2888                           ;i2c.c: 217: value = SSPBUF;
   2889  064C  0024               	movlb	4	; select bank4
   2890  064D  0811               	movf	17,w	;volatile
   2891  064E  00F0               	movwf	??_CheckI2cAsSlave
   2892  064F  0870               	movf	??_CheckI2cAsSlave,w
   2893  0650  00F2               	movwf	CheckI2cAsSlave@value
   2894                           
-  2895                           ;i2c.c: 221: if (!SSPSTATbits.D_nA)
+  2895                           ;i2c.c: 220: if (!SSPSTATbits.D_nA)
   2896  0651  1A94               	btfsc	20,5	;volatile
-  2897  0652  2E7C               	goto	l1791
+  2897  0652  2E7C               	goto	l1783
   2898                           
-  2899                           ;i2c.c: 222: {
-  2900                           ;i2c.c: 223: g_stateFollowed = (0 == (value & 2));
+  2899                           ;i2c.c: 221: {
+  2900                           ;i2c.c: 222: g_stateFollowed = (0 == (value & 2));
   2901  0653  3000               	movlw	0
   2902  0654  1CF2               	btfss	CheckI2cAsSlave@value,1
   2903  0655  3001               	movlw	1
@@ -2919,7 +2919,7 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2906  0658  0020               	movlb	0	; select bank0
   2907  0659  00A4               	movwf	_g_stateFollowed
   2908                           
-  2909                           ;i2c.c: 224: g_commandInstruction = (value >> 2);
+  2909                           ;i2c.c: 223: g_commandInstruction = (value >> 2);
   2910  065A  0872               	movf	CheckI2cAsSlave@value,w
   2911  065B  00F0               	movwf	??_CheckI2cAsSlave
   2912  065C  3002               	movlw	2
@@ -2932,99 +2932,99 @@ Microchip Technology Omniscient Code Generator (Lite mode) build 59893
   2919  0662  0871               	movf	??_CheckI2cAsSlave+1,w
   2920  0663  00A1               	movwf	_g_commandInstruction
   2921                           
-  2922                           ;i2c.c: 226: if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
+  2922                           ;i2c.c: 225: if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
   2923  0664  0821               	movf	_g_commandInstruction,w
   2924  0665  3A03               	xorlw	3
   2925  0666  1D03               	skipz
-  2926  0667  2E6D               	goto	l1785
+  2926  0667  2E6D               	goto	l1777
   2927                           
-  2928                           ;i2c.c: 227: {
-  2929                           ;i2c.c: 228: g_bootloaderPolicy = 1;
+  2928                           ;i2c.c: 226: {
+  2929                           ;i2c.c: 227: g_bootloaderPolicy = 1;
   2930  0668  01A0               	clrf	_g_bootloaderPolicy
   2931  0669  0AA0               	incf	_g_bootloaderPolicy,f
   2932                           
-  2933                           ;i2c.c: 229: SSPBUF = 0;
+  2933                           ;i2c.c: 228: SSPBUF = 0;
   2934  066A  0024               	movlb	4	; select bank4
   2935  066B  0191               	clrf	17	;volatile
   2936                           
-  2937                           ;i2c.c: 230: }
+  2937                           ;i2c.c: 229: }
   2938  066C  2E75               	goto	l342
-  2939  066D                     l1785:	
+  2939  066D                     l1777:	
   2940                           
-  2941                           ;i2c.c: 231: else if (COMMAND_GET_CURRENT_MODE == g_commandInstruction)
+  2941                           ;i2c.c: 230: else if (COMMAND_GET_CURRENT_MODE == g_commandInstruction)
   2942  066D  0020               	movlb	0	; select bank0
   2943  066E  0821               	movf	_g_commandInstruction,w
   2944  066F  3A02               	xorlw	2
   2945  0670  1D03               	skipz
   2946  0671  2E75               	goto	l342
   2947                           
-  2948                           ;i2c.c: 232: SSPBUF = g_persistant.mode;
+  2948                           ;i2c.c: 231: SSPBUF = g_persistant.mode;
   2949  0672  0827               	movf	_g_persistant+1,w
   2950  0673  0024               	movlb	4	; select bank4
   2951  0674  0091               	movwf	17	;volatile
   2952  0675                     l342:	
   2953                           
-  2954                           ;i2c.c: 243: if (COMMAND_FLASH_GET_VERSION != g_commandInstruction)
+  2954                           ;i2c.c: 242: if (COMMAND_FLASH_GET_VERSION != g_commandInstruction)
   2955  0675  0020               	movlb	0	; select bank0
   2956  0676  0821               	movf	_g_commandInstruction,w
   2957  0677  3A03               	xorlw	3
   2958  0678  1903               	skipnz
-  2959  0679  2E8E               	goto	l1803
+  2959  0679  2E8E               	goto	l1795
   2960                           
-  2961                           ;i2c.c: 244: g_bootloaderPolicy = 0;
+  2961                           ;i2c.c: 243: g_bootloaderPolicy = 0;
   2962  067A  01A0               	clrf	_g_bootloaderPolicy
   2963                           
-  2964                           ;i2c.c: 245: }
-  2965  067B  2E8E               	goto	l1803
-  2966  067C                     l1791:	
+  2964                           ;i2c.c: 244: }
+  2965  067B  2E8E               	goto	l1795
+  2966  067C                     l1783:	
   2967                           
-  2968                           ;i2c.c: 246: else
-  2969                           ;i2c.c: 247: {
-  2970                           ;i2c.c: 248: g_bootloaderPolicy = 0;
+  2968                           ;i2c.c: 245: else
+  2969                           ;i2c.c: 246: {
+  2970                           ;i2c.c: 247: g_bootloaderPolicy = 0;
   2971  067C  0020               	movlb	0	; select bank0
   2972  067D  01A0               	clrf	_g_bootloaderPolicy
   2973                           
-  2974                           ;i2c.c: 249: if (g_stateFollowed)
+  2974                           ;i2c.c: 248: if (g_stateFollowed)
   2975  067E  0824               	movf	_g_stateFollowed,w
   2976  067F  1903               	btfsc	3,2
-  2977  0680  2E88               	goto	l1799
+  2977  0680  2E88               	goto	l1791
   2978                           
-  2979                           ;i2c.c: 250: {
-  2980                           ;i2c.c: 251: g_state = value;
+  2979                           ;i2c.c: 249: {
+  2980                           ;i2c.c: 250: g_state = value;
   2981  0681  0872               	movf	CheckI2cAsSlave@value,w
   2982  0682  00F0               	movwf	??_CheckI2cAsSlave
   2983  0683  0870               	movf	??_CheckI2cAsSlave,w
   2984  0684  00A8               	movwf	_g_state
   2985                           
-  2986                           ;i2c.c: 252: g_stateChanged = 1;
+  2986                           ;i2c.c: 251: g_stateChanged = 1;
   2987  0685  01B1               	clrf	_g_stateChanged
   2988  0686  0AB1               	incf	_g_stateChanged,f
   2989                           
-  2990                           ;i2c.c: 253: }
-  2991  0687  2E8E               	goto	l1803
-  2992  0688                     l1799:	
+  2990                           ;i2c.c: 252: }
+  2991  0687  2E8E               	goto	l1795
+  2992  0688                     l1791:	
   2993                           
-  2994                           ;i2c.c: 254: else
-  2995                           ;i2c.c: 255: {
-  2996                           ;i2c.c: 256: g_commandValue = value;
+  2994                           ;i2c.c: 253: else
+  2995                           ;i2c.c: 254: {
+  2996                           ;i2c.c: 255: g_commandValue = value;
   2997  0688  0872               	movf	CheckI2cAsSlave@value,w
   2998  0689  00F0               	movwf	??_CheckI2cAsSlave
   2999  068A  0870               	movf	??_CheckI2cAsSlave,w
   3000  068B  00A3               	movwf	_g_commandValue
   3001                           
-  3002                           ;i2c.c: 257: g_commandRecieved = 1;
+  3002                           ;i2c.c: 256: g_commandRecieved = 1;
   3003  068C  01A2               	clrf	_g_commandRecieved
   3004  068D  0AA2               	incf	_g_commandRecieved,f
-  3005  068E                     l1803:	
+  3005  068E                     l1795:	
   3006                           
-  3007                           ;i2c.c: 258: }
-  3008                           ;i2c.c: 259: }
-  3009                           ;i2c.c: 260: if (SEN)
+  3007                           ;i2c.c: 257: }
+  3008                           ;i2c.c: 258: }
+  3009                           ;i2c.c: 259: if (SEN)
   3010  068E  0024               	movlb	4	; select bank4
   3011  068F  1C16               	btfss	22,0	;volatile
   3012  0690  0008               	return
   3013                           
-  3014                           ;i2c.c: 261: CKP = 1;
+  3014                           ;i2c.c: 260: CKP = 1;
   3015  0691  1615               	bsf	21,4	;volatile
   3016  0692  0008               	return
   3017  0693                     __end_of_CheckI2cAsSlave:	
@@ -3268,7 +3268,7 @@ SFR31                0      0       0      32        0.0%
 
 
 Microchip Technology PIC Macro Assembler V1.33 build 59893 
-Symbol Table                                                                                   Sat May 09 21:45:55 2015
+Symbol Table                                                                                   Sun May 10 11:01:15 2015
 
                                    __CFG_CP$OFF 0000                                     _SSPSTATbits 0214  
                             _g_bootloaderPolicy 0020                                             l342 0675  
@@ -3280,18 +3280,18 @@ Symbol Table                                                                    
                                            u735 0730                                             u675 054D  
                                            _SMP 10A7                         __end_of_CheckI2cAsSlave 0693  
                                   __CFG_BORV$LO 0000                                             wreg 0009  
-                                  __CFG_LVP$OFF 0000                                            l1501 0723  
-                                          l1511 0749                                            l1523 0766  
-                                          l1507 0741                                            l1519 075B  
-                                          l1703 0567                                            l1711 057E  
-                                          l1473 054A                                            l1705 0570  
-                                          l1803 068E                                            l1643 0627  
-                                          l1707 057A                                            l1725 05CA  
-                                          l1495 0713                                            l1585 06BB  
-                                          l1739 04F5                                            l1587 06E0  
-                                          l1791 067C                                            l1785 066D  
-                                          l1883 051D                                            l1877 0516  
-                                          l1799 0688                                            u1005 065D  
+                                  __CFG_LVP$OFF 0000                                            l1503 0741  
+                                          l1515 075B                                            l1507 0749  
+                                          l1701 0570                                            l1519 0766  
+                                          l1703 057A                                            l1721 05CA  
+                                          l1491 0713                                            l1707 057E  
+                                          l1581 06BB                                            l1469 054A  
+                                          l1639 0627                                            l1735 04F5  
+                                          l1583 06E0                                            l1497 0723  
+                                          l1791 0688                                            l1783 067C  
+                                          l1777 066D                                            l1795 068E  
+                                          l1699 0567                                            l1875 051D  
+                                          l1869 0516                                            u1005 065D  
                     __end_of_HEFLASH_writeBlock 06F9                                    __CFG_WRT$OFF 0000  
                                           _main 050A                                            fsr1h 0007  
                                           indf1 0001                                            fsr1l 0006  

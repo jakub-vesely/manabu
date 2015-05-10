@@ -5,7 +5,7 @@ Linker command line:
 --edf=C:\Program Files\Microchip\xc8\v1.33\dat\en_msgs.txt -cs \
   -h+dist/default/production\rgb.X.production.sym \
   --cmf=dist/default/production\rgb.X.production.cmf -z -Q16F1503 \
-  -oC:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.6 \
+  -oC:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.6 \
   -Mdist/default/production/rgb.X.production.map -E1 -ver=XC8 \
   -ASTACK=02012h-0206fh -pstack=STACK \
   -ACONST=00h-0FFhx7,0700h-077Fh,0791h-07FFh -ACODE=00h-077Fh,0791h-07FFh \
@@ -27,7 +27,8 @@ Linker command line:
   -preset_vec=00h,intentry,init,end_init -ppowerup=CODE -pcinit=CODE \
   -pfunctab=CODE -ACONFIG=08007h-08008h -pconfig=CONFIG -DCONFIG=2 \
   -AIDLOC=08000h-08003h -pidloc=IDLOC -DIDLOC=2 -DCODE=2 -DSTRCODE=2 \
-  -DSTRING=2 -DCONST=2 -DENTRY=2 -k C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj \
+  -DSTRING=2 -DCONST=2 -DENTRY=2 -k \
+  C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj \
   dist/default/production\rgb.X.production.obj 
 
 Object code version is 3.11
@@ -37,7 +38,7 @@ Machine type is 16F1503
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
                 end_init                              2        2        1        0       0
                 reset_vec                             0        0        2        0       0
                 config                             8007     8007        2    1000E       0
@@ -1288,7 +1289,7 @@ Total ram usage:        7 bytes
 
  *************** function _CheckI2cAsSlave *****************
  Defined at:
-		line 209 in file "../common/i2c.c"
+		line 208 in file "../common/i2c.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type

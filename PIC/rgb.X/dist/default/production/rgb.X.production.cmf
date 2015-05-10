@@ -11,7 +11,7 @@
 # All addresses and the length are given in unqualified hexadecimal
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
-$C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+$C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 end_init CODE 0 2 2 1 2
 reset_vec CODE 0 0 0 2 2
 config CONFIG 0 8007 8007 2 2
@@ -149,13 +149,13 @@ $dist/default/production\rgb.X.production.obj
 "C:\GitRepository\stavebnice03\PIC/common/main.c":95 513 maintext CODE
 "C:\GitRepository\stavebnice03\PIC/common/main.c":96 514 maintext CODE
 "C:\GitRepository\stavebnice03\PIC/common/main.c":97 515 maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":102 516 maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":103 517 maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":104 51B maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":106 51D maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":108 51E maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":110 522 maintext CODE
-"C:\GitRepository\stavebnice03\PIC/common/main.c":111 523 maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":101 516 maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":102 517 maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":103 51B maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":105 51D maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":107 51E maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":109 522 maintext CODE
+"C:\GitRepository\stavebnice03\PIC/common/main.c":110 523 maintext CODE
 "C:\GitRepository\stavebnice03\PIC/common/main.c":99 524 maintext CODE
 "C:\GitRepository\stavebnice03\PIC\rgb.X\moduleTypeSpecific.c":15 526 text5 CODE
 "C:\GitRepository\stavebnice03\PIC\rgb.X\moduleTypeSpecific.c":17 527 text5 CODE
@@ -244,31 +244,31 @@ $dist/default/production\rgb.X.production.obj
 "C:\GitRepository\stavebnice03\PIC/common/HEFlash.c":50 639 text16 CODE
 "C:\GitRepository\stavebnice03\PIC/common/HEFlash.c":51 645 text16 CODE
 "C:\GitRepository\stavebnice03\PIC/common/HEFlash.c":47 647 text16 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":209 648 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":213 648 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":216 64B text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":218 64C text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":221 651 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":223 653 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":224 65A text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":226 664 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":228 668 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":229 66A text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":230 66C text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":231 66D text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":232 672 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":243 675 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":244 67A text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":245 67B text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":248 67C text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":249 67E text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":251 681 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":252 685 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":253 687 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":256 688 text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":257 68C text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":260 68E text17 CODE
-"C:\GitRepository\stavebnice03\PIC/common/i2c.c":261 691 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":208 648 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":212 648 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":215 64B text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":217 64C text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":220 651 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":222 653 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":223 65A text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":225 664 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":227 668 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":228 66A text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":229 66C text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":230 66D text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":231 672 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":242 675 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":243 67A text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":244 67B text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":247 67C text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":248 67E text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":250 681 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":251 685 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":252 687 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":255 688 text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":256 68C text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":259 68E text17 CODE
+"C:\GitRepository\stavebnice03\PIC/common/i2c.c":260 691 text17 CODE
 "C:\GitRepository\stavebnice03\PIC/common/HEFlash.c":16 693 text9 CODE
 "C:\GitRepository\stavebnice03\PIC/common/HEFlash.c":19 694 text9 CODE
 "C:\GitRepository\stavebnice03\PIC/common/HEFlash.c":21 6A6 text9 CODE
@@ -298,23 +298,23 @@ $dist/default/production\rgb.X.production.obj
 "C:\GitRepository\stavebnice03\PIC\rgb.X\moduleTypeSpecific.c":53 765 text3 CODE
 "C:\GitRepository\stavebnice03\PIC\rgb.X\moduleTypeSpecific.c":56 766 text3 CODE
 "C:\GitRepository\stavebnice03\PIC\rgb.X\moduleTypeSpecific.c":57 771 text3 CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":1953 772 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":1956 772 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":1997 772 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":1998 773 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":1999 774 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2000 775 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2001 776 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2002 777 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2003 778 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2004 779 cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2005 77A cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2010 77B cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2011 77C cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2017 77D cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2018 77D cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2019 77E cinit CODE
-"C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.":2020 77F cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":1953 772 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":1956 772 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":1997 772 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":1998 773 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":1999 774 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2000 775 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2001 776 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2002 777 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2003 778 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2004 779 cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2005 77A cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2010 77B cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2011 77C cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2017 77D cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2018 77D cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2019 77E cinit CODE
+"C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.":2020 77F cinit CODE
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -345,16 +345,16 @@ __CFG_BOREN$ON 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
 __end_of_ProcessModuleFunctionalit 994 0 CODE 0 text7 dist/default/production\rgb.X.production.obj
 SetColor@i 2C 0 BANK0 1 cstackBANK0 dist/default/production\rgb.X.production.obj
 _main A14 0 CODE 0 maintext dist/default/production\rgb.X.production.obj
-___sp 0 0 STACK 2 stack C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+___sp 0 0 STACK 2 stack C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 btemp 7E 0 ABS 0 - dist/default/production\rgb.X.production.obj
 ltemp 7E 0 ABS 0 - dist/default/production\rgb.X.production.obj
 ttemp 7E 0 ABS 0 - dist/default/production\rgb.X.production.obj
 wtemp 7E 0 ABS 0 - dist/default/production\rgb.X.production.obj
-start 4 0 CODE 0 init C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+start 4 0 CODE 0 init C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 _ProcessStateChangedModuleTypeSpecific AC6 0 CODE 0 text1 dist/default/production\rgb.X.production.obj
 _SSPM3 10AB 0 ABS 0 - dist/default/production\rgb.X.production.obj
 SetColor@pwmPeriod 7B 0 COMMON 1 cstackCOMMON dist/default/production\rgb.X.production.obj
-reset_vec 0 0 CODE 0 reset_vec C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+reset_vec 0 0 CODE 0 reset_vec C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 _PMADR 191 0 ABS 0 - dist/default/production\rgb.X.production.obj
 _SSPEN 10AD 0 ABS 0 - dist/default/production\rgb.X.production.obj
 _PMDAT 193 0 ABS 0 - dist/default/production\rgb.X.production.obj
@@ -396,7 +396,7 @@ __Lcommon 0 0 ABS 0 common -
 __Heeprom_data 0 0 EEDATA 3 eeprom_data -
 __Leeprom_data 0 0 EEDATA 3 eeprom_data -
 _SSPADD 212 0 ABS 0 - dist/default/production\rgb.X.production.obj
-___int_sp 0 0 STACK 2 stack C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+___int_sp 0 0 STACK 2 stack C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 _SSP1IF 8B 0 ABS 0 - dist/default/production\rgb.X.production.obj
 __CFG_CLKOUTEN$OFF 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
 _TMR2IF 89 0 ABS 0 - dist/default/production\rgb.X.production.obj
@@ -447,11 +447,11 @@ __Hcode 0 0 ABS 0 code -
 __Lcode 0 0 ABS 0 code -
 __size_of___lbmod 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
 __size_of_ProcessStateChangedCommon 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
-stackhi 206F 0 ABS 0 - C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+stackhi 206F 0 ABS 0 - C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 __HcstackBANK0 0 0 ABS 0 cstackBANK0 -
 __LcstackBANK0 0 0 ABS 0 cstackBANK0 -
 __pcstackBANK0 29 0 BANK0 1 cstackBANK0 dist/default/production\rgb.X.production.obj
-stacklo 2012 0 ABS 0 - C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+stacklo 2012 0 ABS 0 - C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 __end_of_PwmInit C18 0 CODE 0 text12 dist/default/production\rgb.X.production.obj
 __Hinit 4 0 CODE 0 init -
 __Linit 4 0 CODE 0 init -
@@ -704,16 +704,16 @@ _g_bootloaderPolicy 20 0 BANK0 1 bssBANK0 dist/default/production\rgb.X.producti
 __Hreset_vec 4 0 CODE 0 reset_vec -
 __Lreset_vec 0 0 CODE 0 reset_vec -
 _g_commandRecieved 22 0 BANK0 1 bssBANK0 dist/default/production\rgb.X.production.obj
-intlevel0 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+intlevel0 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 __CFG_WDTE$OFF 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
-intlevel1 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+intlevel1 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 _ProcessCommand B64 0 CODE 0 text8 dist/default/production\rgb.X.production.obj
-intlevel2 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
-intlevel3 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
-intlevel4 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+intlevel2 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
+intlevel3 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
+intlevel4 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 __CFG_LPBOR$OFF 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
 _HEFLASH_readByte B10 0 CODE 0 text15 dist/default/production\rgb.X.production.obj
-intlevel5 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\sdk.obj
+intlevel5 0 0 CODE 0 functab C:\DOCUME~1\kubus\LOCALS~1\Temp\s1dk.obj
 __end_of_ProcessStateChangedModuleTypeSpecific B10 0 CODE 0 text1 dist/default/production\rgb.X.production.obj
 __size_of_SetDutyCyclePWM 0 0 ABS 0 - dist/default/production\rgb.X.production.obj
 __HcstackCOMMON 0 0 ABS 0 cstackCOMMON -
