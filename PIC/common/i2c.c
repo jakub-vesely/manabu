@@ -130,22 +130,32 @@ bool I2cMasterStop(void)
 #endif
 }
 
-void I2cMasterIdle()
+bool I2cMasterIdle()
 {
 #if defined(_PIC18F14K50_H_)
 	IdleI2C();
 #else
-	while ((SSPCON2 & 0x1F) | (SSPSTATbits.R_nW));
+	unsigned counter = SEND_TRY_COUNT;
+	while ((SSPCON2 & 0x1F) | (SSPSTATbits.R_nW))
+	{
+		if (0 == counter--)
+			return false;
+	};
 #endif
+	return true;
 }
 
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char i = 0;
 	
-	I2cMasterIdle();
-	I2cMasterStart();
-
+	if (!I2cMasterIdle())
+		return false;
+	if (!I2cMasterStart())
+	{
+		I2cMasterStop();
+		return false;
+	}
 	/*
 	 * because I will communicate always with one slave only I dont need send an
 	 * address so I will use this required byte for a message type
@@ -173,7 +183,6 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 
 bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal)
 {
-	unsigned timeout = 0xff;
 	I2cMasterStart();
 	
 	if (!I2cMasterWrite((command << 2) | (messageType << 1) | 1))
@@ -209,6 +218,7 @@ bool GetCommandI2C(I2cCommand command, unsigned char *retVal)
 void CheckI2cAsSlave(void)
 {
 #ifndef _PIC18F14K50_H_
+
 	unsigned char value;
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return;

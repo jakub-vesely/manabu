@@ -56,6 +56,7 @@ bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigne
 
 void SendToOutputIfReady()
 {
+	unsigned char invertOutput = 0;
 	if (g_toOutput.isReady)
 	{
 		if (TO_OUTPUT_MAX_TRAY == g_toOutput.try)
@@ -67,14 +68,32 @@ void SendToOutputIfReady()
 		g_toOutput.try = g_toOutput.try + 1;
 		if (g_toOutput.isState)
 		{
+			PORTCbits.RC5 = 1;
+
 			if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1))
 			{
 				g_toOutput.isReady = false;
+				PORTCbits.RC5 = 0;
+				Wait(10);
 			}
 			else //message was not send
 			{
-				INVERT_OUTPUT_PORT = !INVERT_OUTPUT_PORT; //output device may be connected by an oposite way
 				PORTCbits.RC5 = 1;
+				Wait(10);
+				if (invertOutput)
+				{
+					invertOutput = 0;
+					INVERT_OUTPUT_PORT = 0;
+					//PORTCbits.RC5 = 1;
+					//Wait(10);
+				}
+				else
+				{
+					invertOutput = 1;
+					INVERT_OUTPUT_PORT = 1;
+					//PORTCbits.RC5 = 0;
+					//Wait(10);
+				}
 			}
 		}
 		else
@@ -99,9 +118,9 @@ void main(void)
 
 	while(1)
 	{
-		CheckI2cAsSlave();
-		if (g_commandRecieved)
-			ProcessCommand();
+		//CheckI2cAsSlave();
+		//if (g_commandRecieved)
+		//	ProcessCommand();
 
 		ProcessModuleFunctionalit();
 
