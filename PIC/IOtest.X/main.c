@@ -1,5 +1,6 @@
 #include <xc.h>
-#include <common/common_16F1503.h>
+#include <common/common.h>
+#include <system_common.h>
 
 __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_OFF);
 
@@ -32,24 +33,24 @@ main()
 	LATC1 = 0;
 	PORTCbits.RC1 = 1;
 
-	INnOUT = 0;
-	INVERT_OUTPUT = 1;
+	INnOUT_PORT = 0;
+	INVERT_OUTPUT_PORT = 1;
 
 	while (1)
 	{
-		INVERT_OUTPUT = 0;
-		INnOUT = 1;
+		INVERT_OUTPUT_PORT = 0;
+		INnOUT_PORT = 1;
 		SdaSclSwitch();
 
-		INnOUT = 0;
+		INnOUT_PORT = 0;
 		SdaSclSwitch();
 
 
-		INVERT_OUTPUT = 1;
-		INnOUT = 1;
+		INVERT_OUTPUT_PORT = 1;
+		INnOUT_PORT = 1;
 		SdaSclSwitch();
 
-		INnOUT = 0;
+		INnOUT_PORT = 0;
 		SdaSclSwitch();
 	}
 }
