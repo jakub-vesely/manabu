@@ -1,7 +1,8 @@
 #include <system_common.h>
 #include <common/common.h>
 
-unsigned char g_potValue = 0;
+//#define HISTERESIS
+
 void ProcessStateChangedModuleTypeSpecific()
 {
 	
@@ -28,9 +29,9 @@ unsigned int ADC_Read10bit(void)
 {
     unsigned int result;
 
-	ADCON0bits.CHS = 0b00111;
-    ADCON0bits.GO = 1;              // Start AD conversion
-    while(ADCON0bits.GO_nDONE);     // Wait for conversion
+	ADCON0bits.GO = 1;              // Start AD conversion
+    while(ADCON0bits.GO_nDONE)
+	{} // Wait for conversion
 
     result = ADRESH;
     result <<=8;
@@ -38,15 +39,19 @@ unsigned int ADC_Read10bit(void)
 
     return result;
 }
+#ifdef HISTERESIS
+#	define IS_DIFFERENT(potValue) potValue != g_state && potValue != g_state + 1 && potValue != g_state - 1
+#else
+#	define IS_DIFFERENT(potValue) potValue != g_state
+#endif
 
 void ProcessModuleFunctionalit()
 {
-	unsigned int potValue10 = ADC_Read10bit();
+	unsigned int potValue = ADC_Read10bit() / 4;
 
-	if (potValue10 / 4 != g_potValue)
+	if (IS_DIFFERENT(potValue))
 	{
-		g_potValue = potValue10 / 4;
-		g_state = g_potValue;
+		g_state = potValue;
 		g_stateChanged = true;
 	}
 }
