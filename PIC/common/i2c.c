@@ -10,7 +10,7 @@ unsigned char g_stateFollowed = 0;
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
 
-#define SEND_TRY_COUNT  10000
+#define SEND_TRY_COUNT  5000
 #define BITRATE 100000
 
 unsigned char  g_bootloaderPolicy = 0;
@@ -47,6 +47,9 @@ void I2cMasterInit(void)
 	SSPCON2 = 0;
 	SSPCON3 = 0;
 	SSPSTAT = 0;
+	
+	//uncomment when slave will be process it
+	//ACKEN = 1; //Acknowledge enabled
 
 	SSPADD = (FREQ/(BITRATE*4))-1;
 	ENABLE_I2C_MASTER_MODE_bit = 1;         //Enable I2C Master mode
@@ -54,86 +57,11 @@ void I2cMasterInit(void)
 #endif
  }
 
-bool I2cMasterStart(void)
-{
-#if defined(_PIC18F14K50_H_)
-	StartI2C();
-	return true;
-#else
-	/*SSPMSK = 0;
-	SSPCON2 = 0;
-	SSPCON3 = 0;
-	SSPSTAT = 0;
-	*/
-	unsigned counter = SEND_TRY_COUNT;
-	SSPCON2bits.SEN=1;
-	while(SSPCON2bits.SEN)
-	{
-		if (0 == counter--)
-			return false;
-	}
-	return true;
-#endif
-}
-/*
-FIXME: legacy - returns false when success
-*/
-bool I2cMasterWrite(char byte)
-{
-#if defined(_PIC18F14K50_H_)
-	return 0 == WriteI2C(byte);
-#else
-	unsigned counter = SEND_TRY_COUNT;
-	SSPBUF = byte;
-	while(SSP1STATbits.R_nW)
-	{
-		if (0 == counter--)
-			return false;
-	}
-	return 0 == SSPCON2bits.ACKSTAT;
-#endif
-}
-
-bool I2cMasterRead(unsigned char *retVal)
-{
-#if defined(_PIC18F14K50_H_)
-	*retVal = ReadI2C();
-	return true;
-#else
-	unsigned counter = SEND_TRY_COUNT;
-
-	SSPCON2bits.RCEN = 1;
-	while(SSPCON2bits.RCEN) //FIXME: may be ther should be !BF
-	{
-		if (0 == counter--)
-			return false;
-	}
-	*retVal = SSPBUF;
-	return true;
-#endif
-}
-
-bool I2cMasterStop(void)
-{
-#if defined(_PIC18F14K50_H_)
-	StopI2C();
-	return true;
-#else
-	unsigned counter = SEND_TRY_COUNT;
-	SSPCON2bits.PEN = 1;
-	while(SSPCON2bits.PEN)
-	{
-		if (0 == counter--)
-			return false;
-	}
-	return true;
-#endif
-}
-
-bool I2cMasterIdle()
+bool I2cMasterIdle(void)
 {
 #if defined(_PIC18F14K50_H_)
 	IdleI2C();
+	return true;
 #else
 	unsigned counter = SEND_TRY_COUNT;
 	while ((SSPCON2 & 0x1F) | (SSPSTATbits.R_nW))
@@ -145,17 +73,81 @@ bool I2cMasterIdle()
 	return true;
 }
 
+void I2cMasterStart(void)
+{
+#if defined(_PIC18F14K50_H_)
+	StartI2C();
+#else
+	/*SSPMSK = 0;
+	SSPCON2 = 0;
+	SSPCON3 = 0;
+	SSPSTAT = 0;
+	*/
+	SSPCON2bits.SEN=1;
+	while(SSPCON2bits.SEN)
+  {} //SEM will be cleared automaticlay after seting of start condition on a bus
+#endif
+}
+/*
+FIXME: legacy - returns false when success
+*/
+bool I2cMasterWrite(char byte)
+{
+#if defined(_PIC18F14K50_H_)
+	return 0 == WriteI2C(byte);
+#else
+	SSPBUF = byte;
+	while(SSP1STATbits.R_nW)
+	{} //R_nW will be cleared automatticly after whole message is written on a bus 
+	return 0 == SSPCON2bits.ACKSTAT;
+#endif
+}
+
+bool I2cMasterRead(unsigned char *retVal)
+{
+#if defined(_PIC18F14K50_H_)
+	*retVal = ReadI2C();
+	return true;
+#else
+  
+	unsigned counter = SEND_TRY_COUNT;
+	
+	if (!I2cMasterIdle())
+	 return false;
+	 
+  SSPCON2bits.RCEN = 1;
+	while(SSPCON2bits.RCEN) //FIXME: may be ther should be !BF
+	{
+		if (0 == counter-- || INPUT_MESSAGE_READY) //timeout or predessor try to send a message to me
+			return false;
+	}
+	*retVal = SSPBUF;
+	
+  //uncomment when slave will be process it
+  //ACKDT = 0;
+  return true;
+#endif
+}
+
+void I2cMasterStop(void)
+{
+#if defined(_PIC18F14K50_H_)
+	StopI2C();
+#else
+	SSPCON2bits.PEN = 1;
+	while(SSPCON2bits.PEN)
+	{} //PEN is cleared automaticaly when stop combination is send  
+#endif
+}
+
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	unsigned char i = 0;
 	
 	if (!I2cMasterIdle())
 		return false;
-	if (!I2cMasterStart())
-	{
-		I2cMasterStop();
-		return false;
-	}
+	
+	I2cMasterStart();
 	/*
 	 * because I will communicate always with one slave only I dont need send an
 	 * address so I will use this required byte for a message type
@@ -169,7 +161,7 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 
 	for (; i < count; i++)
 	{
-		if(!I2cMasterWrite(data[i]))
+		if(INPUT_MESSAGE_READY || !I2cMasterWrite(data[i]))
 		{
 			I2cMasterStop();
 			return false;

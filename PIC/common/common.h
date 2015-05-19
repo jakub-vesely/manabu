@@ -3,6 +3,12 @@
 
 #include <stdbool.h>
 
+#if defined(HAVE_INPUT) || defined(HAVE_OUTPUT)
+#   define INPUT_MESSAGE_READY (true == INTF)
+#else
+#   define INPUT_MESSAGE_READY (false)
+#endif
+
 typedef enum
 {
     COMMAND_NONE = 0,
