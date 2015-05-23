@@ -4,9 +4,9 @@
 #include <stdbool.h>
 
 #if defined(HAVE_INPUT) || defined(HAVE_OUTPUT)
-#   define INPUT_MESSAGE_READY (true == INTF)
+#   define INPUT_MESSAGE_MISSED (INTF)
 #else
-#   define INPUT_MESSAGE_READY (false)
+#   define INPUT_MESSAGE_MISSED (false)
 #endif
 
 typedef enum
@@ -21,7 +21,8 @@ typedef enum
     COMMAND_FLASH_WRITE_WORD = 7,
     COMMAND_FLASH_CHECKSUM = 8,
     COMMAND_FLASH_SET_BOOT_FLAG = 9,
-    COMMAND_PING = 10
+    COMMAND_PING = 10,
+    COMMAND_GET_STATE = 11
 } I2cCommand;
 
 typedef enum
@@ -48,7 +49,6 @@ bool g_stateChanged = true;
 bool g_commandRecieved = false;
 unsigned char g_commandInstruction = 0;
 unsigned char g_commandValue = 0;
-
 struct
 {
     bool isState:1;

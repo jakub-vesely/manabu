@@ -26,22 +26,46 @@
 
 unsigned char g_invertOutput = 0;
 
+void EmintResponseToPred()
+{
+	unsigned char counter = 100;
+	SDA_TRIS = false;
+	SDA_PORT = false;
+	while (0 != --counter)
+	{}
+	SDA_TRIS = true; //back to imput 1 will be set by a pull-up resistor
+}
+
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
-	bool retVal;
+	SSPEN = 0;
+	bool retVal = 0;
 
 	INnOUT_PORT = 0;
 	//it must be behind INnOUT_PORT = 0; because it cause iterupt
-	INTE = 1; //enable external iterupt
+	INPUT_MESSAGE_MISSED = false;
 
-	I2cMasterInit();
-	retVal = I2cMasterPut(messageType, command, data, count);
-	I2cSlaveInit();
+	//I2cMasterInit();
+	//if (!INPUT_MESSAGE_MISSED)
+	//	retVal = I2cMasterPut(messageType, command, data, count);
+	SSPEN = 0;
+	
+	INnOUT_PORT = 1; //It couldn't cause an interrupt because it cause on fall edge
 
-	//INTE = 0; //disable external iterupt, I'm listening again
-	INnOUT_PORT = 1;
+	if (INPUT_MESSAGE_MISSED)
+		EmintResponseToPred();
 
+	SSP1STAT &= 0x3F;                // power on state
+	SSP1CON1 = 0x00;                 // power on state
+	SSP1CON2 = 0x00;
 
+	SSPCON2 = 0b00000001; /*SEN is set to enable clock stretching*/
+    SSPCON3 = 0x00;
+    SSPMSK = 0x00; /*all address bits will be ignored*/
+    SSPADD = 0x00; /*no address is set, all the time is conneceted only one slave*/
+    SSPCON1 = 0b00010110; /*clock stretching + 7-bit addressing*/
+  	SSPEN = 1;
+	
 	return retVal;
 }
 
@@ -50,16 +74,14 @@ bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigne
 	bool retVal;
 
 	INnOUT_PORT = 0;
-	INTE = 1; //enable external iterupt
-
+	INPUT_MESSAGE_MISSED = false;
 	I2cMasterInit();
 	retVal = I2cMasterGet(messageType, command, value);
 
 	I2cSlaveInit();
 
-	INTE = 0; //disable external iterupt, I'm listening again
+	//TODO: if EmintResponseToPred();
 	INnOUT_PORT = 1;
-
 	return retVal;
 }
 
@@ -67,7 +89,11 @@ void SendToOutputIfReady()
 {
 	if (!g_toOutput.isReady)
 		return;
-	
+
+	/*PORTCbits.RC5 = 1;
+	Wait(1);
+	PORTCbits.RC5 = 0;
+	*/
 	if (TO_OUTPUT_MAX_TRAY == g_toOutput.try)
 	{
 		g_toOutput.isReady = false;
@@ -81,7 +107,7 @@ void SendToOutputIfReady()
 		{
 			g_toOutput.isReady = false;
 		}
-		else //message was not send
+		/*else if (!INPUT_MESSAGE_MISSED)//message was not send
 		{
 			if (g_invertOutput)
 			{
@@ -97,7 +123,7 @@ void SendToOutputIfReady()
 				//PORTCbits.RC5 = 0;
 				//Wait(10);
 			}
-		}
+		}*/
 	}
 	else
 	{
@@ -115,7 +141,7 @@ void main(void)
 	TRISA = 0x0; //mainly RA0 and RA1 should be as configured as outputs because the could cause external interupt which I use for Input bus checking
 	TRISAbits.TRISA2 = 1; //input for iterupt
 
-	INTF = 0; //interupt flag cleared
+	INPUT_MESSAGE_MISSED = false; //interupt flag cleared
 	OPTION_REGbits.INTEDG = 0; //external interupt to falling edge
 
 	g_persistant.mode = 1;
@@ -125,30 +151,16 @@ void main(void)
 
 	while(1)
 	{
-		unsigned inputCounter = 1; //at least one question to input message	
-		if (INPUT_MESSAGE_READY) //While I send message to output predecessor try to send me a message I have to wait for it
-		{	
-			INTF = 0;
-			inputCounter = RECEIVE_TRY_COUNT;
+#if defined(HAVE_INPUT)
+		CheckI2cAsSlave();
 
-			//deleteme
-			//PORTCbits.RC5 = 1;
-			//Wait(1);
-		}
-		else
-		{
-			//deleteme
-			//PORTCbits.RC5 = 0;
-		}
-
-
-		while (0 != inputCounter-- && !g_stateChanged && !g_commandRecieved)
-			CheckI2cAsSlave();
+		INTF = 0; //i2c message has benn processed, clear input interrupt flag
 
 		if (g_commandRecieved)
 			ProcessCommand();
+#endif
 
-		ProcessModuleFunctionalit();
+		ProcessModuleFunctionality();
 
 		if (g_stateChanged)
 		{
@@ -157,6 +169,6 @@ void main(void)
 		}
 #if defined (HAVE_OUTPUT)
 		SendToOutputIfReady();
-#endif //#ifdef HAVE_OUTPUT
+#endif
 	}
 }

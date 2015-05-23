@@ -18,7 +18,26 @@ void I2cSlaveInit()
 {
 #ifndef _PIC18F14K50_H_
 	I2C_COMMON_INIT
-	I2C_SLAVE_SPECIFIC_INIT
+	/*SSP1STAT &= 0x3F;                // power on state
+  SSP1CON1 = 0x00;                 // power on state
+  SSP1CON2 = 0x00;                 // power on state
+  SSP1CON1 |= 0b00000110;           // select serial mode
+  SSP1STAT |= 0b10000000;                // slew rate on/off
+
+  SSP1CON1 |= 0b00100000;              // enable synchronous serial port
+	//I2C_SLAVE_SPECIFIC_INIT
+  */
+
+	SSP1STAT &= 0x3F;                // power on state
+  SSP1CON1 = 0x00;                 // power on state
+  SSP1CON2 = 0x00;
+
+	SSPCON2 = 0b00000001; /*SEN is set to enable clock stretching*/
+    SSPCON3 = 0x00; 
+    SSPMSK = 0x00; /*all address bits will be ignored*/
+    SSPADD = 0x00; /*no address is set, all the time is conneceted only one slave*/
+    SSPCON1 = 0b00010110; /*clock stretching + 7-bit addressing*/ 
+    SSPEN = 1;
 #endif
 }
 
@@ -42,11 +61,12 @@ void I2cMasterInit(void)
 	SMP = 1;           //Slew rate control disabled for standard speed mode (100 kHz and 1 MHz)
 	CKE = 1;           //Transmit occurs on transition from active to Idle clock state
 
+	SSP1STAT &= 0x3F;                // power on state
+	SSP1CON1 = 0x00;                 // power on state
+	SSP1CON2 = 0x00;                 // power on state
 	SSPMSK = 0;
-	SSPCON1 = 0;
-	SSPCON2 = 0;
 	SSPCON3 = 0;
-	SSPSTAT = 0;
+	SSP1STAT |= 0b10000000;
 	
 	//uncomment when slave will be process it
 	//ACKEN = 1; //Acknowledge enabled
@@ -63,11 +83,11 @@ bool I2cMasterIdle(void)
 	IdleI2C();
 	return true;
 #else
-	unsigned counter = SEND_TRY_COUNT;
+	//unsigned counter = SEND_TRY_COUNT;
 	while ((SSPCON2 & 0x1F) | (SSPSTATbits.R_nW))
 	{
-		if (0 == counter--)
-			return false;
+		//if (0 == counter--)
+		//	return false;
 	};
 #endif
 	return true;
@@ -98,7 +118,7 @@ bool I2cMasterWrite(char byte)
 #else
 	SSPBUF = byte;
 	while(SSP1STATbits.R_nW)
-	{} //R_nW will be cleared automatticly after whole message is written on a bus 
+	{} //R_nW will be cleared automatticly after whole message is written on a bus
 	return 0 == SSPCON2bits.ACKSTAT;
 #endif
 }
@@ -115,10 +135,10 @@ bool I2cMasterRead(unsigned char *retVal)
 	if (!I2cMasterIdle())
 	 return false;
 	 
-  SSPCON2bits.RCEN = 1;
+	SSPCON2bits.RCEN = 1;
 	while(SSPCON2bits.RCEN) //FIXME: may be ther should be !BF
 	{
-		if (0 == counter-- || INPUT_MESSAGE_READY) //timeout or predessor try to send a message to me
+		if (0 == counter-- || INPUT_MESSAGE_MISSED) //timeout or predessor try to send a message to me
 			return false;
 	}
 	*retVal = SSPBUF;
@@ -144,37 +164,76 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 {
 	unsigned char i = 0;
 	
-	if (!I2cMasterIdle())
-		return false;
+	//if (!I2cMasterIdle())
+	//	return false;
 	
 	I2cMasterStart();
-	/*
-	 * because I will communicate always with one slave only I dont need send an
-	 * address so I will use this required byte for a message type
-	 * on the slave I will mask all the address byte out
-	 */
-	if (!I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
+	if(!INPUT_MESSAGE_MISSED)
 	{
-		I2cMasterStop();
-		return false;
-	}
-
-	for (; i < count; i++)
-	{
-		if(INPUT_MESSAGE_READY || !I2cMasterWrite(data[i]))
+		/*
+		 * because I will communicate always with one slave only I dont need send an
+		 * address so I will use this required byte for a message type
+		 * on the slave I will mask all the address byte out
+		 */
+		if (!I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
 		{
 			I2cMasterStop();
 			return false;
 		}
-	}
 
+		for (; i < count; i++)
+		{
+			if(!I2cMasterWrite(data[i]))
+			{
+				I2cMasterStop();
+				return false;
+			}
+		}
+	}
 	I2cMasterStop();
 	return true;
 }
 
+bool WaitForDescendent()
+{
+	unsigned counter = 5000;
+
+	//swich SCL port to output and set value 0 on it
+	SCL_TRIS = false;
+	SCL_PORT = false;
+
+	//wait to answer from descendent
+	while (0 != counter--)
+	{
+		//if (INPUT_MESSAGE_MISSED)
+		//	goto WFD_FAILED;
+
+		if (!SDA_PORT)
+		{
+			while(!SDA_PORT)
+			{
+				//if (INPUT_MESSAGE_MISSED)
+				//	goto WFD_FAILED;
+			}
+			SCL_TRIS = true; //back to input
+			
+			counter = 100;
+			while (0 != counter--)
+			{}
+			
+			return true;
+		}
+	}
+WFD_FAILED:;
+	SCL_TRIS = true;
+	return false;
+}
 
 bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal)
 {
+	if (!WaitForDescendent())
+		return false;
+
 	I2cMasterStart();
 	
 	if (!I2cMasterWrite((command << 2) | (messageType << 1) | 1))
@@ -207,16 +266,15 @@ bool GetCommandI2C(I2cCommand command, unsigned char *retVal)
 	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, retVal);
 }
 
-void CheckI2cAsSlave(void)
+bool CheckI2cAsSlave(void)
 {
 #ifndef _PIC18F14K50_H_
 
 	unsigned char value;
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
-		return;
+		return false;
 
 	SSP1IF = 0;
-	
 	value = SSPBUF;
 
 	//FIXME: I should wait for processing last command or data
@@ -225,14 +283,21 @@ void CheckI2cAsSlave(void)
 		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
 
-		if (COMMAND_FLASH_GET_VERSION == g_commandInstruction)
+		switch (g_commandInstruction)
 		{
-			g_bootloaderPolicy = 1;
-			SSPBUF = 0; //I'm in program so i dont have a bootloader version
+			case COMMAND_FLASH_GET_VERSION:
+		
+				g_bootloaderPolicy = 1;
+				SSPBUF = 0; //I'm in program so i dont have a bootloader version
+			break;
+			case COMMAND_GET_CURRENT_MODE:
+				SSPBUF = g_persistant.mode;
+			break;
+			case COMMAND_GET_STATE:
+				SSPBUF = g_state;
+			break;
 		}
-		else if (COMMAND_GET_CURRENT_MODE == g_commandInstruction)
-			SSPBUF = g_persistant.mode;
-
+		
 		//I want to be sure this insrtuction didn't come by a mistake
 		//It is very important because after this isnstuction is chip set to
 		//a bootloader state and the program is not accessible any more
@@ -261,5 +326,7 @@ void CheckI2cAsSlave(void)
 	}
 	if (SEN)
 		CKP = 1;
+
+	return true;
 #endif
 }

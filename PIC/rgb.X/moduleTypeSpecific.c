@@ -98,6 +98,6 @@ void ModuleTypeSpecificInit()
 	PwmInit();
 }
 
-void ProcessModuleFunctionalit()
+void ProcessModuleFunctionality()
 {
 }

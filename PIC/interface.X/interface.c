@@ -52,15 +52,23 @@ void ResponseChar(unsigned char answer)
 	putUSBUSART(buffer, 2);
 }
 
+unsigned char GetFromI2C(I2cCommand command)
+{
+	unsigned char retVal;
+	if (GetCommandI2C(command, &retVal))
+		return retVal;
+		
+	return 0xff;
+}
 void UsbDataRead()
 {
-	unsigned char retVal = 0;
 	if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1))
 		return;
 
 	unsigned char length = getsUSBUSART(buffer,CDC_DATA_IN_EP_SIZE);
 	if (0 != length)
 	{
+		unsigned char deviceId = buffer[1];
 		switch (buffer[2])
 		{
 		case FID_GET_PROTOCOL_ID:
@@ -71,12 +79,13 @@ void UsbDataRead()
 			ResponseChar(0);
 			break;
 		case FID_GET_STATE:
-			ResponseChar(g_state);
+			if (0 == deviceId)
+				ResponseChar(g_state);
+			else
+				ResponseChar(GetFromI2C(COMMAND_GET_STATE));
 			break;
 		case FID_GET_MODE:
-			if (!GetCommandI2C(COMMAND_GET_CURRENT_MODE, &retVal))
-				retVal = 0xff;
-			ResponseChar(retVal);
+			ResponseChar(GetFromI2C(COMMAND_GET_CURRENT_MODE));
 			break;
 		case FID_SET_MODE:
 			//SetDescendentMode(data[3]);
@@ -84,10 +93,7 @@ void UsbDataRead()
 			break;
 
 		case FID_COMMAND_FLASH_GET_VERSION:
-			retVal = 0xfe;
-			if (!GetCommandI2C(COMMAND_FLASH_GET_VERSION, &retVal))
-				retVal = 0xff;
-			ResponseChar(retVal);
+			ResponseChar(GetFromI2C(COMMAND_FLASH_GET_VERSION));
 			break;
 		case FID_COMMAND_FLASH_END:
 			PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
@@ -106,9 +112,7 @@ void UsbDataRead()
 			ResponseChar(0);
 			break;
 		case FID_COMMAND_FLASH_CHECKSUM:
-			if (!GetCommandI2C(COMMAND_FLASH_CHECKSUM, &retVal))
-				retVal = 0xff;
-			ResponseChar(retVal);
+			ResponseChar(GetFromI2C(COMMAND_FLASH_CHECKSUM));
 			break;
 		case FID_COMMAND_FLASH_SET_BOOT_FLAG:
 			PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);

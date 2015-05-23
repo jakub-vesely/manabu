@@ -82,7 +82,8 @@
       </makeCustomizationType>
       <HI-TECH-COMP>
         <property key="asmlist" value="true"/>
-        <property key="define-macros" value="DONT_HAVE_OUTPUT;INTERUPTS_DISABLED"/>
+        <property key="define-macros"
+                  value="DONT_HAVE_OUTPUT;INTERUPTS_DISABLED;HAVE_INPUT"/>
         <property key="extra-include-directories" value=".;..;../..;../common/16F1503"/>
         <property key="identifier-length" value="255"/>
         <property key="operation-mode" value="free"/>

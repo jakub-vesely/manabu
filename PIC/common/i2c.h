@@ -11,17 +11,20 @@ void I2cMasterInit(void);
 bool PutStateI2C(unsigned char state);
 bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
 bool GetCommandI2C(I2cCommand command, unsigned char *retVal);
-void CheckI2cAsSlave(void);
+bool CheckI2cAsSlave(void);
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal);
 
-
+#define SCL_PORT PORTCbits.RC0
+#define SDA_PORT PORTCbits.RC1
+#define SCL_TRIS TRISCbits.TRISC0
+#define SDA_TRIS TRISCbits.TRISC1
 #define  I2C_COMMON_INIT\
     SSPEN = 0;\
-    PORTCbits.RC0 = 0;\
-    PORTCbits.RC1 = 0;\
-    TRISCbits.TRISC0 = 1;\
-    TRISCbits.TRISC1 = 1;
+    SCL_PORT = 0;\
+    SDA_PORT = 0;\
+    SCL_TRIS = 1;\
+    SDA_TRIS = 1;
 
 #define I2C_SLAVE_SPECIFIC_INIT \
     SSPCON2 = 0b00000001; /*SEN is set to enable clock stretching*/\

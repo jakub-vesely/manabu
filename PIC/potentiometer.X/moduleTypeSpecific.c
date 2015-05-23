@@ -45,9 +45,9 @@ unsigned int ADC_Read10bit(void)
 #	define IS_DIFFERENT(potValue) potValue != g_state
 #endif
 
-void ProcessModuleFunctionalit()
+void ProcessModuleFunctionality()
 {
-	unsigned int potValue = ADC_Read10bit() / 4;
+	unsigned char potValue = (unsigned char)(ADC_Read10bit() / 4);
 
 	if (IS_DIFFERENT(potValue))
 	{
