@@ -49,7 +49,7 @@ void SerialPort::SetValue(int value)
 
 unsigned char SerialPort::GetValue()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_STATE, 0, 2, false);
+	_CallCubeFunction(1, FID_GET_STATE, 0, 2, false);
 
 	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
 	return g_buffer[1];

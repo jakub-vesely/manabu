@@ -89,8 +89,9 @@ bool I2cMasterIdle(void)
 		//if (0 == counter--)
 		//	return false;
 	};
-#endif
 	return true;
+#endif
+	
 }
 
 void I2cMasterStart(void)
@@ -194,45 +195,8 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 	return true;
 }
 
-bool WaitForDescendent()
-{
-	unsigned counter = 5000;
-
-	//swich SCL port to output and set value 0 on it
-	SCL_TRIS = false;
-	SCL_PORT = false;
-
-	//wait to answer from descendent
-	while (0 != counter--)
-	{
-		//if (INPUT_MESSAGE_MISSED)
-		//	goto WFD_FAILED;
-
-		if (!SDA_PORT)
-		{
-			while(!SDA_PORT)
-			{
-				//if (INPUT_MESSAGE_MISSED)
-				//	goto WFD_FAILED;
-			}
-			SCL_TRIS = true; //back to input
-			
-			counter = 100;
-			while (0 != counter--)
-			{}
-			
-			return true;
-		}
-	}
-WFD_FAILED:;
-	SCL_TRIS = true;
-	return false;
-}
-
 bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal)
 {
-	if (!WaitForDescendent())
-		return false;
 
 	I2cMasterStart();
 	
@@ -328,5 +292,7 @@ bool CheckI2cAsSlave(void)
 		CKP = 1;
 
 	return true;
+#else
+	return false;
 #endif
 }

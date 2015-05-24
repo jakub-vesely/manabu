@@ -21,7 +21,6 @@
  *******************************************************************/
 
 #include <system.h>
-#include <system_config.h>
 #include <usb/usb.h>
 
 /** CONFIGURATION Bits **********************************************/

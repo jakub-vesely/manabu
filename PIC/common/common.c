@@ -5,6 +5,9 @@
 #	include <common/HEFlash.h>
 #	include <common/i2c.h>
 #endif
+
+#define TO_OUTPUT_MAX_TRAY 10
+
 void Wait(int delay)
 {
 	int i;
@@ -66,7 +69,7 @@ void ProcessStateChangedCommon()
 
 #ifdef HAVE_OUTPUT
 	g_toOutput.isState = true;
-	g_toOutput.try = 0;
+	g_toOutput.send_try = TO_OUTPUT_MAX_TRAY;
 	g_toOutput.isReady = true;
 #endif
 }

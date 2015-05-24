@@ -51,13 +51,15 @@ void ResponseChar(unsigned char answer)
 	buffer[1] = answer;
 	putUSBUSART(buffer, 2);
 }
-
 unsigned char GetFromI2C(I2cCommand command)
 {
-	unsigned char retVal;
-	if (GetCommandI2C(command, &retVal))
-		return retVal;
-		
+	unsigned  counter = 1000; //there should probably be less
+	unsigned char retVal = 0;
+	while (0 != counter--)
+	{
+		if (GetCommandI2C(command, &retVal))
+			return retVal;
+	}
 	return 0xff;
 }
 void UsbDataRead()
@@ -137,7 +139,6 @@ MAIN_RETURN main(void)
 	
     USBDeviceInit();
     USBDeviceAttach();
-    
     while(1)
     {
 		SYSTEM_Tasks();

@@ -53,7 +53,7 @@ struct
 {
     bool isState:1;
     bool isReady:1;
-    unsigned try:6;
+    unsigned send_try:6;
 } g_toOutput;
 #endif //BOOTLOADER
 

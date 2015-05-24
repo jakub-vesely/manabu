@@ -21,39 +21,24 @@
 #pragma config LPBOR = OFF      // Low-Power Brown Out Reset (Low-Power BOR is disabled)
 #pragma config LVP = OFF        // Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
 
-#define TO_OUTPUT_MAX_TRAY 10
-#define RECEIVE_TRY_COUNT  5000
+#define RECEIVE_TRY_COUNT  50000
 
 unsigned char g_invertOutput = 0;
-
-void EmintResponseToPred()
-{
-	unsigned char counter = 100;
-	SDA_TRIS = false;
-	SDA_PORT = false;
-	while (0 != --counter)
-	{}
-	SDA_TRIS = true; //back to imput 1 will be set by a pull-up resistor
-}
-
+bool g_inputMessageMissed = false;
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
-	SSPEN = 0;
 	bool retVal = 0;
 
 	INnOUT_PORT = 0;
 	//it must be behind INnOUT_PORT = 0; because it cause iterupt
 	INPUT_MESSAGE_MISSED = false;
 
-	//I2cMasterInit();
-	//if (!INPUT_MESSAGE_MISSED)
-	//	retVal = I2cMasterPut(messageType, command, data, count);
+	I2cMasterInit();
+	if (!INPUT_MESSAGE_MISSED)
+		retVal = I2cMasterPut(messageType, command, data, count);
 	SSPEN = 0;
-	
-	INnOUT_PORT = 1; //It couldn't cause an interrupt because it cause on fall edge
-
-	if (INPUT_MESSAGE_MISSED)
-		EmintResponseToPred();
+	SSP1IF = false;
+	INnOUT_PORT = 1;
 
 	SSP1STAT &= 0x3F;                // power on state
 	SSP1CON1 = 0x00;                 // power on state
@@ -64,7 +49,10 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
     SSPMSK = 0x00; /*all address bits will be ignored*/
     SSPADD = 0x00; /*no address is set, all the time is conneceted only one slave*/
     SSPCON1 = 0b00010110; /*clock stretching + 7-bit addressing*/
-  	SSPEN = 1;
+    SSPEN = 1;
+
+	if (INPUT_MESSAGE_MISSED)
+		g_inputMessageMissed = true;
 	
 	return retVal;
 }
@@ -80,7 +68,8 @@ bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigne
 
 	I2cSlaveInit();
 
-	//TODO: if EmintResponseToPred();
+	if (INPUT_MESSAGE_MISSED)
+		g_inputMessageMissed = true;
 	INnOUT_PORT = 1;
 	return retVal;
 }
@@ -94,20 +83,22 @@ void SendToOutputIfReady()
 	Wait(1);
 	PORTCbits.RC5 = 0;
 	*/
-	if (TO_OUTPUT_MAX_TRAY == g_toOutput.try)
+	if (0 == g_toOutput.send_try)
 	{
 		g_toOutput.isReady = false;
 		//TODO: solve module on output is not connected any more
 		return;
 	}
-	g_toOutput.try = g_toOutput.try + 1;
+
+	g_toOutput.send_try = g_toOutput.send_try - 1;
+	
 	if (g_toOutput.isState)
 	{
 		if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1))
 		{
 			g_toOutput.isReady = false;
 		}
-		/*else if (!INPUT_MESSAGE_MISSED)//message was not send
+		else if (!INPUT_MESSAGE_MISSED)//message was not send
 		{
 			if (g_invertOutput)
 			{
@@ -123,7 +114,7 @@ void SendToOutputIfReady()
 				//PORTCbits.RC5 = 0;
 				//Wait(10);
 			}
-		}*/
+		}
 	}
 	else
 	{
@@ -152,6 +143,18 @@ void main(void)
 	while(1)
 	{
 #if defined(HAVE_INPUT)
+		//While I sended message to output predecessor try to send a message to me. I have to wait for it again
+		if (g_inputMessageMissed)
+		{
+			unsigned inputCounter = RECEIVE_TRY_COUNT; //at least one question to input message
+			g_inputMessageMissed = false;
+			PORTCbits.RC5 = 1;
+			while (0 != inputCounter-- && !SSP1IF)
+			{};
+
+			PORTCbits.RC5 = 0;
+		}
+
 		CheckI2cAsSlave();
 
 		INTF = 0; //i2c message has benn processed, clear input interrupt flag

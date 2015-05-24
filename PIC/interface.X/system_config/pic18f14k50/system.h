@@ -26,7 +26,6 @@
 #include <xc.h>
 #include <stdbool.h>
 
-#include <io_mapping.h>
 #include <fixed_address_memory.h>
 
 #define MAIN_RETURN void

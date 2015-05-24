@@ -1,8 +1,6 @@
 #include <system_common.h>
 #include <common/common.h>
 
-//#define HISTERESIS
-
 void ProcessStateChangedModuleTypeSpecific()
 {
 	
@@ -39,17 +37,13 @@ unsigned int ADC_Read10bit(void)
 
     return result;
 }
-#ifdef HISTERESIS
-#	define IS_DIFFERENT(potValue) potValue != g_state && potValue != g_state + 1 && potValue != g_state - 1
-#else
-#	define IS_DIFFERENT(potValue) potValue != g_state
-#endif
+
 
 void ProcessModuleFunctionality()
 {
 	unsigned char potValue = (unsigned char)(ADC_Read10bit() / 4);
 
-	if (IS_DIFFERENT(potValue))
+	//if (potValue != g_state)
 	{
 		g_state = potValue;
 		g_stateChanged = true;
