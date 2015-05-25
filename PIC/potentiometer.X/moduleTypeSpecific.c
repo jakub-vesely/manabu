@@ -43,7 +43,7 @@ void ProcessModuleFunctionality()
 {
 	unsigned char potValue = (unsigned char)(ADC_Read10bit() / 4);
 
-	//if (potValue != g_state)
+	if (potValue != g_state)
 	{
 		g_state = potValue;
 		g_stateChanged = true;

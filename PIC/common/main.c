@@ -21,36 +21,32 @@
 #pragma config LPBOR = OFF      // Low-Power Brown Out Reset (Low-Power BOR is disabled)
 #pragma config LVP = OFF        // Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
 
-#define RECEIVE_TRY_COUNT  50000
+#define RECEIVE_TRY_COUNT  5000
 
 unsigned char g_invertOutput = 0;
 bool g_inputMessageMissed = false;
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
 	bool retVal = 0;
-
-	INnOUT_PORT = 0;
-	//it must be behind INnOUT_PORT = 0; because it cause iterupt
-	INPUT_MESSAGE_MISSED = false;
+	if (SSP1IF || SSPSTATbits.S) //message from input recieved or just comming
+	{
+		INPUT_MESSAGE_MISSED = false;
+		return false;
+	}
+	
+	SSPEN = 0;
+	INnOUT_PORT = 0; //sitch to output
+	INPUT_MESSAGE_MISSED = false; //it must be behind INnOUT_PORT = 0; because it cause iterupt
 
 	I2cMasterInit();
+	I2cMasterIdle();
 	if (!INPUT_MESSAGE_MISSED)
 		retVal = I2cMasterPut(messageType, command, data, count);
+	I2cMasterIdle();
 	SSPEN = 0;
-	SSP1IF = false;
+	
 	INnOUT_PORT = 1;
-
-	SSP1STAT &= 0x3F;                // power on state
-	SSP1CON1 = 0x00;                 // power on state
-	SSP1CON2 = 0x00;
-
-	SSPCON2 = 0b00000001; /*SEN is set to enable clock stretching*/
-    SSPCON3 = 0x00;
-    SSPMSK = 0x00; /*all address bits will be ignored*/
-    SSPADD = 0x00; /*no address is set, all the time is conneceted only one slave*/
-    SSPCON1 = 0b00010110; /*clock stretching + 7-bit addressing*/
-    SSPEN = 1;
-
+	I2cSlaveInit();
 	if (INPUT_MESSAGE_MISSED)
 		g_inputMessageMissed = true;
 	
@@ -65,7 +61,6 @@ bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigne
 	INPUT_MESSAGE_MISSED = false;
 	I2cMasterInit();
 	retVal = I2cMasterGet(messageType, command, value);
-
 	I2cSlaveInit();
 
 	if (INPUT_MESSAGE_MISSED)
@@ -79,10 +74,6 @@ void SendToOutputIfReady()
 	if (!g_toOutput.isReady)
 		return;
 
-	/*PORTCbits.RC5 = 1;
-	Wait(1);
-	PORTCbits.RC5 = 0;
-	*/
 	if (0 == g_toOutput.send_try)
 	{
 		g_toOutput.isReady = false;
@@ -104,15 +95,11 @@ void SendToOutputIfReady()
 			{
 				g_invertOutput = 0;
 				INVERT_OUTPUT_PORT = 0;
-				//PORTCbits.RC5 = 1;
-				//Wait(10);
 			}
 			else
 			{
 				g_invertOutput = 1;
 				INVERT_OUTPUT_PORT = 1;
-				//PORTCbits.RC5 = 0;
-				//Wait(10);
 			}
 		}
 	}
@@ -143,20 +130,18 @@ void main(void)
 	while(1)
 	{
 #if defined(HAVE_INPUT)
+		
 		//While I sended message to output predecessor try to send a message to me. I have to wait for it again
 		if (g_inputMessageMissed)
 		{
 			unsigned inputCounter = RECEIVE_TRY_COUNT; //at least one question to input message
 			g_inputMessageMissed = false;
-			PORTCbits.RC5 = 1;
 			while (0 != inputCounter-- && !SSP1IF)
 			{};
-
-			PORTCbits.RC5 = 0;
 		}
-
+		
 		CheckI2cAsSlave();
-
+		
 		INTF = 0; //i2c message has benn processed, clear input interrupt flag
 
 		if (g_commandRecieved)

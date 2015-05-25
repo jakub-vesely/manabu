@@ -7,7 +7,8 @@
 #include <system_common.h>
 
 void I2cSlaveInit();
-void I2cMasterInit(void);
+void I2cInit(void);
+bool I2cMasterIdle(void);
 bool PutStateI2C(unsigned char state);
 bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
 bool GetCommandI2C(I2cCommand command, unsigned char *retVal);
@@ -15,10 +16,17 @@ bool CheckI2cAsSlave(void);
 bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
 bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal);
 
-#define SCL_PORT PORTCbits.RC0
-#define SDA_PORT PORTCbits.RC1
-#define SCL_TRIS TRISCbits.TRISC0
-#define SDA_TRIS TRISCbits.TRISC1
+#if defined LPCDEVKIT
+#   define SCL_PORT PORTBbits.RB6
+#   define SDA_PORT PORTBbits.RB4
+#   define SCL_TRIS TRISBbits.TRISB6
+#   define SDA_TRIS TRISBbits.TRISB4
+#else
+#   define SCL_PORT PORTCbits.RC0
+#   define SDA_PORT PORTCbits.RC1
+#   define SCL_TRIS TRISCbits.TRISC0
+#   define SDA_TRIS TRISCbits.TRISC1
+#endif
 #define  I2C_COMMON_INIT\
     SSPEN = 0;\
     SCL_PORT = 0;\

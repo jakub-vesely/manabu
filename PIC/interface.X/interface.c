@@ -60,7 +60,7 @@ unsigned char GetFromI2C(I2cCommand command)
 		if (GetCommandI2C(command, &retVal))
 			return retVal;
 	}
-	return 0xff;
+	return 0x0;
 }
 void UsbDataRead()
 {
@@ -128,19 +128,24 @@ void UsbDataRead()
 
 MAIN_RETURN main(void)
 {
-#ifndef _PIC18F14K50_H_
+#if defined (_PIC18F14K50_H_)
+	ANSEL = 0;
+	ANSELH = 0;
+#else
 	OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
 	ACTCON = 0x90;  //Active clock tuning enabled for USB
-
 	ANSELC = 0;
-	TRISC = 0;
 #endif
+	LATC = 0;
+	TRISC = 0;
+		
 	I2cMasterInit();
 	
     USBDeviceInit();
     USBDeviceAttach();
     while(1)
     {
+
 		SYSTEM_Tasks();
 		if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
 			continue;

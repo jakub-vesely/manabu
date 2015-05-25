@@ -44,13 +44,7 @@ void I2cSlaveInit()
 void I2cMasterInit(void)
 {
 #if defined(_PIC18F14K50_H_)
-	OSCCONbits.IRCF = 7;
-	ANSELHbits.ANS10 = 0;
-
-	LATB=0;
-	TRIS_SCL = 0;
-	TRIS_SDA = 0;
-
+	CloseI2C();
 	SSPADD = (FREQ/(BITRATE*4))-1;
 	OpenI2C(MASTER, SLEW_OFF);
 #else
@@ -126,11 +120,6 @@ bool I2cMasterWrite(char byte)
 
 bool I2cMasterRead(unsigned char *retVal)
 {
-#if defined(_PIC18F14K50_H_)
-	*retVal = ReadI2C();
-	return true;
-#else
-  
 	unsigned counter = SEND_TRY_COUNT;
 	
 	if (!I2cMasterIdle())
@@ -142,12 +131,10 @@ bool I2cMasterRead(unsigned char *retVal)
 		if (0 == counter-- || INPUT_MESSAGE_MISSED) //timeout or predessor try to send a message to me
 			return false;
 	}
+
 	*retVal = SSPBUF;
-	
-  //uncomment when slave will be process it
-  //ACKDT = 0;
-  return true;
-#endif
+	return true;
+
 }
 
 void I2cMasterStop(void)
@@ -197,15 +184,14 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 
 bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal)
 {
-
+	I2cMasterInit();
+	I2cMasterIdle();
 	I2cMasterStart();
-	
 	if (!I2cMasterWrite((command << 2) | (messageType << 1) | 1))
 	{
 		I2cMasterStop();
 		return false;
 	}
-
 	if (!I2cMasterRead(retVal))
 	{
 		I2cMasterStop();
@@ -238,8 +224,9 @@ bool CheckI2cAsSlave(void)
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
 		return false;
 
-	SSP1IF = 0;
 	value = SSPBUF;
+
+	SSP1IF = false;
 
 	//FIXME: I should wait for processing last command or data
 	if (!IS_DATA) //"address" byte in write mode
@@ -247,19 +234,22 @@ bool CheckI2cAsSlave(void)
 		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
 
-		switch (g_commandInstruction)
+		if (IS_READ) //it have not be here - just for sure
 		{
-			case COMMAND_FLASH_GET_VERSION:
-		
-				g_bootloaderPolicy = 1;
-				SSPBUF = 0; //I'm in program so i dont have a bootloader version
-			break;
-			case COMMAND_GET_CURRENT_MODE:
-				SSPBUF = g_persistant.mode;
-			break;
-			case COMMAND_GET_STATE:
-				SSPBUF = g_state;
-			break;
+			switch (g_commandInstruction)
+			{
+				case COMMAND_FLASH_GET_VERSION:
+
+					g_bootloaderPolicy = 1;
+					SSPBUF = 0; //I'm in program so i dont have a bootloader version
+				break;
+				case COMMAND_GET_CURRENT_MODE:
+					SSPBUF = g_persistant.mode;
+				break;
+				case COMMAND_GET_STATE:
+					SSPBUF = g_state;
+				break;
+			}
 		}
 		
 		//I want to be sure this insrtuction didn't come by a mistake
