@@ -37,11 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
 		{
 			_AddInterfaceTab();
 			//_AddRgbTab();
-
+			_AddPlotTab();
 		}
-		_AddPlotTab();
 		_AddBootloaderTab();
-		//m_serialPort->GetValue(0);
 	}
 }
 
