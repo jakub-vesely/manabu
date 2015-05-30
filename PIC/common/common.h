@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#if defined(HAVE_INPUT) || defined(HAVE_OUTPUT)
+#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
 #   define INPUT_MESSAGE_MISSED (INTF)
 #else
 #   define INPUT_MESSAGE_MISSED (false)

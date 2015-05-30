@@ -24,9 +24,14 @@
 #define RECEIVE_TRY_COUNT  5000
 
 unsigned char g_invertOutput = 0;
-bool g_inputMessageMissed = false;
+
+#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
+	bool g_inputMessageMissed = false;
+#endif
+
 bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
 {
+#if defined(HAVE_OUTPUT)
 	bool retVal = 0;
 	if (SSP1IF || SSPSTATbits.S) //message from input recieved or just comming
 	{
@@ -49,12 +54,15 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 	I2cSlaveInit();
 	if (INPUT_MESSAGE_MISSED)
 		g_inputMessageMissed = true;
-	
 	return retVal;
+#else
+	return false;
+#endif
 }
 
 bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *value)
 {
+#if defined(HAVE_OUTPUT)
 	bool retVal;
 
 	INnOUT_PORT = 0;
@@ -67,6 +75,9 @@ bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigne
 		g_inputMessageMissed = true;
 	INnOUT_PORT = 1;
 	return retVal;
+#else
+	return false;
+#endif
 }
 
 void SendToOutputIfReady()
@@ -118,10 +129,12 @@ void main(void)
 
 	TRISC = 0x0; //mainl for debug
 	TRISA = 0x0; //mainly RA0 and RA1 should be as configured as outputs because the could cause external interupt which I use for Input bus checking
+	
+#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
 	TRISAbits.TRISA2 = 1; //input for iterupt
-
 	INPUT_MESSAGE_MISSED = false; //interupt flag cleared
 	OPTION_REGbits.INTEDG = 0; //external interupt to falling edge
+#endif
 
 	g_persistant.mode = 1;
 	g_persistant.bootLoaderCheck = RUN_PROGRAM_VALUE;
@@ -131,7 +144,8 @@ void main(void)
 	while(1)
 	{
 #if defined(HAVE_INPUT)
-		
+
+#	if defined (HAVE_OUTPUT)
 		//While I sended message to output predecessor try to send a message to me. I have to wait for it again
 		if (g_inputMessageMissed)
 		{
@@ -140,7 +154,7 @@ void main(void)
 			while (0 != inputCounter-- && !SSP1IF)
 			{};
 		}
-		
+#	endif
 		CheckI2cAsSlave();
 		
 		INTF = 0; //i2c message has benn processed, clear input interrupt flag
