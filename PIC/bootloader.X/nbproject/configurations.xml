@@ -117,11 +117,11 @@
         <property key="display-psect-usage" value="false"/>
         <property key="fill-flash-options-addr" value=""/>
         <property key="fill-flash-options-const" value="0x01"/>
-        <property key="fill-flash-options-how" value="0"/>
+        <property key="fill-flash-options-how" value="1"/>
         <property key="fill-flash-options-inc-const" value="1"/>
         <property key="fill-flash-options-increment" value=""/>
         <property key="fill-flash-options-seq" value="0x01"/>
-        <property key="fill-flash-options-what" value="0"/>
+        <property key="fill-flash-options-what" value="1"/>
         <property key="format-hex-file-for-download" value="false"/>
         <property key="initialize-data" value="true"/>
         <property key="keep-generated-startup.as" value="false"/>
