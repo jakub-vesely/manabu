@@ -1,5 +1,6 @@
 #include <system_common.h>
 #include <common/common.h>
+#include <CommonConstants.h>
 
 void ProcessStateChangedModuleTypeSpecific()
 {
@@ -48,4 +49,9 @@ void ProcessModuleFunctionality()
 		g_state = potValue;
 		g_stateChanged = true;
 	}
+}
+
+unsigned char GetModuleType()
+{
+	return TYPE_POTENTIOMETER;
 }

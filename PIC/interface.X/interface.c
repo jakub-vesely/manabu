@@ -120,6 +120,12 @@ void UsbDataRead()
 			PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
 			ResponseChar(0);
 			break;
+		case FID_GET_MODULE_TYPE:
+			if (0 == deviceId)
+				ResponseChar(TYPE_USB_INTERFACE);
+			else
+				ResponseChar(GetFromI2C(COMMAND_GET_MODULE_TYPE));
+			break;
 		}
 	}
 

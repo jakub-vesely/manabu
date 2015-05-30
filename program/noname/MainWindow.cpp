@@ -35,13 +35,13 @@ MainWindow::MainWindow(QWidget *parent) :
 		}
 		else
 		{
-			//_AddInterfaceTab();
+			_AddInterfaceTab();
 			//_AddRgbTab();
 
 		}
 		_AddPlotTab();
 		_AddBootloaderTab();
-		m_serialPort->GetValue();
+		//m_serialPort->GetValue(0);
 	}
 }
 
@@ -57,7 +57,10 @@ bool MainWindow::_AddInterfaceTab()
 	m_tabWidget->addTab(widget, tr("Interface"));
 	QVBoxLayout *layout = new QVBoxLayout(widget);
 
-	QSlider *slider = new QSlider(Qt::Horizontal, widget);
+	m_serialPort->GetModuleType(0);
+	m_serialPort->GetModuleType(1);
+
+	/*QSlider *slider = new QSlider(Qt::Horizontal, widget);
 	slider->setMinimumSize(200, 20);
 	slider->setRange(0, 255);
 	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
@@ -73,7 +76,7 @@ bool MainWindow::_AddInterfaceTab()
 	else
 	{
 		QMessageBox::critical(this, "", tr("Value was not set."));
-	}
+	}*/
 
 	return true;
 }

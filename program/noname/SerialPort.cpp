@@ -47,9 +47,9 @@ void SerialPort::SetValue(int value)
 	qDebug() << "value has been set to: " << value;
 }
 
-unsigned char SerialPort::GetValue()
+unsigned char SerialPort::GetValue(unsigned layer)
 {
-	_CallCubeFunction(1, FID_GET_STATE, 0, 2, false);
+	_CallCubeFunction(layer, FID_GET_STATE, 0, 2, false);
 
 	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
 	return g_buffer[1];
@@ -112,6 +112,14 @@ void SerialPort::SetMode(int mode)
 {
 	g_buffer[0] = mode;
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_MODE, 1, 1, false);
+}
+
+unsigned char SerialPort::GetModuleType(unsigned layer)
+{
+	_CallCubeFunction(layer, FID_GET_MODULE_TYPE, 0, 2, false);
+
+	qDebug() << "module type on layer:" << layer << " is " << (unsigned char)(g_buffer[1]);
+	return g_buffer[1];
 }
 
 bool SerialPort::FillValue(int &value)

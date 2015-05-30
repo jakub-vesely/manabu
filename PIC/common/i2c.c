@@ -1,6 +1,10 @@
 #include <common/i2c.h>
 #include <system_common.h>
 
+#ifndef INTERFACE
+#	include <moduleTypeSpecific.h>
+#endif
+
 #if defined(_PIC18F14K50_H_)
 #include <i2c.h>
 #endif
@@ -218,7 +222,7 @@ bool GetCommandI2C(I2cCommand command, unsigned char *retVal)
 
 bool CheckI2cAsSlave(void)
 {
-#ifndef _PIC18F14K50_H_
+#ifndef INTERFACE
 
 	unsigned char value;
 	if (!SSP1IF) //MSSP interupt flag (SPI or I2C)
@@ -248,6 +252,9 @@ bool CheckI2cAsSlave(void)
 				break;
 				case COMMAND_GET_STATE:
 					SSPBUF = g_state;
+				break;
+				case COMMAND_GET_MODULE_TYPE:
+					SSPBUF = GetModuleType();
 				break;
 			}
 		}

@@ -45,7 +45,7 @@ void Plot::draw()
 	m_y.resize(size + 1);
 
 	m_x[size] = size; // x goes from -1 to 1
-	m_y[size] = m_serialPort->GetValue();  // let's plot a quadratic function
+	m_y[size] = m_serialPort->GetValue(1);
 
 	m_customPlot->xAxis->setRange(0, m_x[size]);
 	//m_customPlot->yAxis->setRange(0, m_y[size]);

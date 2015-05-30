@@ -22,7 +22,8 @@ typedef enum
     COMMAND_FLASH_CHECKSUM = 8,
     COMMAND_FLASH_SET_BOOT_FLAG = 9,
     COMMAND_PING = 10,
-    COMMAND_GET_STATE = 11
+    COMMAND_GET_STATE = 11,
+    COMMAND_GET_MODULE_TYPE = 12,
 } I2cCommand;
 
 typedef enum

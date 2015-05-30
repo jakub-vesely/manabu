@@ -1,4 +1,5 @@
 #include <common/pwm.h>
+#include <CommonConstants.h>
 
 #define COMMON_ANODE 0
 
@@ -100,4 +101,9 @@ void ModuleTypeSpecificInit()
 
 void ProcessModuleFunctionality()
 {
+}
+
+unsigned char GetModuleType()
+{
+	return TYPE_RGB_LED;
 }
