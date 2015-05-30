@@ -52,6 +52,7 @@ void ProcessCommand()
 			g_persistant.bootLoaderCheck = g_commandValue;
 #ifndef LPCDEVKIT
 			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
+			Wait(1);
 #endif
 			//if (0 !=  g_persistant.bootLoaderCheck)
 			{

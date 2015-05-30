@@ -116,6 +116,7 @@ void main(void)
 	OSCCONbits.IRCF = 0b1111; //16MHz
 	while (!OSCSTATbits.HFIOFS);
 
+	TRISC = 0x0; //mainl for debug
 	TRISA = 0x0; //mainly RA0 and RA1 should be as configured as outputs because the could cause external interupt which I use for Input bus checking
 	TRISAbits.TRISA2 = 1; //input for iterupt
 

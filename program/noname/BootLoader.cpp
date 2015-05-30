@@ -152,7 +152,7 @@ void BootLoader::upload()
 	}
 	else
 	{
-		m_status->append(tr("no program present yet"));
+		m_status->append(tr("no program present"));
 		m_status->repaint();
 	}
 
