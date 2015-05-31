@@ -2,5 +2,6 @@
 #define _MODULE_TYPE_SPECIFIC_H_
 void ProcessStateChangedModuleTypeSpecific();
 void ModuleTypeSpecificInit();
-void ProcessModuleFunctionalit();
+void ProcessModuleFunctionality();
+unsigned char GetModuleType();
 #endif //_MODULE_TYPE_SPECIFIC_H_
