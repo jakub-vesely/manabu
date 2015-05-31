@@ -44,7 +44,7 @@ public slots:
 	void SetFlashLoadCheck(unsigned char byte);
 	void SetMode(int mode);
 	unsigned char GetModuleType(unsigned layer);
-	bool FillValue(int &value);
+	bool GetState(int &value);
 protected slots:
 	void readyRead();
 	void timerTimeout();

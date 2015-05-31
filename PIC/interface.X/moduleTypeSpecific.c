@@ -1,26 +1,5 @@
-/********************************************************************
- Software License Agreement:
-
- The software supplied herewith by Microchip Technology Incorporated
- (the "Company") for its PIC(R) Microcontroller is intended and
- supplied to you, the Company's customer, for use solely and
- exclusively on Microchip PIC Microcontroller products. The
- software is owned by the Company and/or its supplier, and is
- protected under applicable copyright laws. All rights are reserved.
- Any use in violation of the foregoing restrictions may subject the
- user to criminal sanctions under applicable laws, as well as to
- civil liability for the breach of the terms and conditions of this
- license.
-
- THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
- WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
- TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
- IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
- CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
- *******************************************************************/
-
-/** INCLUDES *******************************************************/
+#include "moduleTypeSpecific.h"
+#include <system_common.h>
 #include <system.h>
 #include <usb_config.h>
 
@@ -77,7 +56,8 @@ void UsbDataRead()
 			Response((unsigned char *)protocolId, sizeof(protocolId)-1);
 			break;
 		case FID_SET_STATE:
-			//SetState(data[3]);
+			g_state = buffer[3];
+			g_stateChanged = true;
 			ResponseChar(0);
 			break;
 		case FID_GET_STATE:
@@ -122,7 +102,7 @@ void UsbDataRead()
 			break;
 		case FID_GET_MODULE_TYPE:
 			if (0 == deviceId)
-				ResponseChar(TYPE_USB_INTERFACE);
+				ResponseChar(GetModuleType());
 			else
 				ResponseChar(GetFromI2C(COMMAND_GET_MODULE_TYPE));
 			break;
@@ -131,35 +111,6 @@ void UsbDataRead()
 
 	CDCTxService();
 }
-
-MAIN_RETURN main(void)
-{
-#if defined (_PIC18F14K50_H_)
-	ANSEL = 0;
-	ANSELH = 0;
-#else
-	OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
-	ACTCON = 0x90;  //Active clock tuning enabled for USB
-	ANSELC = 0;
-#endif
-	LATC = 0;
-	TRISC = 0;
-		
-	I2cMasterInit();
-	
-    USBDeviceInit();
-    USBDeviceAttach();
-    while(1)
-    {
-
-		SYSTEM_Tasks();
-		if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
-			continue;
-
-		UsbDataRead();
-
-    }//end while
-}//end main
 
 void APP_DeviceCDCEmulatorInitialize()
 {
@@ -188,7 +139,7 @@ bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size
             break;
 
         case EVENT_CONFIGURED:
-            /* When the device is configured, we can (re)initialize the 
+            /* When the device is configured, we can (re)initialize the
              * demo code. */
             APP_DeviceCDCEmulatorInitialize();
             break;
@@ -214,6 +165,41 @@ bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size
     return true;
 }
 
-/*******************************************************************************
- End of File
-*/
+void ProcessStateChangedModuleTypeSpecific()
+{
+}
+
+void ModuleTypeSpecificInit()
+{
+	#if defined (_PIC18F14K50_H_)
+	ANSEL = 0;
+	ANSELH = 0;
+#else
+	OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
+	ACTCON = 0x90;  //Active clock tuning enabled for USB
+	ANSELC = 0;
+#endif
+	LATC = 0;
+	TRISC = 0;
+
+	I2cMasterInit();
+
+    USBDeviceInit();
+    USBDeviceAttach();
+	g_state = 0;
+}
+
+
+void ProcessModuleFunctionality()
+{
+	SYSTEM_Tasks();
+	if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
+		return;
+
+	UsbDataRead();
+}
+
+unsigned char GetModuleType()
+{
+	return TYPE_USB_INTERFACE;
+}

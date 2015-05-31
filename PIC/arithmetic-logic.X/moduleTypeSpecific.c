@@ -4,7 +4,7 @@
 
 void ProcessStateChangedModuleTypeSpecific()
 {
-	
+	g_state = 255-g_state; //works as invertor
 }
 
 void ModuleTypeSpecificInit()
@@ -15,10 +15,6 @@ void ModuleTypeSpecificInit()
 
 void ProcessModuleFunctionality()
 {
-	if (g_stateChanged)
-	{
-		g_state = 255-g_state; //works as invertor
-	}
 }
 
 unsigned char GetModuleType()

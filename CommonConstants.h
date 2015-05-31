@@ -36,7 +36,8 @@ typedef enum
     TYPE_USB_INTERFACE = 1,
     TYPE_POTENTIOMETER = 2,
     TYPE_RGB_LED = 3,
-    TYPE_BUTTON = 4
+    TYPE_BUTTON = 4,
+    TYPE_ARITHMETIC_LOGIC = 5,
 } ModuleTypes;
 
 #endif //_COMMON_CONSTANTS_H_

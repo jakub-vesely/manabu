@@ -43,7 +43,7 @@ bool SerialPort::Open()
 void SerialPort::SetValue(int value)
 {
 	g_buffer[0] = value;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_STATE, 1, 1, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_STATE, 1, 2, false);
 	qDebug() << "value has been set to: " << value;
 }
 
@@ -122,9 +122,9 @@ unsigned char SerialPort::GetModuleType(unsigned layer)
 	return g_buffer[1];
 }
 
-bool SerialPort::FillValue(int &value)
+bool SerialPort::GetState(int &value)
 {
-	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_STATE, 0, 1, false))
+	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_STATE, 0, 2, false))
 			return false;
 
 		value = (unsigned char)g_buffer[0];

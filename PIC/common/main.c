@@ -33,27 +33,35 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 {
 #if defined(HAVE_OUTPUT)
 	bool retVal = 0;
-	if (SSP1IF || SSPSTATbits.S) //message from input recieved or just comming
-	{
-		INPUT_MESSAGE_MISSED = false;
-		return false;
-	}
-	
+#	if defined(HAVE_INPUT)
+		if (SSP1IF || SSPSTATbits.S) //message from input recieved or just comming
+		{
+			INPUT_MESSAGE_MISSED = false;
+			return false;
+		}
+#	endif
 	SSPEN = 0;
 	INnOUT_PORT = 0; //sitch to output
-	INPUT_MESSAGE_MISSED = false; //it must be behind INnOUT_PORT = 0; because it cause iterupt
-
+#	if defined(HAVE_INPUT)
+		INPUT_MESSAGE_MISSED = false; //it must be behind INnOUT_PORT = 0; because it cause iterupt
+#	endif
 	I2cMasterInit();
 	I2cMasterIdle();
-	if (!INPUT_MESSAGE_MISSED)
-		retVal = I2cMasterPut(messageType, command, data, count);
+#	if defined(HAVE_INPUT)
+		if (!INPUT_MESSAGE_MISSED)
+			retVal = I2cMasterPut(messageType, command, data, count);
+#	else
+	retVal = I2cMasterPut(messageType, command, data, count);
+#	endif
 	I2cMasterIdle();
 	SSPEN = 0;
 	
 	INnOUT_PORT = 1;
 	I2cSlaveInit();
-	if (INPUT_MESSAGE_MISSED)
-		g_inputMessageMissed = true;
+#	if defined(HAVE_INPUT)
+		if (INPUT_MESSAGE_MISSED)
+			g_inputMessageMissed = true;
+#	endif
 	return retVal;
 #else
 	return false;
@@ -66,13 +74,16 @@ bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigne
 	bool retVal;
 
 	INnOUT_PORT = 0;
-	INPUT_MESSAGE_MISSED = false;
+#	if defined(HAVE_INPUT)
+		INPUT_MESSAGE_MISSED = false;
+#	endif
 	I2cMasterInit();
 	retVal = I2cMasterGet(messageType, command, value);
 	I2cSlaveInit();
-
-	if (INPUT_MESSAGE_MISSED)
-		g_inputMessageMissed = true;
+#	if defined(HAVE_INPUT)
+		if (INPUT_MESSAGE_MISSED)
+			g_inputMessageMissed = true;
+#	endif
 	INnOUT_PORT = 1;
 	return retVal;
 #else
@@ -122,6 +133,7 @@ void SendToOutputIfReady()
 
 void main(void)
 {
+#ifndef INTERFACE
 	INTCONbits.GIE = 0;
 
 	OSCCONbits.IRCF = 0b1111; //16MHz
@@ -130,21 +142,21 @@ void main(void)
 	TRISC = 0x0; //mainl for debug
 	TRISA = 0x0; //mainly RA0 and RA1 should be as configured as outputs because the could cause external interupt which I use for Input bus checking
 	
-#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
-	TRISAbits.TRISA2 = 1; //input for iterupt
-	INPUT_MESSAGE_MISSED = false; //interupt flag cleared
-	OPTION_REGbits.INTEDG = 0; //external interupt to falling edge
-#endif
+#	if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
+		TRISAbits.TRISA2 = 1; //input for iterupt
+		INPUT_MESSAGE_MISSED = false; //interupt flag cleared
+		OPTION_REGbits.INTEDG = 0; //external interupt to falling edge
+#	endif
 
 	g_persistant.mode = 1;
 	g_persistant.bootLoaderCheck = RUN_PROGRAM_VALUE;
 	CommonInit();
+#endif
 	ModuleTypeSpecificInit();
 
 	while(1)
 	{
 #if defined(HAVE_INPUT)
-
 #	if defined (HAVE_OUTPUT)
 		//While I sended message to output predecessor try to send a message to me. I have to wait for it again
 		if (g_inputMessageMissed)
