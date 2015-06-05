@@ -7461,7 +7461,7 @@ Source: www.kingbright.com</description>
 <part name="C7" library="resistor" deviceset="C-EU" device="C0603" value="1uF"/>
 <part name="U$10" library="!stavebnice03" deviceset="JUMPER5M-90" device=""/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="R0603" value="10k"/>
-<part name="R6" library="resistor" deviceset="R-EU_" device="R0603" value="100"/>
+<part name="R6" library="resistor" deviceset="R-EU_" device="R0805" value="100"/>
 <part name="LED2" library="led" deviceset="LED" device="3MM"/>
 <part name="C8" library="resistor" deviceset="C-EU" device="C0603" value="470pF"/>
 </parts>
