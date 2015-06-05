@@ -49,21 +49,34 @@ void MainWindow::_SetMainLayout()
 	this->setCentralWidget(m_tabWidget);
 }
 
+char const *MainWindow::_GetModuleTypeName(ModuleTypes type)
+{
+	switch(type)
+	{
+	case TYPE_USB_INTERFACE:
+		return tr("USB Interface").toStdString().c_str();
+	case TYPE_POTENTIOMETER:
+		return tr("Potentiometer").toStdString().c_str();
+	case TYPE_RGB_LED:
+		return tr("RGB LED").toStdString().c_str();
+	case TYPE_BUTTON:
+		return tr("Button").toStdString().c_str();
+	case TYPE_ARITHMETIC_LOGIC:
+		return tr("Arithmetic-logic").toStdString().c_str();
+	default:
+		return tr("Unknown module").toStdString().c_str();
+	}
+}
+
 bool MainWindow::_AddInterfaceTab()
 {
 	QWidget *widget = new QWidget(this);
-	m_tabWidget->addTab(widget, tr("Interface"));
+	m_tabWidget->addTab(widget, _GetModuleTypeName((ModuleTypes)m_serialPort->GetModuleType(0)));
 	QVBoxLayout *layout = new QVBoxLayout(widget);
-
-	m_serialPort->GetModuleType(0);
-	m_serialPort->GetModuleType(1);
 
 	QSlider *slider = new QSlider(Qt::Horizontal, widget);
 	slider->setMinimumSize(200, 20);
 	slider->setRange(0, 255);
-	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
-	layout->addWidget(slider);
-
 
 	int value;
 	if (m_serialPort->GetState(value))
@@ -75,6 +88,9 @@ bool MainWindow::_AddInterfaceTab()
 	{
 		QMessageBox::critical(this, "", tr("Value was not set."));
 	}
+
+	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
+	layout->addWidget(slider);
 
 	return true;
 }
@@ -103,7 +119,7 @@ void MainWindow::_AddBootloaderTab()
 void MainWindow::_AddPlotTab()
 {
 	Plot *plot = new Plot(this, m_serialPort);
-	m_tabWidget->addTab(plot, tr("Plot"));
+	m_tabWidget->addTab(plot, _GetModuleTypeName((ModuleTypes)m_serialPort->GetModuleType(1)));
 }
 
 MainWindow::~MainWindow()
