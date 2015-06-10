@@ -7458,7 +7458,7 @@ Source: www.kingbright.com</description>
 <part name="TC1185" library="!stavebnice03" deviceset="STABILISER_APE8865" device=""/>
 <part name="U$9" library="!stavebnice03" deviceset="P-MOSFET-FDV304P" device=""/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
-<part name="C7" library="resistor" deviceset="C-EU" device="C0603" value="1uF"/>
+<part name="C7" library="resistor" deviceset="C-EU" device="C0603" value="4,7uF"/>
 <part name="U$10" library="!stavebnice03" deviceset="JUMPER5M-90" device=""/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="R6" library="resistor" deviceset="R-EU_" device="R0805" value="100"/>
