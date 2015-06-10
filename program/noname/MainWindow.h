@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QVector>
+#include <../../CommonConstants.h>
 
 class QTabWidget;
 class Qstring;
@@ -13,6 +14,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 	void _SetMainLayout();
+	char const *_GetModuleTypeName(ModuleTypes type);
 	bool _AddInterfaceTab();
 	void _AddRgbTab();
 	void _AddBootloaderTab();

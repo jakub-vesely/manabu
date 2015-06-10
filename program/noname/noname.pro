@@ -23,6 +23,7 @@ HEADERS  += MainWindow.h \
     SerialPort.h \
     BootLoader.h \
     ../extern/qcustomplot/qcustomplot.h \
-    Plot.h
+    Plot.h \
+    ../../CommonConstants.h
 
 FORMS    +=
