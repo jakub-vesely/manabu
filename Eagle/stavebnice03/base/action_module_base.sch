@@ -54,6 +54,7 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="no" active="no"/>
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
@@ -122,7 +123,7 @@
 <wire x1="0" y1="2.032" x2="0" y2="6.985" width="0.6604" layer="21"/>
 <wire x1="-2.54" y1="2.032" x2="-2.54" y2="6.985" width="0.6604" layer="21"/>
 <wire x1="-5.08" y1="2.032" x2="-5.08" y2="6.985" width="0.6604" layer="21"/>
-<pad name="1" x="-5.08" y="-2.54" drill="0.9144" diameter="1.9304" shape="octagon" rot="R90"/>
+<pad name="1" x="-5.08" y="-2.54" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="2" x="-2.54" y="-2.54" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="0" y="-2.54" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-6.731" y="-1.016" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
@@ -160,7 +161,7 @@
 <wire x1="6.096" y1="1.524" x2="6.35" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="6.35" y1="1.27" x2="6.35" y2="-0.762" width="0.1524" layer="21"/>
 <wire x1="5.08" y1="2.032" x2="5.08" y2="6.985" width="0.6604" layer="21"/>
-<pad name="5" x="5.08" y="-2.54" drill="0.9144" diameter="1.9304" shape="octagon" rot="R90"/>
+<pad name="5" x="5.08" y="-2.54" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="4.572" y="0" size="0.9906" layer="21" ratio="12">5</text>
 <rectangle x1="4.7752" y1="1.524" x2="5.3848" y2="2.032" layer="21"/>
 <rectangle x1="4.7752" y1="-1.524" x2="5.3848" y2="-1.016" layer="21"/>
@@ -186,7 +187,7 @@
 <wire x1="-7.62" y1="-1.016" x2="-7.366" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="-2.794" y1="-1.27" x2="-4.826" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="-5.334" y1="-1.27" x2="-7.366" y2="-1.27" width="0.1524" layer="21"/>
-<pad name="1" x="-6.35" y="0" drill="0.9144" diameter="1.9304" shape="octagon" rot="R90"/>
+<pad name="1" x="-6.35" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="2" x="-3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="-1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-7.366" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
@@ -218,7 +219,7 @@
 <wire x1="2.286" y1="-1.27" x2="0.254" y2="-1.27" width="0.1524" layer="21"/>
 <pad name="4" x="1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="5" x="3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
-<pad name="6" x="6.35" y="0" drill="0.9144" diameter="1.9304" shape="octagon" rot="R90"/>
+<pad name="6" x="6.35" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="1.27" y="-2.667" size="0.9906" layer="21" ratio="12">4</text>
 <text x="3.81" y="-2.667" size="0.9906" layer="21" ratio="12">5</text>
 <text x="6.35" y="-2.667" size="0.9906" layer="21" ratio="12">6</text>
@@ -246,7 +247,7 @@
 <wire x1="-5.08" y1="-1.016" x2="-4.826" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="-0.254" y1="-1.27" x2="-2.286" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="-2.794" y1="-1.27" x2="-4.826" y2="-1.27" width="0.1524" layer="21"/>
-<pad name="1" x="-3.81" y="0" drill="0.9144" diameter="1.9304" shape="octagon" rot="R90"/>
+<pad name="1" x="-3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="2" x="-1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-4.826" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
@@ -263,7 +264,7 @@
 <wire x1="4.826" y1="-1.27" x2="5.08" y2="-1.016" width="0.1524" layer="21"/>
 <wire x1="2.54" y1="-1.016" x2="2.794" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="4.826" y1="-1.27" x2="2.794" y2="-1.27" width="0.1524" layer="21"/>
-<pad name="4" x="3.81" y="0" drill="0.9144" diameter="1.9304" shape="octagon" rot="R90"/>
+<pad name="4" x="3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="3.81" y="-2.667" size="0.9906" layer="21" ratio="12">4</text>
 <rectangle x1="3.5052" y1="-0.3048" x2="4.1148" y2="0.3048" layer="51"/>
 <wire x1="5.08" y1="-1.016" x2="5.08" y2="1.016" width="0.1524" layer="21"/>
@@ -5721,6 +5722,7 @@ type RDH, grid 15 mm</description>
 <part name="U$9" library="!stavebnice03" deviceset="JUMPER4M" device=""/>
 <part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2K2"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
+<part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
 </parts>
 <sheets>
 <sheet>
@@ -5734,6 +5736,7 @@ type RDH, grid 15 mm</description>
 <instance part="U$9" gate="G$1" x="119.38" y="35.56" rot="R270"/>
 <instance part="R3" gate="G$1" x="106.68" y="144.78" rot="R270"/>
 <instance part="R4" gate="G$1" x="114.3" y="144.78" rot="R270"/>
+<instance part="R1" gate="G$1" x="114.3" y="93.98"/>
 </instances>
 <busses>
 </busses>
@@ -5778,18 +5781,17 @@ type RDH, grid 15 mm</description>
 <pinref part="U$8" gate="G$1" pin="2"/>
 <pinref part="U$1" gate="G$1" pin="RA4"/>
 <wire x1="124.46" y1="88.9" x2="121.92" y2="88.9" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="88.9" x2="121.92" y2="93.98" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="RA5"/>
-<wire x1="121.92" y1="93.98" x2="121.92" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="124.46" y1="93.98" x2="121.92" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="121.92" y1="88.9" x2="121.92" y2="99.06" width="0.1524" layer="91"/>
 <junction x="121.92" y="99.06"/>
-<junction x="121.92" y="93.98"/>
 <pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="114.3" y1="139.7" x2="114.3" y2="109.22" width="0.1524" layer="91"/>
 <junction x="114.3" y="109.22"/>
 <pinref part="R3" gate="G$1" pin="2"/>
 <wire x1="106.68" y1="109.22" x2="106.68" y2="139.7" width="0.1524" layer="91"/>
 <junction x="106.68" y="109.22"/>
+<pinref part="R1" gate="G$1" pin="1"/>
+<wire x1="109.22" y1="93.98" x2="106.68" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="93.98" x2="106.68" y2="109.22" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$13" class="0">
@@ -5883,6 +5885,13 @@ type RDH, grid 15 mm</description>
 <pinref part="U$1" gate="G$1" pin="RC3"/>
 <wire x1="121.92" y1="43.18" x2="121.92" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="68.58" x2="124.46" y2="68.58" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="RA5"/>
+<pinref part="R1" gate="G$1" pin="2"/>
+<wire x1="124.46" y1="93.98" x2="119.38" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
