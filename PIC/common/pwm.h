@@ -4,7 +4,8 @@
 #define _COMMON_PWM_H_
 
 #include <common/common.h>
-
+#include <system_common.h>
+/*
 volatile unsigned char PWM1DCL @ 0x611;
 volatile unsigned char PWM1DCH @ 0x612;
 volatile unsigned char PWM1CON @ 0x613;
@@ -32,7 +33,7 @@ volatile bit PWM3EN @ ((unsigned)&PWM3CON*8)+7;
 volatile bit PWM3OE @ ((unsigned)&PWM3CON*8)+6;
 volatile bit PWM3OUT @ ((unsigned)&PWM3CON*8)+5;
 volatile bit PWM3POL @ ((unsigned)&PWM3CON*8)+4;
-
+*/
 
 
 
