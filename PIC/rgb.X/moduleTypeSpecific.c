@@ -1,10 +1,12 @@
 #include <common/pwm.h>
 #include <CommonConstants.h>
 
-#define COMMON_ANODE 0
-
 #define RED_TO_RED_PERIOD 85 //6 states
 #define RED_TO_PURPLE_PERIOD 102 //5 states
+
+#define RED_CALIBRATION 0.5
+#define GREEN_CALIBRATION 2
+#define BLUE_CALIBRATION 0.5
 
 typedef enum
 {
@@ -15,9 +17,9 @@ typedef enum
 
 void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
 {
-	SetDutyCyclePWM1(COMMON_ANODE ? 255 - green : green);
-	SetDutyCyclePWM2(COMMON_ANODE ? 255 - red : red);
-    SetDutyCyclePWM3(COMMON_ANODE ? 255 - blue : blue);
+	SetDutyCyclePWM1((unsigned char)((float)green * GREEN_CALIBRATION));
+	SetDutyCyclePWM2((unsigned char)((float)red * RED_CALIBRATION));
+    SetDutyCyclePWM3((unsigned char)((float)blue * BLUE_CALIBRATION));
 }
 
 void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
