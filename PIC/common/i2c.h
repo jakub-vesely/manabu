@@ -5,16 +5,17 @@
 
 #include <common/common.h>
 #include <system_common.h>
+#include <CommonConstants.h>
 
 void I2cSlaveInit();
 void I2cInit(void);
 bool I2cMasterIdle(void);
 bool PutStateI2C(unsigned char state);
-bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count);
-bool GetCommandI2C(I2cCommand command, unsigned char *retVal);
+bool PutCommandI2C(MessageId command, unsigned char const *data, unsigned char count);
+bool GetCommandI2C(MessageId command, unsigned char *retVal);
 bool CheckI2cAsSlave(void);
-bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count);
-bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal);
+bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count);
+bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal);
 
 #if defined LPCDEVKIT
 #   define SCL_PORT PORTBbits.RB6

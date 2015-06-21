@@ -30,7 +30,7 @@ void ResponseChar(unsigned char answer)
 	buffer[1] = answer;
 	putUSBUSART(buffer, 2);
 }
-unsigned char GetFromI2C(I2cCommand command)
+unsigned char GetFromI2C(MessageId command)
 {
 	unsigned  counter = 1000; //there should probably be less
 	unsigned char retVal = 0;
@@ -52,59 +52,54 @@ void UsbDataRead()
 		unsigned char deviceId = buffer[1];
 		switch (buffer[2])
 		{
-		case FID_GET_PROTOCOL_ID:
+		case MID_GET_PROTOCOL_ID:
 			Response((unsigned char *)protocolId, sizeof(protocolId)-1);
 			break;
-		case FID_SET_STATE:
+		case MID_SET_STATE:
 			g_state = buffer[3];
 			g_stateChanged = true;
 			ResponseChar(0);
 			break;
-		case FID_GET_STATE:
+		case MID_GET_STATE:
 			if (0 == deviceId)
 				ResponseChar(g_state);
 			else
-				ResponseChar(GetFromI2C(COMMAND_GET_STATE));
+				ResponseChar(GetFromI2C(MID_GET_STATE));
 			break;
-		case FID_GET_MODE:
-			ResponseChar(GetFromI2C(COMMAND_GET_CURRENT_MODE));
+		case MID_COMMAND_FLASH_GET_VERSION:
+			ResponseChar(GetFromI2C(MID_COMMAND_FLASH_GET_VERSION));
 			break;
-		case FID_SET_MODE:
-			//SetDescendentMode(data[3]);
+		case MID_COMMAND_FLASH_END:
+			PutCommandI2C(MID_COMMAND_FLASH_END, NULL, 0);
 			ResponseChar(0);
 			break;
-
-		case FID_COMMAND_FLASH_GET_VERSION:
-			ResponseChar(GetFromI2C(COMMAND_FLASH_GET_VERSION));
-			break;
-		case FID_COMMAND_FLASH_END:
-			PutCommandI2C(COMMAND_FLASH_END, NULL, 0);
+		case MID_COMMAND_FLASH_ADDRESS:
+			PutCommandI2C(MID_COMMAND_FLASH_ADDRESS, buffer+3, 2);
 			ResponseChar(0);
 			break;
-		case FID_COMMAND_FLASH_ADDRESS:
-			PutCommandI2C(COMMAND_FLASH_ADDRESS, buffer+3, 2);
+		case MID_COMMAND_FLASH_LATCH_WORD:
+			PutCommandI2C(MID_COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
 			ResponseChar(0);
 			break;
-		case FID_COMMAND_FLASH_LATCH_WORD:
-			PutCommandI2C(COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
+		case MID_COMMAND_FLASH_WRITE_WORD:
+			PutCommandI2C(MID_COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
 			ResponseChar(0);
 			break;
-		case FID_COMMAND_FLASH_WRITE_WORD:
-			PutCommandI2C(COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
+		case MID_COMMAND_FLASH_CHECKSUM:
+			ResponseChar(GetFromI2C(MID_COMMAND_FLASH_CHECKSUM));
+			break;
+		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
+			PutCommandI2C(MID_COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
 			ResponseChar(0);
 			break;
-		case FID_COMMAND_FLASH_CHECKSUM:
-			ResponseChar(GetFromI2C(COMMAND_FLASH_CHECKSUM));
-			break;
-		case FID_COMMAND_FLASH_SET_BOOT_FLAG:
-			PutCommandI2C(COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
-			ResponseChar(0);
-			break;
-		case FID_GET_MODULE_TYPE:
+		case MID_GET_MODULE_TYPE:
 			if (0 == deviceId)
 				ResponseChar(GetModuleType());
 			else
-				ResponseChar(GetFromI2C(COMMAND_GET_MODULE_TYPE));
+				ResponseChar(GetFromI2C(MID_GET_MODULE_TYPE));
+			break;
+		default:
+			PutCommandI2C(buffer[2], buffer+3, 1);
 			break;
 		}
 	}

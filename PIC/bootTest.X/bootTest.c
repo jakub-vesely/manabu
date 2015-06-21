@@ -49,7 +49,7 @@ void main(void)
 			value = SSPBUF;
 			if (!IS_DATA)
 			{
-				if (COMMAND_FLASH_GET_VERSION == (value >> 2))
+				if (MID_COMMAND_FLASH_GET_VERSION == (value >> 2))
 						SSPBUF = FLASH_VERSION;
 						
 				CKP = 1;

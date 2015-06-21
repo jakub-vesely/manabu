@@ -152,7 +152,7 @@ void I2cMasterStop(void)
 #endif
 }
 
-bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count)
 {
 	unsigned char i = 0;
 	
@@ -186,7 +186,7 @@ bool I2cMasterPut(unsigned char messageType, I2cCommand command, unsigned char c
 	return true;
 }
 
-bool I2cMasterGet(unsigned char messageType, I2cCommand command, unsigned char *retVal)
+bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal)
 {
 	I2cMasterInit();
 	I2cMasterIdle();
@@ -210,12 +210,12 @@ bool PutStateI2C(unsigned char state)
 	return I2cMasterPut(I2C_MESSAGE_TYPE_DATA, 0,  &state, 1);
 }
 
-bool PutCommandI2C(I2cCommand command, unsigned char const *data, unsigned char count)
+bool PutCommandI2C(MessageId command, unsigned char const *data, unsigned char count)
 {
 	return I2cMasterPut(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
 }
 
-bool GetCommandI2C(I2cCommand command, unsigned char *retVal)
+bool GetCommandI2C(MessageId command, unsigned char *retVal)
 {
 	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, retVal);
 }
@@ -242,33 +242,21 @@ bool CheckI2cAsSlave(void)
 		{
 			switch (g_commandInstruction)
 			{
-				case COMMAND_FLASH_GET_VERSION:
+				case MID_COMMAND_FLASH_GET_VERSION:
 
 					g_bootloaderPolicy = 1;
 					SSPBUF = 0; //I'm in program so i dont have a bootloader version
 				break;
-				case COMMAND_GET_CURRENT_MODE:
-					SSPBUF = g_persistant.mode;
-				break;
-				case COMMAND_GET_STATE:
+				case MID_GET_STATE:
 					SSPBUF = g_state;
 				break;
-				case COMMAND_GET_MODULE_TYPE:
+				case MID_GET_MODULE_TYPE:
 					SSPBUF = GetModuleType();
 				break;
 			}
 		}
-		
-		//I want to be sure this insrtuction didn't come by a mistake
-		//It is very important because after this isnstuction is chip set to
-		//a bootloader state and the program is not accessible any more
-		/*else if (COMMAND_FLASH_SET_BOOT_FLAG == g_commandInstruction &&
-			0 == g_bootloaderPolicy)
-		{
-			//g_commandInstruction = COMMAND_NONE; //set boot flag sequence is not complete. I don't want to risk bootloader state
-		}*/
 
-		if (COMMAND_FLASH_GET_VERSION != g_commandInstruction)
+		if (MID_COMMAND_FLASH_GET_VERSION != g_commandInstruction)
 			g_bootloaderPolicy = 0;
 	}
 	else

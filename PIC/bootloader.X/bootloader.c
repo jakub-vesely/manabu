@@ -51,11 +51,11 @@ void ReadI2C()
 	{
 		g_command = value >> 2;
 
-		if (COMMAND_FLASH_GET_VERSION == g_command)
+		if (MID_COMMAND_FLASH_GET_VERSION == g_command)
 		{
 			SSPBUF = VERSION;
 		}
-		else if (COMMAND_FLASH_CHECKSUM == g_command)
+		else if (MID_COMMAND_FLASH_CHECKSUM == g_command)
 		{	SSPBUF = checkSum;
 			checkSum = 0; //read for next programming
 		}
@@ -77,7 +77,7 @@ void ReadI2C()
 			g_bitFiled.lo = true;
 			g_word |= (value << 8);
 
-			if (COMMAND_FLASH_ADDRESS == g_command)
+			if (MID_COMMAND_FLASH_ADDRESS == g_command)
 			{
 				g_flashAddr = g_word;
 
@@ -91,7 +91,7 @@ void ReadI2C()
 
 				FLASH_ERASE(g_flashAddr);
 			}
-			else if (COMMAND_FLASH_LATCH_WORD == g_command || COMMAND_FLASH_WRITE_WORD == g_command)
+			else if (MID_COMMAND_FLASH_LATCH_WORD == g_command || MID_COMMAND_FLASH_WRITE_WORD == g_command)
 				g_bitFiled.dataReady = true;
 		}
 	}
@@ -134,7 +134,7 @@ int main()
 
 	while (1)
 	{
-		if(g_command == COMMAND_FLASH_END)
+		if(g_command == MID_COMMAND_FLASH_END)
 		{
 #asm
 			GOTO MAIN_PROOGRAM_START;
@@ -146,7 +146,7 @@ int main()
 		if (g_bitFiled.dataReady)
 		{
 			g_bitFiled.dataReady = false;
-			FLASH_WRITE(g_flashAddr, g_word, COMMAND_FLASH_LATCH_WORD == g_command); 
+			FLASH_WRITE(g_flashAddr, g_word, MID_COMMAND_FLASH_LATCH_WORD == g_command);
 			if (PMCON1bits.WRERR) //0 write success, 1 write error
 				++checkSum;
 			g_flashAddr++;

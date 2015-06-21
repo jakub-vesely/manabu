@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <common/common.h>
+#include <CommonConstants.h>
 #include <system_common.h>
 #include <common/i2c.h>
 #include <xc.h>
@@ -29,7 +30,7 @@ unsigned char g_invertOutput = 0;
 	bool g_inputMessageMissed = false;
 #endif
 
-bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count)
+bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count)
 {
 #if defined(HAVE_OUTPUT)
 	bool retVal = 0;
@@ -68,7 +69,7 @@ bool SendMessageToOutput(unsigned char messageType, I2cCommand command, unsigned
 #endif
 }
 
-bool GetMessageFromOutput(unsigned char messageType, I2cCommand command, unsigned char const *data, unsigned char count, unsigned char *value)
+bool GetMessageFromOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count, unsigned char *value)
 {
 #if defined(HAVE_OUTPUT)
 	bool retVal;

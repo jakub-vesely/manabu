@@ -1,6 +1,7 @@
 #include "common.h"
 
 #ifndef LPCDEVKIT
+#	include <CommonConstants.h>
 #	include <system_common.h>
 #	include <common/HEFlash.h>
 #	include <common/i2c.h>
@@ -40,15 +41,15 @@ void ProcessCommand()
 	//unsigned char deleteme;
 	switch(g_commandInstruction)
 	{
-		case COMMAND_CHANGE_MODE:
+		/*case COMMAND_CHANGE_MODE:
 
 			g_persistant.mode = g_commandValue;
 #ifndef LPCDEVKIT
 			HEFLASH_writeBlock(0, (void*)&g_persistant, sizeof(g_persistant));
 #endif
 			g_stateChanged = true;
-		break;
-		case COMMAND_FLASH_SET_BOOT_FLAG:
+		break;*/
+		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
 			g_persistant.bootLoaderCheck = g_commandValue;
 #ifndef LPCDEVKIT
 			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
