@@ -16,7 +16,7 @@ class SerialPort : public QObject
 	bool _OpenIfMyPotr();
 	bool _IsMyDevice();
 	unsigned _CallCubeFunction(
-		char moduleId, FunctionId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor);
+		char moduleId, MessageId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor);
 	unsigned _ReadData();
 
 	QSerialPort m_serialPort;

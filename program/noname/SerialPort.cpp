@@ -43,13 +43,13 @@ bool SerialPort::Open()
 void SerialPort::SetValue(int value)
 {
 	g_buffer[0] = value;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_STATE, 1, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_STATE, 1, 2, false);
 	qDebug() << "value has been set to: " << value;
 }
 
 unsigned char SerialPort::GetValue(unsigned layer)
 {
-	_CallCubeFunction(layer, FID_GET_STATE, 0, 2, false);
+	_CallCubeFunction(layer, MID_GET_STATE, 0, 2, false);
 
 	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
 	return g_buffer[1];
@@ -57,17 +57,18 @@ unsigned char SerialPort::GetValue(unsigned layer)
 
 int SerialPort::GetMode()
 {
-	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_MODE, 0, 1, true);
+/*	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_MODE, 0, 1, true);
 	if (0 == size || size != g_buffer[0])
 		return 0;
 
 	qDebug() << "mode: " << (int)(g_buffer[1]);
-	return g_buffer[1];
+	return g_buffer[1];*/
+	return 0;
 }
 
 int SerialPort::GetFlashVersion()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
 
 	qDebug() << "flash version: " << (int)(g_buffer[1]);
 	return g_buffer[1];
@@ -76,47 +77,48 @@ int SerialPort::GetFlashVersion()
 void SerialPort::SetFlashAddress(uint16_t address)
 {
 	((uint16_t *)g_buffer)[0] = address;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_ADDRESS, 2, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_ADDRESS, 2, 2, false);
 }
 
 void SerialPort::SetFlashWriteWord(uint16_t word)
 {
 	((uint16_t *)g_buffer)[0] = word;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_WRITE_WORD, 2, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_WRITE_WORD, 2, 2, false);
 }
 
 void SerialPort::SetFlashLatchWord(uint16_t word)
 {
 	((uint16_t *)g_buffer)[0] = word;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_LATCH_WORD, 2, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_LATCH_WORD, 2, 2, false);
 }
 
 int SerialPort::GetFlashCheckSum()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_CHECKSUM, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_CHECKSUM, 0, 2, false);
 	return g_buffer[1];
 }
 
 void SerialPort::SetFlashEnd()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_END, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_END, 0, 2, false);
 }
 
 void SerialPort::SetFlashLoadCheck(unsigned char byte)
 {
 	g_buffer[0] = byte;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, false);
 }
 
 void SerialPort::SetMode(int mode)
 {
-	g_buffer[0] = mode;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_SET_MODE, 1, 1, false);
+/*	g_buffer[0] = mode;
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_MODE, 1, 1, false);
+	*/
 }
 
 unsigned char SerialPort::GetModuleType(unsigned layer)
 {
-	_CallCubeFunction(layer, FID_GET_MODULE_TYPE, 0, 2, false);
+	_CallCubeFunction(layer, MID_GET_MODULE_TYPE, 0, 2, false);
 
 	qDebug() << "module type on layer:" << layer << " is " << (unsigned char)(g_buffer[1]);
 	return g_buffer[1];
@@ -124,7 +126,7 @@ unsigned char SerialPort::GetModuleType(unsigned layer)
 
 bool SerialPort::GetState(int &value)
 {
-	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_STATE, 0, 2, false))
+	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_STATE, 0, 2, false))
 			return false;
 
 		value = (unsigned char)g_buffer[0];
@@ -168,12 +170,12 @@ bool SerialPort::_OpenIfMyPotr()
 bool SerialPort::_IsMyDevice()
 {
 	qDebug() << "is really my device?";
-	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, FID_GET_PROTOCOL_ID, 0, 0, true);
+	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_PROTOCOL_ID, 0, 0, true);
 
 	size_t pidSize = strlen(PROTOCOL_ID);
 	if (size != MESSAGE_LENGTH_BYTE_COUNT + pidSize || size != (unsigned)g_buffer[0])
 	{
-		qDebug() << "wrong returned size for FID_GET_PROTOCOL_ID:" << size;
+		qDebug() << "wrong returned size for MID_GET_PROTOCOL_ID:" << size;
 		qDebug() << "message is:" << g_buffer + MESSAGE_LENGTH_BYTE_COUNT;
 		return false;
 	}
@@ -184,8 +186,7 @@ bool SerialPort::_IsMyDevice()
 	return (0 == strncmp(PROTOCOL_ID, g_buffer + MESSAGE_LENGTH_BYTE_COUNT, pidSize));
 }
 
-unsigned SerialPort::_CallCubeFunction(
-		char moduleId, FunctionId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor)
+unsigned SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor)
 {
 	if (!m_serialPort.isOpen())
 	{
