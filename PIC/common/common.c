@@ -35,7 +35,7 @@ void SwitchControllerInit()
 #endif
 }
 
-void ProcessCommand()
+void ProcessCommandCommon()
 {
 	g_commandRecieved = false;
 	//unsigned char deleteme;

@@ -2,6 +2,9 @@
 #include <common/common.h>
 #include <CommonConstants.h>
 
+void ProcessCommandModuleTypeSpecific()
+{
+}
 void ProcessStateChangedModuleTypeSpecific()
 {
 	g_state = 255-g_state; //works as invertor

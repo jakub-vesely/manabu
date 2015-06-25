@@ -17,7 +17,7 @@ typedef enum
 
 void Wait(int delay);
 void SwitchControllerInit();
-void ProcessCommand();
+void ProcessCommandCommon();
 void ProcessStateChangedCommon();
 void CommonInit();
 

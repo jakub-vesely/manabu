@@ -173,7 +173,11 @@ void main(void)
 		INTF = 0; //i2c message has benn processed, clear input interrupt flag
 
 		if (g_commandRecieved)
-			ProcessCommand();
+		{
+
+			ProcessCommandModuleTypeSpecific();
+			ProcessCommandCommon();
+		}
 #endif
 
 		ProcessModuleFunctionality();

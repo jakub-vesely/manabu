@@ -1,7 +1,9 @@
 #include <system_common.h>
 #include <common/common.h>
 #include <CommonConstants.h>
-
+void ProcessCommandModuleTypeSpecific()
+{
+}
 void ProcessStateChangedModuleTypeSpecific()
 {
 	

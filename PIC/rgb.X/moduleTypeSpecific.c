@@ -4,9 +4,9 @@
 #define RED_TO_RED_PERIOD 85 //6 states
 #define RED_TO_PURPLE_PERIOD 102 //5 states
 
-#define RED_CALIBRATION 0.5
-#define GREEN_CALIBRATION 2
-#define BLUE_CALIBRATION 0.5
+#define RED_CALIBRATION 0.8
+#define GREEN_CALIBRATION 1.2
+#define BLUE_CALIBRATION 1
 
 typedef enum
 {
@@ -15,6 +15,9 @@ typedef enum
 	MODE_WHITE_VALUE = 3,
 } MODE;
 
+void ProcessCommandModuleTypeSpecific()
+{
+}
 void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
 {
 	SetDutyCyclePWM1((unsigned char)((float)green * GREEN_CALIBRATION));
