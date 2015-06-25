@@ -12,7 +12,7 @@
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
@@ -68,10 +68,12 @@
 <text x="4.92125" y="-6.0325" size="2.54" layer="16" rot="MR0" align="center">II=I+I</text>
 <text x="4.92125" y="-6.0325" size="2.54" layer="1" align="center">II=I+I</text>
 <text x="10.5" y="27" size="1.778" layer="20" align="center">sensor base</text>
-<wire x1="-10" y1="-10" x2="31" y2="-10" width="0.01" layer="49"/>
-<wire x1="31" y1="-10" x2="31" y2="31" width="0.01" layer="49"/>
-<wire x1="31" y1="31" x2="-10" y2="31" width="0.01" layer="49"/>
-<wire x1="-10" y1="31" x2="-10" y2="-10" width="0.01" layer="49"/>
+<wire x1="-10" y1="-10" x2="-2.5" y2="-10" width="0.01" layer="49"/>
+<wire x1="-2.5" y1="-10" x2="23.5" y2="-10" width="0.01" layer="49"/>
+<wire x1="23.5" y1="-10" x2="31" y2="-10" width="0.01" layer="49"/>
+<wire x1="31" y1="31" x2="23.5" y2="31" width="0.01" layer="49"/>
+<wire x1="23.5" y1="31" x2="-2.5" y2="31" width="0.01" layer="49"/>
+<wire x1="-2.5" y1="31" x2="-10" y2="31" width="0.01" layer="49"/>
 <circle x="2.2" y="18.8" radius="0.6" width="0.9" layer="116"/>
 <circle x="18.8" y="2.2" radius="0.6" width="0.9" layer="116"/>
 <circle x="9.34" y="5.42" radius="0.329" width="0.357" layer="116"/>
@@ -112,6 +114,12 @@
 <circle x="12.9" y="14.3" radius="0.25" width="0.2" layer="116"/>
 <circle x="13.1" y="6.8" radius="0.25" width="0.2" layer="116"/>
 <circle x="12.8" y="4.8" radius="0.25" width="0.2" layer="116"/>
+<wire x1="-2.5" y1="31" x2="-2.5" y2="-10" width="0.01" layer="49"/>
+<wire x1="23.5" y1="31" x2="23.5" y2="-10" width="0.01" layer="49"/>
+<wire x1="-10" y1="-5" x2="-10" y2="-10" width="0.01" layer="49"/>
+<wire x1="-10" y1="26" x2="-10" y2="31" width="0.01" layer="49"/>
+<wire x1="31" y1="25.8" x2="31" y2="30.8" width="0.01" layer="49"/>
+<wire x1="31" y1="-5" x2="31" y2="-10" width="0.01" layer="49"/>
 </plain>
 <libraries>
 <library name="!stavebnice03">
@@ -1809,9 +1817,9 @@ design rules under a new name.</description>
 <wire x1="14.32875" y1="10.63625" x2="14.64625" y2="10.63625" width="0.8128" layer="1"/>
 <wire x1="14.64625" y1="10.63625" x2="14.805" y2="10.63625" width="0.8128" layer="1"/>
 <wire x1="14.805" y1="10.63625" x2="17.6625" y2="10.63625" width="1" layer="1"/>
-<wire x1="17.6625" y1="10.63625" x2="20.20875" y2="10.63625" width="1" layer="1"/>
-<wire x1="20.20875" y1="10.63625" x2="20.39125" y2="10.4775" width="0.8128" layer="1"/>
-<wire x1="20.39125" y1="10.4775" x2="19.66" y2="10.5" width="0.8128" layer="1"/>
+<wire x1="17.6625" y1="10.63625" x2="19.70875" y2="10.63625" width="1" layer="1"/>
+<wire x1="19.70875" y1="10.63625" x2="19.79125" y2="10.4775" width="0.8128" layer="1"/>
+<wire x1="19.79125" y1="10.4775" x2="19.66" y2="10.5" width="0.8128" layer="1"/>
 <via x="12.9" y="14.3" extent="1-16" drill="0.6"/>
 <wire x1="14.64625" y1="14.12875" x2="14.64625" y2="13.81125" width="0.3556" layer="1"/>
 <wire x1="14.64625" y1="14.12875" x2="14.64625" y2="13.97" width="1.016" layer="1"/>
@@ -2193,7 +2201,7 @@ design rules under a new name.</description>
 <vertex x="4.1" y="6.2"/>
 <vertex x="6.8" y="3.3"/>
 <vertex x="7.3" y="2.9"/>
-<vertex x="7.3" y="2.1"/>
+<vertex x="7.3" y="1.9"/>
 <vertex x="1.5" y="1.9"/>
 </polygon>
 </signal>

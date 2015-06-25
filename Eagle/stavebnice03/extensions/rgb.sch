@@ -3365,7 +3365,7 @@ type RDH, grid 15 mm</description>
 <instance part="U$1" gate="G$1" x="149.86" y="76.2" rot="R180"/>
 <instance part="R1" gate="G$1" x="111.76" y="55.88" rot="R90"/>
 <instance part="R2" gate="G$1" x="121.92" y="55.88" rot="R90"/>
-<instance part="R3" gate="G$1" x="127" y="55.88" rot="R90"/>
+<instance part="R3" gate="G$1" x="187.96" y="55.88" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -3407,10 +3407,10 @@ type RDH, grid 15 mm</description>
 <net name="N$4" class="0">
 <segment>
 <wire x1="154.94" y1="86.36" x2="154.94" y2="91.44" width="0.1524" layer="91"/>
-<wire x1="154.94" y1="91.44" x2="127" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="91.44" x2="187.96" y2="91.44" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="1"/>
 <pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="127" y1="60.96" x2="127" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="187.96" y1="60.96" x2="187.96" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$1" class="0">
@@ -3430,8 +3430,8 @@ type RDH, grid 15 mm</description>
 <net name="N$6" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
-<pinref part="U$9" gate="G$1" pin="1"/>
-<wire x1="127" y1="50.8" x2="127" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="U$8" gate="G$1" pin="6"/>
+<wire x1="187.96" y1="50.8" x2="187.96" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
