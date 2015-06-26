@@ -185,6 +185,9 @@ void ModuleTypeSpecificInit()
     USBDeviceInit();
     USBDeviceAttach();
 	g_state = STATE_MAX;
+
+	TRISC5 = true; //stat
+	TRISC2 = false; //LED
 }
 
 
@@ -195,6 +198,7 @@ void ProcessModuleFunctionality()
 		return;
 
 	UsbDataRead();
+	LATC2 = !RC5;
 }
 
 unsigned char GetModuleType()
