@@ -11,7 +11,7 @@ void ProcessStateChangedModuleTypeSpecific()
 
 void ModuleTypeSpecificInit()
 {
-	g_state = 1;
+	g_inState = 1;
 	TRISC5 = 0; //for diode
 
 	//for potentiometer
@@ -46,9 +46,10 @@ void ProcessModuleFunctionality()
 {
 	unsigned char potValue = (unsigned char)(ADC_Read10bit() / 4);
 
-	if (potValue != g_state)
+	unsigned char outState = (unsigned char)((unsigned)g_inState * (unsigned)potValue / (unsigned)STATE_MAX);
+	if (g_outState != outState)
 	{
-		g_state = potValue;
+		g_outState = outState;
 		g_stateChanged = true;
 	}
 }

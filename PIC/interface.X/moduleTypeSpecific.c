@@ -56,13 +56,13 @@ void UsbDataRead()
 			Response((unsigned char *)protocolId, sizeof(protocolId)-1);
 			break;
 		case MID_SET_STATE:
-			g_state = buffer[3];
+			g_inState = buffer[3];
 			g_stateChanged = true;
 			ResponseChar(0);
 			break;
 		case MID_GET_STATE:
 			if (0 == deviceId)
-				ResponseChar(g_state);
+				ResponseChar(g_inState);
 			else
 				ResponseChar(GetFromI2C(MID_GET_STATE));
 			break;
@@ -165,6 +165,7 @@ void ProcessCommandModuleTypeSpecific()
 }
 void ProcessStateChangedModuleTypeSpecific()
 {
+	g_outState = g_inState;
 }
 
 void ModuleTypeSpecificInit()
@@ -184,7 +185,7 @@ void ModuleTypeSpecificInit()
 
     USBDeviceInit();
     USBDeviceAttach();
-	g_state = STATE_MAX;
+	g_inState = STATE_MAX;
 
 	TRISC5 = true; //stat
 	TRISC2 = false; //LED

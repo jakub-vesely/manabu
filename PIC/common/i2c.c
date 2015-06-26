@@ -9,7 +9,7 @@
 #include <i2c.h>
 #endif
 
-unsigned char g_stateFollowed = 0;
+unsigned char g_inStateFollowed = 0;
 
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
@@ -235,7 +235,7 @@ bool CheckI2cAsSlave(void)
 	//FIXME: I should wait for processing last command or data
 	if (!IS_DATA) //"address" byte in write mode
 	{	
-		g_stateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
+		g_inStateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
 		g_commandInstruction = (value >> 2);
 
 		if (IS_READ) //it have not be here - just for sure
@@ -248,7 +248,7 @@ bool CheckI2cAsSlave(void)
 					SSPBUF = 0; //I'm in program so i dont have a bootloader version
 				break;
 				case MID_GET_STATE:
-					SSPBUF = g_state;
+					SSPBUF = g_outState;
 				break;
 				case MID_GET_MODULE_TYPE:
 					SSPBUF = GetModuleType();
@@ -262,9 +262,9 @@ bool CheckI2cAsSlave(void)
 	else
 	{
 		g_bootloaderPolicy = 0;
-		if (g_stateFollowed)
+		if (g_inStateFollowed)
 		{
-			g_state = value;
+			g_inState = value;
 			g_stateChanged = true;
 		}
 		else

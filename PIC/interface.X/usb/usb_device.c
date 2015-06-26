@@ -797,11 +797,11 @@ void USBDeviceTasks(void)
                 #if (USB_PING_PONG_MODE == USB_PING_PONG__ALL_BUT_EP0) || (USB_PING_PONG_MODE == USB_PING_PONG__FULL_PING_PONG)
                 if(USBHALGetLastDirection(USTATcopy) == OUT_FROM_HOST)
                 {
-                    ep_data_out[endpoint_number].bits.ping_pong_state ^= 1;
+                    ep_data_out[endpoint_number].bits.ping_pong_inState ^= 1;
                 }
                 else
                 {
-                    ep_data_in[endpoint_number].bits.ping_pong_state ^= 1;
+                    ep_data_in[endpoint_number].bits.ping_pong_inState ^= 1;
                 }
                 #endif
 
@@ -2601,10 +2601,10 @@ static void USBCtrlTrfInHandler(void)
     //switch to the next ping pong buffer
     ((uint8_t_VAL*)&pBDTEntryIn[0])->Val ^= USB_NEXT_EP0_IN_PING_PONG;
 
-    //Must check if in ADR_PENDING_STATE.  If so, we need to update the address
+    //Must check if in ADR_PENDINg_inState.  If so, we need to update the address
     //now, since the IN status stage of the (set address) control transfer has 
     //evidently completed successfully.
-    if(USBDeviceState == ADR_PENDING_STATE)
+    if(USBDeviceState == ADR_PENDINg_inState)
     {
         U1ADDR = (SetupPkt.bDevADR & 0x7F);
         if(U1ADDR != 0u)
@@ -2694,7 +2694,7 @@ static void USBCheckStdRequest(void)
     {
         case USB_REQUEST_SET_ADDRESS:
             inPipes[0].info.bits.busy = 1;            // This will generate a zero length packet
-            USBDeviceState = ADR_PENDING_STATE;       // Update state only
+            USBDeviceState = ADR_PENDINg_inState;       // Update state only
             /* See USBCtrlTrfInHandler() for the next step */
             break;
         case USB_REQUEST_GET_DESCRIPTOR:
@@ -2835,7 +2835,7 @@ static void USBStdFeatureReqHandler(void)
         //to point to the one that is the active BDT entry which the SIE will 
         //use for the next attempted transaction on that EP number.
         #if (USB_PING_PONG_MODE == USB_PING_PONG__ALL_BUT_EP0) || (USB_PING_PONG_MODE == USB_PING_PONG__FULL_PING_PONG)   
-            if(current_ep_data.bits.ping_pong_state == 0) //Check if even
+            if(current_ep_data.bits.ping_pong_inState == 0) //Check if even
             {
                 USBHALPingPongSetToEven(&p);
             }

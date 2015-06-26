@@ -29,7 +29,9 @@ struct
     unsigned char mode;
 } g_persistant;
 
-unsigned char g_state = 0;
+unsigned char g_inState = STATE_MAX;
+unsigned char g_outState = 0;
+
 bool g_stateChanged = true;
 bool g_commandRecieved = false;
 unsigned char g_commandInstruction = 0;

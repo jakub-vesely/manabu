@@ -108,7 +108,7 @@ void SendToOutputIfReady()
 	
 	if (g_toOutput.isState)
 	{
-		if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_state, 1))
+		if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 1))
 		{
 			g_toOutput.isReady = false;
 		}

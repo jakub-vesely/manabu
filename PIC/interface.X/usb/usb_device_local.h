@@ -50,7 +50,7 @@ typedef union
 {
     struct
     {
-        unsigned char ping_pong_state :1;
+        unsigned char ping_pong_inState :1;
         unsigned char transfer_terminated :1;
     } bits;
     uint8_t Val;

@@ -99,7 +99,7 @@ typedef enum
     SET_ADDRESS command but has not received the STATUS stage of the transfer yet.
     The device is should not switch addresses until after the STATUS stage is
     complete.  */
-    ADR_PENDING_STATE
+    ADR_PENDINg_inState
     /*DOM-IGNORE-BEGIN*/    = 0x08                         /*DOM-IGNORE-END*/,
     /* Address is the state in which the device has its own specific address on the
     bus. */

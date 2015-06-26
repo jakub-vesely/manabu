@@ -7,12 +7,11 @@ void ProcessCommandModuleTypeSpecific()
 }
 void ProcessStateChangedModuleTypeSpecific()
 {
-	g_state = 255-g_state; //works as invertor
+	g_outState = STATE_MAX - g_inState; //works as invertor
 }
 
 void ModuleTypeSpecificInit()
 {
-	g_state = 0;
 }
 
 
