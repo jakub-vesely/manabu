@@ -9,6 +9,7 @@
 #   define INPUT_MESSAGE_MISSED (false)
 #endif
 
+#define STATE_MAX 0xff
 typedef enum
 {
     I2C_MESSAGE_TYPE_DATA  = 0,

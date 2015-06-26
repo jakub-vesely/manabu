@@ -169,7 +169,7 @@ void ProcessStateChangedModuleTypeSpecific()
 
 void ModuleTypeSpecificInit()
 {
-	#if defined (_PIC18F14K50_H_)
+#if defined (_PIC18F14K50_H_)
 	ANSEL = 0;
 	ANSELH = 0;
 #else
@@ -184,7 +184,7 @@ void ModuleTypeSpecificInit()
 
     USBDeviceInit();
     USBDeviceAttach();
-	g_state = 0;
+	g_state = STATE_MAX;
 }
 
 
