@@ -134,6 +134,7 @@ void SendToOutputIfReady()
 
 void main(void)
 {
+	unsigned stateRepeater = 0;
 #ifndef INTERFACE
 	INTCONbits.GIE = 0;
 
@@ -182,8 +183,9 @@ void main(void)
 
 		ProcessModuleFunctionality();
 
-		if (g_stateChanged)
+		if (g_stateChanged || stateRepeater++ == 1000)
 		{
+			stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
 			ProcessStateChangedCommon();
 		}
