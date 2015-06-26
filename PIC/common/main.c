@@ -117,12 +117,12 @@ void SendToOutputIfReady()
 			if (g_invertOutput)
 			{
 				g_invertOutput = 0;
-				INVERT_OUTPUT_PORT = 0;
+				INVERT_OUTPUT_PORT = false;
 			}
 			else
 			{
 				g_invertOutput = 1;
-				INVERT_OUTPUT_PORT = 1;
+				INVERT_OUTPUT_PORT = true;
 			}
 		}
 	}
@@ -155,7 +155,7 @@ void main(void)
 	CommonInit();
 #endif
 	ModuleTypeSpecificInit();
-
+	INVERT_OUTPUT_TRIS = false; //FIXME: it should not be here, it should be enough to set it in CommonInit, but it doesn work for the interface module
 	while(1)
 	{
 #if defined(HAVE_INPUT)
