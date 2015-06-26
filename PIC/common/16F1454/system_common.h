@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <pic16f1454.h>
 
-#define INVERT_OUTPUT_PORT RA4
-#define INnOUT_PORT RA5
+#define INVERT_OUTPUT_PORT LATA4
+#define INnOUT_PORT LATA5
 
 #define INVERT_OUTPUT_TRIS TRISA4
 #define INnOUT_TRIS TRISA5
