@@ -21,15 +21,11 @@ void Wait(int delay)
 void SwitchControllerInit()
 {
 #ifndef LPCDEVKIT
-#	if defined HAVE_OUTPUT
-		INVERT_OUTPUT_TRIS = 0;
-#	endif
-
-
 		INnOUT_TRIS = 0;
 		INnOUT_PORT = 1;
 
-#	ifdef HAVE_OUTPUT
+#	if defined HAVE_OUTPUT
+		INVERT_OUTPUT_TRIS = 0;
 		INVERT_OUTPUT_PORT = 0;
 #	endif
 #endif
