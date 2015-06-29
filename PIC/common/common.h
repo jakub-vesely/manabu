@@ -2,6 +2,7 @@
 #define _COMMON_COMMON1_H_
 
 #include <stdbool.h>
+#include <CommonConstants.h>
 
 #if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
 #   define INPUT_MESSAGE_MISSED (INTF)
@@ -10,6 +11,12 @@
 #endif
 
 #define STATE_MAX 0xff
+#define TO_OUTPUT_MAX_TRAY 10
+
+#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
+	bool g_inputMessageMissed = false;
+#endif
+        
 typedef enum
 {
     I2C_MESSAGE_TYPE_DATA  = 0,
@@ -19,7 +26,8 @@ typedef enum
 void Wait(int delay);
 void SwitchControllerInit();
 void ProcessCommandCommon();
-void ProcessStateChangedCommon();
+bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count);
+bool SendCommand(MessageId command, unsigned char const * data, unsigned char count);
 void CommonInit();
 
 #ifndef BOOTLOADER
@@ -32,16 +40,17 @@ struct
 unsigned char g_inState = STATE_MAX;
 unsigned char g_outState = 0;
 
+bool g_stateMessageEnabled = true;
 bool g_stateChanged = true;
 bool g_commandRecieved = false;
 unsigned char g_commandInstruction = 0;
 unsigned char g_commandValue = 0;
 struct
 {
-    bool isState:1;
     bool isReady:1;
     unsigned send_try:6;
 } g_toOutput;
+
 #endif //BOOTLOADER
 
 

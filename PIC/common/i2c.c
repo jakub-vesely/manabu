@@ -210,12 +210,12 @@ bool PutStateI2C(unsigned char state)
 	return I2cMasterPut(I2C_MESSAGE_TYPE_DATA, 0,  &state, 1);
 }
 
-bool PutCommandI2C(MessageId command, unsigned char const *data, unsigned char count)
+bool PutCommandToI2C(MessageId command, unsigned char const *data, unsigned char count)
 {
 	return I2cMasterPut(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
 }
 
-bool GetCommandI2C(MessageId command, unsigned char *retVal)
+bool GetCommandFromI2C(MessageId command, unsigned char *retVal)
 {
 	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, retVal);
 }
@@ -253,8 +253,14 @@ bool CheckI2cAsSlave(void)
 				case MID_GET_MODULE_TYPE:
 					SSPBUF = GetModuleType();
 				break;
+				//TODO: when i will process get with parameter i should place here g_stateMessageEnabled = false;
 			}
 		}
+		else
+		{
+			g_stateMessageEnabled = false; //Im expecting second part of message so state sending must wait now
+		}
+
 
 		if (MID_COMMAND_FLASH_GET_VERSION != g_commandInstruction)
 			g_bootloaderPolicy = 0;
@@ -272,7 +278,10 @@ bool CheckI2cAsSlave(void)
 			g_commandValue = value;
 			g_commandRecieved = true;
 		}
+
+		g_stateMessageEnabled = true; //Second part of message recieved. I ddon't wait for anthitng and can switch to output
 	}
+
 	if (SEN)
 		CKP = 1;
 

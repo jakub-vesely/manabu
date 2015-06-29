@@ -7,7 +7,7 @@
 #	include <common/i2c.h>
 #endif
 
-#define TO_OUTPUT_MAX_TRAY 10
+unsigned char g_invertOutput = 0;
 
 void Wait(int delay)
 {
@@ -61,16 +61,65 @@ void ProcessCommandCommon()
 	}
 }
 
-void ProcessStateChangedCommon()
+void InvertOutput()
 {
-	g_stateChanged = false;
+	g_invertOutput = (g_invertOutput) ? false : true;
+	INVERT_OUTPUT_PORT = g_invertOutput;
+}
 
-#ifdef HAVE_OUTPUT
-	g_toOutput.isState = true;
-	g_toOutput.send_try = TO_OUTPUT_MAX_TRAY;
-	g_toOutput.isReady = true;
+bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count)
+{
+#if defined(HAVE_OUTPUT)
+	bool retVal = 0;
+#	if defined(HAVE_INPUT)
+		if (SSP1IF || SSPSTATbits.S) //message from input recieved or just comming
+		{
+			INPUT_MESSAGE_MISSED = false;
+			return false;
+		}
+#	endif
+	SSPEN = 0;
+	INnOUT_PORT = 0; //sitch to output
+#	if defined(HAVE_INPUT)
+		INPUT_MESSAGE_MISSED = false; //it must be behind INnOUT_PORT = 0; because it cause iterupt
+#	endif
+	I2cMasterInit();
+	I2cMasterIdle();
+#	if defined(HAVE_INPUT)
+		if (!INPUT_MESSAGE_MISSED)
+			retVal = I2cMasterPut(messageType, command, data, count);
+#	else
+	retVal = I2cMasterPut(messageType, command, data, count);
+#	endif
+	I2cMasterIdle();
+	SSPEN = 0;
+
+	INnOUT_PORT = 1;
+	I2cSlaveInit();
+#	if defined(HAVE_INPUT)
+		if (INPUT_MESSAGE_MISSED)
+			g_inputMessageMissed = true;
+#	endif
+	return retVal;
+#else
+	return false;
 #endif
 }
+
+bool SendCommand(MessageId command, unsigned char const * data, unsigned char count)
+{
+	unsigned tryCounter = TO_OUTPUT_MAX_TRAY;
+	while (--tryCounter != 0) //I will repeat it couple of times because output module could be connected to an output and bss b sending a message
+	{
+		if (SendMessageToOutput(I2C_MESSAGE_TYPE_COMMAND, command, data, count))
+			break;
+
+		InvertOutput(); //may be output module is inverted
+	}
+
+	return (0 != tryCounter);
+}
+
 
 void CommonInit()
 {

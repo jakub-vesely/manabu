@@ -24,50 +24,6 @@
 
 #define RECEIVE_TRY_COUNT  5000
 
-unsigned char g_invertOutput = 0;
-
-#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
-	bool g_inputMessageMissed = false;
-#endif
-
-bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count)
-{
-#if defined(HAVE_OUTPUT)
-	bool retVal = 0;
-#	if defined(HAVE_INPUT)
-		if (SSP1IF || SSPSTATbits.S) //message from input recieved or just comming
-		{
-			INPUT_MESSAGE_MISSED = false;
-			return false;
-		}
-#	endif
-	SSPEN = 0;
-	INnOUT_PORT = 0; //sitch to output
-#	if defined(HAVE_INPUT)
-		INPUT_MESSAGE_MISSED = false; //it must be behind INnOUT_PORT = 0; because it cause iterupt
-#	endif
-	I2cMasterInit();
-	I2cMasterIdle();
-#	if defined(HAVE_INPUT)
-		if (!INPUT_MESSAGE_MISSED)
-			retVal = I2cMasterPut(messageType, command, data, count);
-#	else
-	retVal = I2cMasterPut(messageType, command, data, count);
-#	endif
-	I2cMasterIdle();
-	SSPEN = 0;
-	
-	INnOUT_PORT = 1;
-	I2cSlaveInit();
-#	if defined(HAVE_INPUT)
-		if (INPUT_MESSAGE_MISSED)
-			g_inputMessageMissed = true;
-#	endif
-	return retVal;
-#else
-	return false;
-#endif
-}
 
 bool GetMessageFromOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count, unsigned char *value)
 {
@@ -92,7 +48,7 @@ bool GetMessageFromOutput(unsigned char messageType, MessageId command, unsigned
 #endif
 }
 
-void SendToOutputIfReady()
+void SendStateToOutputIfReady()
 {
 	if (!g_toOutput.isReady)
 		return;
@@ -106,30 +62,20 @@ void SendToOutputIfReady()
 
 	g_toOutput.send_try = g_toOutput.send_try - 1;
 	
-	if (g_toOutput.isState)
-	{
-		if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 1))
-		{
-			g_toOutput.isReady = false;
-		}
-		else if (!INPUT_MESSAGE_MISSED)//message was not send
-		{
-			if (g_invertOutput)
-			{
-				g_invertOutput = 0;
-				INVERT_OUTPUT_PORT = false;
-			}
-			else
-			{
-				g_invertOutput = 1;
-				INVERT_OUTPUT_PORT = true;
-			}
-		}
-	}
-	else
-	{
-		//TODO: command send
-	}
+	if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 1))
+		g_toOutput.isReady = false;
+	else if (!INPUT_MESSAGE_MISSED)//message was not send
+		InvertOutput();
+}
+
+void ProcessStateChangedCommon()
+{
+	g_stateChanged = false;
+
+#ifdef HAVE_OUTPUT
+	g_toOutput.send_try = TO_OUTPUT_MAX_TRAY;
+	g_toOutput.isReady = true;
+#endif
 }
 
 void main(void)
@@ -183,14 +129,14 @@ void main(void)
 
 		ProcessModuleFunctionality();
 
-		if (g_stateChanged || stateRepeater++ == 1000)
+		if (g_stateMessageEnabled && (g_stateChanged || stateRepeater++ == 1000))
 		{
 			stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
 			ProcessStateChangedCommon();
 		}
 #if defined (HAVE_OUTPUT)
-		SendToOutputIfReady();
+		SendStateToOutputIfReady();
 #endif
 	}
 }

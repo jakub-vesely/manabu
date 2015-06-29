@@ -12,6 +12,9 @@
 #include <common/common.h>
 #include <common/i2c.h>
 
+#define CHARGING_LED_OUTPUT LATC2
+#define CHARGING_N_STATE_INPUT RC5
+
 static uint8_t buffer[CDC_DATA_OUT_EP_SIZE];
 static const char protocolId[] = PROTOCOL_ID;
 
@@ -36,7 +39,7 @@ unsigned char GetFromI2C(MessageId command)
 	unsigned char retVal = 0;
 	while (0 != counter--)
 	{
-		if (GetCommandI2C(command, &retVal))
+		if (GetCommandFromI2C(command, &retVal))
 			return retVal;
 	}
 	return 0x0;
@@ -70,26 +73,32 @@ void UsbDataRead()
 			ResponseChar(GetFromI2C(MID_COMMAND_FLASH_GET_VERSION));
 			break;
 		case MID_COMMAND_FLASH_END:
-			PutCommandI2C(MID_COMMAND_FLASH_END, NULL, 0);
+			SendCommand(MID_COMMAND_FLASH_END, NULL, 0);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_ADDRESS:
-			PutCommandI2C(MID_COMMAND_FLASH_ADDRESS, buffer+3, 2);
+			//in the case there is not a program it is the first programming command there is a bootloader so no status message will be accepted
+			g_stateMessageEnabled = false;
+			SendCommand(MID_COMMAND_FLASH_ADDRESS, buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_LATCH_WORD:
-			PutCommandI2C(MID_COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
+			SendCommand(MID_COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_WRITE_WORD:
-			PutCommandI2C(MID_COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
+			SendCommand(MID_COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_CHECKSUM:
 			ResponseChar(GetFromI2C(MID_COMMAND_FLASH_CHECKSUM));
 			break;
 		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
-			PutCommandI2C(MID_COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
+			//in the case there is a program it is the first programming command which cause a reset of module, no more state message will be accepted
+			//it is also the last proggramming command. the main programm is alread running ane status messages will be accepted again
+			g_stateMessageEnabled = (g_stateMessageEnabled ? false : true);
+
+			SendCommand(MID_COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
 			ResponseChar(0);
 			break;
 		case MID_GET_MODULE_TYPE:
@@ -99,7 +108,7 @@ void UsbDataRead()
 				ResponseChar(GetFromI2C(MID_GET_MODULE_TYPE));
 			break;
 		default:
-			PutCommandI2C(buffer[2], buffer+3, 1);
+			SendCommand(buffer[2], buffer+3, 1);
 			break;
 		}
 	}
@@ -187,7 +196,7 @@ void ModuleTypeSpecificInit()
     USBDeviceAttach();
 	g_inState = STATE_MAX;
 
-	TRISC5 = true; //stat
+	TRISC5 = true; //charging state
 	TRISC2 = false; //LED
 }
 
@@ -199,7 +208,7 @@ void ProcessModuleFunctionality()
 		return;
 
 	UsbDataRead();
-	LATC2 = !RC5;
+	CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
 }
 
 unsigned char GetModuleType()

@@ -143,7 +143,7 @@ void BootLoader::upload()
 		m_serialPort->SetFlashLoadCheck(0xff);
 		QThread::msleep(500); //wait for reset
 	}
-	if (~0 == version)
+	else if (~0 == version)
 	{
 		m_status->append(tr("no module connected - programming terminated."));
 		m_status->repaint();
