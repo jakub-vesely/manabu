@@ -76,10 +76,10 @@ bool MainWindow::_AddInterfaceTab()
 
 	QSlider *slider = new QSlider(Qt::Horizontal, widget);
 	slider->setMinimumSize(200, 20);
-	slider->setRange(0, 255);
+	slider->setRange(0, 1024);
 
 	int value;
-	if (m_serialPort->GetState(value))
+	if (m_serialPort->GetState(0, value))
 	{
 		slider->setValue(value);
 		qDebug() << "value: " << value;

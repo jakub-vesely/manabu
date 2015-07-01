@@ -44,9 +44,9 @@ unsigned int ADC_Read10bit(void)
 
 void ProcessModuleFunctionality()
 {
-	unsigned char potValue = (unsigned char)(ADC_Read10bit() / 4);
+	unsigned potValue = ADC_Read10bit();
 
-	unsigned char outState = (unsigned char)((unsigned)g_inState * (unsigned)potValue / (unsigned)STATE_MAX);
+	unsigned outState = (unsigned)((unsigned long)g_inState * (unsigned long)potValue / (unsigned long)STATE_MAX);
 	if (g_outState != outState)
 	{
 		g_outState = outState;

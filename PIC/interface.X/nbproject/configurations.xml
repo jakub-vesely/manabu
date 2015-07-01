@@ -23,7 +23,6 @@
         </logicalFolder>
         <logicalFolder name="pic18f14k50" displayName="pic18f14k50" projectFiles="true">
           <itemPath>system_config/pic18f14k50/fixed_address_memory.h</itemPath>
-          <itemPath>system_config/pic18f14k50/io_mapping.h</itemPath>
           <itemPath>system_config/pic18f14k50/system.h</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -194,6 +193,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

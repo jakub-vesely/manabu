@@ -8,14 +8,15 @@
 #include <CommonConstants.h>
 
 void I2cSlaveInit();
+void I2cMasterInit(void);
 void I2cInit(void);
 bool I2cMasterIdle(void);
 bool PutStateI2C(unsigned char state);
 bool PutCommandToI2C(MessageId command, unsigned char const *data, unsigned char count);
-bool GetCommandFromI2C(MessageId command, unsigned char *retVal);
+bool GetCommandFromI2C(MessageId command, unsigned char *retVal, unsigned char count);
 bool CheckI2cAsSlave(void);
 bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count);
-bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal);
+bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal, unsigned char count);
 
 #if defined LPCDEVKIT
 #   define SCL_PORT PORTBbits.RB6

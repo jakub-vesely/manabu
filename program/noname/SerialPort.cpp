@@ -42,19 +42,20 @@ bool SerialPort::Open()
 
 void SerialPort::SetValue(int value)
 {
-	g_buffer[0] = value;
+	memcpy(g_buffer, (char const *)&value, 2);
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_STATE, 1, 2, false);
 	qDebug() << "value has been set to: " << value;
 }
 
-unsigned char SerialPort::GetValue(unsigned layer)
+bool SerialPort::GetState(unsigned layer, int &value)
 {
-	_CallCubeFunction(layer, MID_GET_STATE, 0, 2, false);
+	if (!_CallCubeFunction(layer, MID_GET_STATE, 0, 3, false))
+			return false;
 
-	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
-	return g_buffer[1];
+		value = *(uint16_t *)(g_buffer+1);
+		qDebug() << "get value: " << *(uint16_t *)(g_buffer+1);
+		return true;
 }
-
 int SerialPort::GetMode()
 {
 /*	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_MODE, 0, 1, true);
@@ -122,15 +123,6 @@ unsigned char SerialPort::GetModuleType(unsigned layer)
 
 	qDebug() << "module type on layer:" << layer << " is " << (unsigned char)(g_buffer[1]);
 	return g_buffer[1];
-}
-
-bool SerialPort::GetState(int &value)
-{
-	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_STATE, 0, 2, false))
-			return false;
-
-		value = (unsigned char)g_buffer[0];
-		return true;
 }
 
 

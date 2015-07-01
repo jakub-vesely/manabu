@@ -10,7 +10,7 @@
 #   define INPUT_MESSAGE_MISSED (false)
 #endif
 
-#define STATE_MAX 0xff
+#define STATE_MAX 0x3ff
 #define TO_OUTPUT_MAX_TRAY 10
 
 #if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
@@ -26,6 +26,7 @@ typedef enum
 void Wait(int delay);
 void SwitchControllerInit();
 void ProcessCommandCommon();
+void InvertOutput();
 bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count);
 bool SendCommand(MessageId command, unsigned char const * data, unsigned char count);
 void CommonInit();
@@ -37,8 +38,8 @@ struct
     unsigned char mode;
 } g_persistant;
 
-unsigned char g_inState = STATE_MAX;
-unsigned char g_outState = 0;
+unsigned g_inState = STATE_MAX;
+unsigned g_outState = 0;
 
 bool g_stateMessageEnabled = true;
 bool g_stateChanged = true;

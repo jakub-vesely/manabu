@@ -24,30 +24,6 @@
 
 #define RECEIVE_TRY_COUNT  5000
 
-
-bool GetMessageFromOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count, unsigned char *value)
-{
-#if defined(HAVE_OUTPUT)
-	bool retVal;
-
-	INnOUT_PORT = 0;
-#	if defined(HAVE_INPUT)
-		INPUT_MESSAGE_MISSED = false;
-#	endif
-	I2cMasterInit();
-	retVal = I2cMasterGet(messageType, command, value);
-	I2cSlaveInit();
-#	if defined(HAVE_INPUT)
-		if (INPUT_MESSAGE_MISSED)
-			g_inputMessageMissed = true;
-#	endif
-	INnOUT_PORT = 1;
-	return retVal;
-#else
-	return false;
-#endif
-}
-
 void SendStateToOutputIfReady()
 {
 	if (!g_toOutput.isReady)
@@ -61,8 +37,7 @@ void SendStateToOutputIfReady()
 	}
 
 	g_toOutput.send_try = g_toOutput.send_try - 1;
-	
-	if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 1))
+	if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 2))
 		g_toOutput.isReady = false;
 	else if (!INPUT_MESSAGE_MISSED)//message was not send
 		InvertOutput();
