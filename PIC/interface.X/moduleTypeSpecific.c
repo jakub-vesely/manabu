@@ -211,12 +211,14 @@ void ModuleTypeSpecificInit()
 
 void ProcessModuleFunctionality()
 {
+	CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
+	
 	SYSTEM_Tasks();
 	if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
 		return;
 
 	UsbDataRead();
-	CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
+	
 }
 
 unsigned char GetModuleType()
