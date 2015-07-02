@@ -67,7 +67,7 @@ void UsbDataRead()
 			Response((unsigned char *)s_protocolId, sizeof(s_protocolId)-1);
 			break;
 		case MID_SET_STATE:
-			g_inState = *(unsigned *)s_buffer+3;
+			g_inState = *(unsigned *)(s_buffer+3);
 			g_stateChanged = true;
 			ResponseChar(0);
 			break;
