@@ -29,16 +29,22 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 	else
 	{
-		if (0 != m_serialPort->GetFlashVersion())
+		_AddInterfaceTab();
+		unsigned version;
+		try
 		{
-			qDebug() << "module with a bootloader connected";
+			version = m_serialPort->GetFlashVersion1();
 		}
-		else
+		catch (...)
 		{
-			_AddInterfaceTab();
-			//_AddRgbTab();
+			return;
+		}
+
+		if (0 == version)
 			_AddPlotTab();
-		}
+		else
+			qDebug() << "module with a bootloader connected";
+
 		_AddBootloaderTab();
 	}
 }
@@ -71,12 +77,17 @@ char const *MainWindow::_GetModuleTypeName(ModuleTypes type)
 bool MainWindow::_AddInterfaceTab()
 {
 	QWidget *widget = new QWidget(this);
-	m_tabWidget->addTab(widget, _GetModuleTypeName((ModuleTypes)m_serialPort->GetModuleType(0)));
+
+	ModuleTypes moduleType;
+	if (!m_serialPort->FillModuleType(0, moduleType))
+		return false;
+
+	m_tabWidget->addTab(widget, _GetModuleTypeName(moduleType));
 	QVBoxLayout *layout = new QVBoxLayout(widget);
 
 	QSlider *slider = new QSlider(Qt::Horizontal, widget);
 	slider->setMinimumSize(200, 20);
-	slider->setRange(0, 1024);
+	slider->setRange(0, 1023);
 
 	int value;
 	if (m_serialPort->GetState(0, value))
@@ -119,7 +130,11 @@ void MainWindow::_AddBootloaderTab()
 void MainWindow::_AddPlotTab()
 {
 	Plot *plot = new Plot(this, m_serialPort);
-	m_tabWidget->addTab(plot, _GetModuleTypeName((ModuleTypes)m_serialPort->GetModuleType(1)));
+	ModuleTypes moduleType;
+	if(!(ModuleTypes)m_serialPort->FillModuleType(1, moduleType))
+		return; //tab will not be added
+
+	m_tabWidget->addTab(plot, _GetModuleTypeName(moduleType));
 }
 
 MainWindow::~MainWindow()
