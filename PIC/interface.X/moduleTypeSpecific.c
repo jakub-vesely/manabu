@@ -115,6 +115,19 @@ void UsbDataRead()
 			else
 				ResponsePrepared(GetFromI2C(MID_GET_MODULE_TYPE, s_buffer + 1, 1));
 			break;
+		case MID_GET_MODE:
+			if (0 == deviceId)
+				ResponseChar(g_persistant.mode);
+			else
+				ResponsePrepared(GetFromI2C(MID_GET_MODE, s_buffer + 1, 1));
+			break;
+		case MID_SET_MODE:
+			if (0 == deviceId)
+				SetMode(s_buffer[3]);
+			else
+				SendCommand(MID_SET_MODE, s_buffer+3, 1);
+			ResponseChar(0);
+			break;
 		default:
 			SendCommand(s_buffer[2], s_buffer+3, 1);
 			break;

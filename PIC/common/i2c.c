@@ -285,6 +285,8 @@ bool CheckI2cAsSlave(void)
 				case MID_GET_MODULE_TYPE:
 					SSPBUF = GetModuleType();
 				break;
+				case MID_GET_MODE:
+					SSPBUF = g_persistant.mode;
 				//TODO: when i will process get with parameter i should place here g_stateMessageEnabled = false;
 			}
 		}

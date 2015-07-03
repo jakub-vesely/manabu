@@ -40,8 +40,17 @@ MainWindow::MainWindow(QWidget *parent) :
 			return;
 		}
 
+		ModuleTypes moduleType;
+		if(!(ModuleTypes)m_serialPort->FillModuleType(1, moduleType))
+			return; //no module connected to the interface
+
 		if (0 == version)
-			_AddPlotTab();
+		{
+			if (moduleType == TYPE_RGB_LED)
+				_AddRgbTab();
+			else
+				_AddPlotTab();
+		}
 		else
 			qDebug() << "module with a bootloader connected";
 
@@ -100,6 +109,9 @@ bool MainWindow::_AddInterfaceTab()
 		QMessageBox::critical(this, "", tr("Value was not set."));
 	}
 
+	unsigned mode;
+	m_serialPort->GetMode(1, mode);
+
 	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
 	layout->addWidget(slider);
 
@@ -109,16 +121,19 @@ bool MainWindow::_AddInterfaceTab()
 void MainWindow::_AddRgbTab()
 {
 	QWidget *widget = new QWidget(this);
-	m_tabWidget->addTab(widget, tr("RGB"));
+	m_tabWidget->addTab(widget, _GetModuleTypeName(TYPE_RGB_LED));
 	QVBoxLayout *layout = new QVBoxLayout(widget);
 
-	QComboBox *mode = new QComboBox(widget);
-	mode->addItem(tr("red to red"));
-	mode->addItem(tr("red to purple"));
-	mode->addItem(tr("white value"));
-	mode->setCurrentIndex(m_serialPort->GetMode()-1);
+	QComboBox *modeCombo = new QComboBox(widget);
+	modeCombo->addItem(tr("red to red"));
+	modeCombo->addItem(tr("red to purple"));
+	modeCombo->addItem(tr("white value"));
 
-	connect(mode, SIGNAL(currentIndexChanged(int)), this, SLOT(modeChanged(int)));
+	unsigned mode;
+	m_serialPort->GetMode(1, mode);
+	modeCombo->setCurrentIndex(mode-1);
+
+	connect(modeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLayer1Mode(int)));
 }
 
 void MainWindow::_AddBootloaderTab()
@@ -141,8 +156,8 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::modeChanged(int value)
+void MainWindow::changeLayer1Mode(int value)
 {
-	m_serialPort->SetMode(value+1);
+	m_serialPort->SetMode(1, value+1);
 
 }

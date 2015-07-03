@@ -31,23 +31,30 @@ void SwitchControllerInit()
 #endif
 }
 
+void SetMode(unsigned char mode)
+{
+	g_persistant.mode = mode;
+
+#ifndef INTERFACE
+	HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
+	Wait(1);
+#endif
+
+	g_stateChanged = true;
+}
+
 void ProcessCommandCommon()
 {
 	g_commandRecieved = false;
 	//unsigned char deleteme;
 	switch(g_commandInstruction)
 	{
-		/*case COMMAND_CHANGE_MODE:
-
-			g_persistant.mode = g_commandValue;
-#ifndef LPCDEVKIT
-			HEFLASH_writeBlock(0, (void*)&g_persistant, sizeof(g_persistant));
-#endif
-			g_stateChanged = true;
-		break;*/
+		case MID_SET_MODE:
+			SetMode(g_commandValue);
+		break;
 		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
 			g_persistant.bootLoaderCheck = g_commandValue;
-#ifndef LPCDEVKIT
+#ifndef INTERFACE
 			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
 			Wait(1);
 #endif

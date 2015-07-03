@@ -55,20 +55,19 @@ bool SerialPort::GetState(unsigned layer, int &value)
 	if (!_CallCubeFunction(layer, MID_GET_STATE, 0, 3, false))
 			return false;
 
-		value = *(uint16_t *)(g_buffer+1);
-		qDebug() << "get value: " << *(uint16_t *)(g_buffer+1);
-		return true;
+	value = *(uint16_t *)(g_buffer+1);
+	qDebug() << "get value: " << *(uint16_t *)(g_buffer+1);
+	return true;
 }
 
-int SerialPort::GetMode()
+int SerialPort::GetMode(unsigned layer, unsigned &mode)
 {
-/*	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_MODE, 0, 1, true);
-	if (0 == size || size != g_buffer[0])
-		return 0;
+	if (!_CallCubeFunction(layer, MID_GET_MODE, 0, 2, false))
+			return false;
 
-	qDebug() << "mode: " << (int)(g_buffer[1]);
-	return g_buffer[1];*/
-	return 0;
+	mode = g_buffer[1];
+	qDebug() << "get mode: " << mode;
+	return true;
 }
 
 int SerialPort::GetFlashVersion1()
@@ -114,11 +113,12 @@ void SerialPort::SetFlashLoadCheck(unsigned char byte)
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, true);
 }
 
-void SerialPort::SetMode(int mode)
+bool SerialPort::SetMode(unsigned layer, unsigned mode)
 {
-/*	g_buffer[0] = mode;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_MODE, 1, 1, false);
-	*/
+	g_buffer[0] = mode;
+	qDebug() << "mode on layer:" << layer << " set to " << mode;
+
+	return _CallCubeFunction(layer, MID_SET_MODE, 1, 2, false);
 }
 
 bool SerialPort::FillModuleType(unsigned layer, ModuleTypes &moduleType)

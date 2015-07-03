@@ -25,6 +25,7 @@ typedef enum
 
 void Wait(int delay);
 void SwitchControllerInit();
+void SetMode(unsigned char mode);
 void ProcessCommandCommon();
 void InvertOutput();
 bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count);

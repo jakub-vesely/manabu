@@ -32,7 +32,6 @@ signals:
 
 public slots:
 	bool SetValue(int value);
-	int GetMode();
 	int GetFlashVersion1();
 	void SetFlashAddress(uint16_t address);
 	void SetFlashWriteWord(uint16_t word);
@@ -40,9 +39,10 @@ public slots:
 	int GetFlashCheckSum();
 	void SetFlashEnd();
 	void SetFlashLoadCheck(unsigned char byte);
-	void SetMode(int mode);
+	bool SetMode(unsigned layer, unsigned mode);
 	bool FillModuleType(unsigned layer, ModuleTypes &moduleType);
 	bool GetState(unsigned layer, int &value);
+	int GetMode(unsigned layer, unsigned &mode);
 protected slots:
 	void readyRead();
 	void timerTimeout();
