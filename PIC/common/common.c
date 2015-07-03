@@ -1,11 +1,8 @@
 #include "common.h"
-
-#ifndef LPCDEVKIT
-#	include <CommonConstants.h>
-#	include <system_common.h>
-#	include <common/HEFlash.h>
-#	include <common/i2c.h>
-#endif
+#include <CommonConstants.h>
+#include <system_common.h>
+#include <common/HEFlash.h>
+#include <common/i2c.h>
 
 unsigned char g_invertOutput = 0;
 
@@ -20,14 +17,13 @@ void Wait(int delay)
 
 void SwitchControllerInit()
 {
-#ifndef LPCDEVKIT
-		INnOUT_TRIS = 0;
-		INnOUT_PORT = 1;
 
-#	if defined HAVE_OUTPUT
-		INVERT_OUTPUT_TRIS = 0;
-		INVERT_OUTPUT_PORT = 0;
-#	endif
+	INnOUT_TRIS = 0;
+	INnOUT_PORT = 1;
+
+#if defined HAVE_OUTPUT
+	INVERT_OUTPUT_TRIS = 0;
+	INVERT_OUTPUT_PORT = 0;
 #endif
 }
 
@@ -130,21 +126,17 @@ bool SendCommand(MessageId command, unsigned char const * data, unsigned char co
 
 void CommonInit()
 {
-#ifndef LPCDEVKIT
 	ANSELA = 0x00;      //set analog pins to digital
     ANSELC = 0x00;
 
 	if (0 == HEFLASH_readByte(0, 0)) //is not the first time run after the program loading
 		HEFLASH_readBlock((char *)&g_persistant, 0, sizeof(g_persistant));
-#endif
 
 #ifdef HAVE_OUTPUT
 	SwitchControllerInit();
 #endif
 
-#ifndef LPCDEVKIT
 	I2cSlaveInit();
-#endif
 	
 #ifdef INTERUPTS_ENABLED
 	INTCONbits.GIE = 1;
