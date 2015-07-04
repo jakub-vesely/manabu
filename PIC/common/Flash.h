@@ -8,6 +8,8 @@
 *
 */
 #include<xc.h>
+#include <system_common.h>
+
 #if defined(_PIC16F1501_H_)
 //1K
 #define FLASH_ROWSIZE 16 //size of a row

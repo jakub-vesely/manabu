@@ -31,10 +31,8 @@ void SetMode(unsigned char mode)
 {
 	g_persistant.mode = mode;
 
-#ifndef INTERFACE
 	HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
 	Wait(1);
-#endif
 
 	g_stateChanged = true;
 }

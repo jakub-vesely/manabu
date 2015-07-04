@@ -10,6 +10,8 @@
         </logicalFolder>
         <itemPath>../common/common.h</itemPath>
         <itemPath>../common/i2c.h</itemPath>
+        <itemPath>../common/Flash.h</itemPath>
+        <itemPath>../common/HEFlash.h</itemPath>
       </logicalFolder>
       <logicalFolder name="system_config"
                      displayName="system_config"
@@ -41,6 +43,8 @@
         <itemPath>../common/common.c</itemPath>
         <itemPath>../common/i2c.c</itemPath>
         <itemPath>../common/main.c</itemPath>
+        <itemPath>../common/Flash.c</itemPath>
+        <itemPath>../common/HEFlash.c</itemPath>
       </logicalFolder>
       <logicalFolder name="system_config"
                      displayName="system_config"
