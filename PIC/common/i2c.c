@@ -10,6 +10,7 @@
 #endif
 
 unsigned char g_inStateFollowed = 0;
+unsigned char g_inStateHiTemp = 0;
 
 #define IS_DATA SSPSTATbits.D_nA
 #define IS_READ  SSPSTATbits.R_nW
@@ -138,7 +139,6 @@ bool I2cMasterRead(unsigned char *retVal)
 
 	*retVal = SSPBUF;
 	return true;
-
 }
 
 void I2cMasterStop(void)
@@ -167,7 +167,20 @@ bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char co
 		 * address so I will use this required byte for a message type
 		 * on the slave I will mask all the address byte out
 		 */
-		if (!I2cMasterWrite((command << 2) | (messageType << 1))) //lowest bite is read/write (write = 0)
+		unsigned char mixture = 0;
+		mixture |= (messageType << 1);
+		if (I2C_MESSAGE_TYPE_COMMAND ==  messageType)
+			mixture |= (command << 2);
+		else
+		{
+				//state is 10 bits long and for high two bits is used first address byte
+				mixture |= data[1] << 2;
+				count--;
+		}
+		
+			
+
+		if (!I2cMasterWrite(mixture)) //lowest bite is read/write (write = 0)
 		{
 			I2cMasterStop();
 			return false;
@@ -186,7 +199,13 @@ bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char co
 	return true;
 }
 
-bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal)
+void I2CMasterAck( void )
+{
+  SSPCON2bits.ACKDT = 0;           // set acknowledge bit state for ACK
+  SSPCON2bits.ACKEN = 1;           // initiate bus acknowledge sequence
+}
+
+bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal, unsigned char count)
 {
 	I2cMasterInit();
 	I2cMasterIdle();
@@ -196,10 +215,16 @@ bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *r
 		I2cMasterStop();
 		return false;
 	}
-	if (!I2cMasterRead(retVal))
+	for (unsigned char i = 0; i < count; i++)
 	{
-		I2cMasterStop();
-		return false;
+		
+		if (!I2cMasterRead(retVal+i))
+		{
+			I2cMasterStop();
+			return false;
+		}
+		if (i != count-1)
+			I2CMasterAck();
 	}
 	I2cMasterStop();
 	return true;
@@ -210,14 +235,14 @@ bool PutStateI2C(unsigned char state)
 	return I2cMasterPut(I2C_MESSAGE_TYPE_DATA, 0,  &state, 1);
 }
 
-bool PutCommandI2C(MessageId command, unsigned char const *data, unsigned char count)
+bool PutCommandToI2C(MessageId command, unsigned char const *data, unsigned char count)
 {
 	return I2cMasterPut(I2C_MESSAGE_TYPE_COMMAND, command, data, count);
 }
 
-bool GetCommandI2C(MessageId command, unsigned char *retVal)
+bool GetCommandFromI2C(MessageId command, unsigned char *retVal, unsigned char count)
 {
-	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, retVal);
+	return I2cMasterGet(I2C_MESSAGE_TYPE_COMMAND, command, retVal, count);
 }
 
 bool CheckI2cAsSlave(void)
@@ -236,7 +261,10 @@ bool CheckI2cAsSlave(void)
 	if (!IS_DATA) //"address" byte in write mode
 	{	
 		g_inStateFollowed = (0 == (value & 2)); //second lowest bite is I2C_MESSAGE_TYPE where 0 means data
-		g_commandInstruction = (value >> 2);
+		if (g_inStateFollowed)
+			g_inStateHiTemp = (value >> 2);
+		else
+			g_commandInstruction = (value >> 2);
 
 		if (IS_READ) //it have not be here - just for sure
 		{
@@ -248,13 +276,25 @@ bool CheckI2cAsSlave(void)
 					SSPBUF = 0; //I'm in program so i dont have a bootloader version
 				break;
 				case MID_GET_STATE:
-					SSPBUF = g_outState;
+					SSPBUF = (unsigned char)(g_outState & 0xff);
+					SSPCON1bits.CKP = 1;
+					while (!PIR1bits.SSP1IF) //wait until ninth clock pulse received
+					{}
+					SSPBUF = (unsigned char)(g_outState >> 8);
 				break;
 				case MID_GET_MODULE_TYPE:
 					SSPBUF = GetModuleType();
 				break;
+				case MID_GET_MODE:
+					SSPBUF = g_persistant.mode;
+				//TODO: when i will process get with parameter i should place here g_stateMessageEnabled = false;
 			}
 		}
+		else
+		{
+			g_stateMessageEnabled = false; //Im expecting second part of message so state sending must wait now
+		}
+
 
 		if (MID_COMMAND_FLASH_GET_VERSION != g_commandInstruction)
 			g_bootloaderPolicy = 0;
@@ -264,7 +304,8 @@ bool CheckI2cAsSlave(void)
 		g_bootloaderPolicy = 0;
 		if (g_inStateFollowed)
 		{
-			g_inState = value;
+			g_inState = g_inStateHiTemp << 8;
+			g_inState |= value;
 			g_stateChanged = true;
 		}
 		else
@@ -272,7 +313,10 @@ bool CheckI2cAsSlave(void)
 			g_commandValue = value;
 			g_commandRecieved = true;
 		}
+
+		g_stateMessageEnabled = true; //Second part of message recieved. I ddon't wait for anthitng and can switch to output
 	}
+
 	if (SEN)
 		CKP = 1;
 

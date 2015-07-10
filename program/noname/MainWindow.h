@@ -27,7 +27,7 @@ public:
 	~MainWindow();
 
 public slots:
-	void modeChanged(int value);
+	void changeLayer1Mode(int value);
 };
 
 #endif // MAINWINDOW_H

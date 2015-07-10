@@ -85,17 +85,16 @@ void SetBlue(unsigned char pwmPeriod)
 void ProcessStateChangedModuleTypeSpecific()
 {
 	g_outState = g_inState;
-	unsigned char g_mode = MODE_RED_TO_RED;
-	switch (g_mode)
+	switch (g_persistant.mode)
 	{
 		case MODE_RED_TO_RED:
-			SetColor(g_outState, RED_TO_RED_PERIOD, true);
+			SetColor(g_outState/4, RED_TO_RED_PERIOD, true);
 			break;
 		case MODE_RED_TO_PURPLE:
-			SetColor(g_outState, RED_TO_PURPLE_PERIOD, true);
+			SetColor(g_outState/4, RED_TO_PURPLE_PERIOD, true);
 			break;
 		default: //white and initial value from HEFLASH after programming
-			SetWhiteValue(g_outState);
+			SetWhiteValue(g_outState/8);
 			break;
 	}
 }

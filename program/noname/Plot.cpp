@@ -21,7 +21,7 @@ Plot::Plot(QWidget *parent, SerialPort *serialPort) :
 	m_customPlot->xAxis->setLabel("x");
 	m_customPlot->yAxis->setLabel("y");
 	m_customPlot->xAxis->setRange(0, 1);
-	m_customPlot->yAxis->setRange(0, 255);
+	m_customPlot->yAxis->setRange(0, 1024);
 
 	QHBoxLayout *buttons = new QHBoxLayout(this);
 	layout->addLayout(buttons);
@@ -45,7 +45,16 @@ void Plot::draw()
 	m_y.resize(size + 1);
 
 	m_x[size] = size; // x goes from -1 to 1
-	m_y[size] = m_serialPort->GetValue(1);
+
+	int state;
+	if (m_serialPort->GetState(1, state))
+	{
+		m_y[size] = state;
+	}
+	else
+	{
+		m_y[size] = 0;
+	}
 
 	m_customPlot->xAxis->setRange(0, m_x[size]);
 	//m_customPlot->yAxis->setRange(0, m_y[size]);

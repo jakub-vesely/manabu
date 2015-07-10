@@ -15,8 +15,7 @@ class SerialPort : public QObject
 
 	bool _OpenIfMyPotr();
 	bool _IsMyDevice();
-	unsigned _CallCubeFunction(
-		char moduleId, MessageId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor);
+	bool _CallCubeFunction(char moduleId, MessageId functionId, unsigned inDataSize, unsigned expectedSize, bool forceSize);
 	unsigned _ReadData();
 
 	QSerialPort m_serialPort;
@@ -32,19 +31,18 @@ public:
 signals:
 
 public slots:
-	void SetValue(int value);
-	unsigned char GetValue(unsigned layer);
-	int GetMode();
-	int GetFlashVersion();
+	bool SetValue(int value);
+	int GetFlashVersion1();
 	void SetFlashAddress(uint16_t address);
 	void SetFlashWriteWord(uint16_t word);
 	void SetFlashLatchWord(uint16_t word);
 	int GetFlashCheckSum();
 	void SetFlashEnd();
 	void SetFlashLoadCheck(unsigned char byte);
-	void SetMode(int mode);
-	unsigned char GetModuleType(unsigned layer);
-	bool GetState(int &value);
+	bool SetMode(unsigned layer, unsigned mode);
+	bool FillModuleType(unsigned layer, ModuleTypes &moduleType);
+	bool GetState(unsigned layer, int &value);
+	int GetMode(unsigned layer, unsigned &mode);
 protected slots:
 	void readyRead();
 	void timerTimeout();

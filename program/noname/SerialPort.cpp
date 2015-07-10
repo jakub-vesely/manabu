@@ -40,35 +40,39 @@ bool SerialPort::Open()
 	return _OpenIfMyPotr();
 }
 
-void SerialPort::SetValue(int value)
+bool SerialPort::SetValue(int value)
 {
-	g_buffer[0] = value;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_STATE, 1, 2, false);
+	memcpy(g_buffer, (char const *)&value, 2);
+	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_STATE, 2, 2, false))
+		return false;
+
 	qDebug() << "value has been set to: " << value;
+	return true;
 }
 
-unsigned char SerialPort::GetValue(unsigned layer)
+bool SerialPort::GetState(unsigned layer, int &value)
 {
-	_CallCubeFunction(layer, MID_GET_STATE, 0, 2, false);
+	if (!_CallCubeFunction(layer, MID_GET_STATE, 0, 3, false))
+			return false;
 
-	qDebug() << "value: " << (unsigned char)(g_buffer[1]);
-	return g_buffer[1];
+	value = *(uint16_t *)(g_buffer+1);
+	qDebug() << "get value: " << *(uint16_t *)(g_buffer+1);
+	return true;
 }
 
-int SerialPort::GetMode()
+int SerialPort::GetMode(unsigned layer, unsigned &mode)
 {
-/*	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_MODE, 0, 1, true);
-	if (0 == size || size != g_buffer[0])
-		return 0;
+	if (!_CallCubeFunction(layer, MID_GET_MODE, 0, 2, false))
+			return false;
 
-	qDebug() << "mode: " << (int)(g_buffer[1]);
-	return g_buffer[1];*/
-	return 0;
+	mode = g_buffer[1];
+	qDebug() << "get mode: " << mode;
+	return true;
 }
 
-int SerialPort::GetFlashVersion()
+int SerialPort::GetFlashVersion1()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_GET_VERSION, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_GET_VERSION, 0, 2, true);
 
 	qDebug() << "flash version: " << (int)(g_buffer[1]);
 	return g_buffer[1];
@@ -77,60 +81,55 @@ int SerialPort::GetFlashVersion()
 void SerialPort::SetFlashAddress(uint16_t address)
 {
 	((uint16_t *)g_buffer)[0] = address;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_ADDRESS, 2, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_ADDRESS, 2, 2, true);
 }
 
 void SerialPort::SetFlashWriteWord(uint16_t word)
 {
 	((uint16_t *)g_buffer)[0] = word;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_WRITE_WORD, 2, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_WRITE_WORD, 2, 2, true);
 }
 
 void SerialPort::SetFlashLatchWord(uint16_t word)
 {
 	((uint16_t *)g_buffer)[0] = word;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_LATCH_WORD, 2, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_LATCH_WORD, 2, 2, true);
 }
 
 int SerialPort::GetFlashCheckSum()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_CHECKSUM, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_CHECKSUM, 0, 2, true);
 	return g_buffer[1];
 }
 
 void SerialPort::SetFlashEnd()
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_END, 0, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_END, 0, 2, true);
 }
 
 void SerialPort::SetFlashLoadCheck(unsigned char byte)
 {
 	g_buffer[0] = byte;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, false);
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, true);
 }
 
-void SerialPort::SetMode(int mode)
+bool SerialPort::SetMode(unsigned layer, unsigned mode)
 {
-/*	g_buffer[0] = mode;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_MODE, 1, 1, false);
-	*/
+	g_buffer[0] = mode;
+	qDebug() << "mode on layer:" << layer << " set to " << mode;
+
+	return _CallCubeFunction(layer, MID_SET_MODE, 1, 2, false);
 }
 
-unsigned char SerialPort::GetModuleType(unsigned layer)
+bool SerialPort::FillModuleType(unsigned layer, ModuleTypes &moduleType)
 {
-	_CallCubeFunction(layer, MID_GET_MODULE_TYPE, 0, 2, false);
+	if (!_CallCubeFunction(layer, MID_GET_MODULE_TYPE, 0, 2, false))
+		return false;
 
 	qDebug() << "module type on layer:" << layer << " is " << (unsigned char)(g_buffer[1]);
-	return g_buffer[1];
-}
+	moduleType = (ModuleTypes)g_buffer[1];
 
-bool SerialPort::GetState(int &value)
-{
-	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_STATE, 0, 2, false))
-			return false;
-
-		value = (unsigned char)g_buffer[0];
-		return true;
+	return true;
 }
 
 
@@ -170,23 +169,15 @@ bool SerialPort::_OpenIfMyPotr()
 bool SerialPort::_IsMyDevice()
 {
 	qDebug() << "is really my device?";
-	unsigned size = _CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_PROTOCOL_ID, 0, 0, true);
-
 	size_t pidSize = strlen(PROTOCOL_ID);
-	if (size != MESSAGE_LENGTH_BYTE_COUNT + pidSize || size != (unsigned)g_buffer[0])
-	{
-		qDebug() << "wrong returned size for MID_GET_PROTOCOL_ID:" << size;
-		qDebug() << "message is:" << g_buffer + MESSAGE_LENGTH_BYTE_COUNT;
+
+	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_PROTOCOL_ID, 0, pidSize+1, false))
 		return false;
-	}
-	else
-	{
-		qDebug() << "returned size is correct";
-	}
+
 	return (0 == strncmp(PROTOCOL_ID, g_buffer + MESSAGE_LENGTH_BYTE_COUNT, pidSize));
 }
 
-unsigned SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsigned inDataSize, unsigned requiredSize, bool usbCubeLookingFor)
+bool SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsigned inDataSize, unsigned expectedSize, bool forceSize)
 {
 	if (!m_serialPort.isOpen())
 	{
@@ -206,17 +197,19 @@ unsigned SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsi
 
 	int size = _ReadData();
 
-	if
-	(
-		!usbCubeLookingFor &&
-		(size == 0 || (requiredSize != 0 && size != requiredSize) || (requiredSize == 0 && size != (unsigned)g_buffer[0]))
+	if(
+		size == 0 ||
+		(expectedSize != 0 && size != expectedSize) ||
+		(expectedSize == 0 && size != (unsigned)g_buffer[0])
 	)
 	{
-		QMessageBox::critical(NULL, "", tr("Readed data are uncomplete"));
-		qDebug() << "Error: Readed data are uncomplete. required_size:" << requiredSize << "size:" << size << " g_buffer[0]:" << (unsigned)g_buffer[0];
-		throw std::runtime_error(tr("Readed data are uncomplete.").toStdString());
+		qDebug() << "Error: Readed data are uncomplete. required_size:" << expectedSize << "size:" << size << " g_buffer[0]:" << (unsigned)g_buffer[0];
+
+		if (forceSize)
+			throw std::runtime_error(tr("Readed data are uncomplete.").toStdString());
+		else return false;
 	}
-	return size;
+	return true;
 
 }
 

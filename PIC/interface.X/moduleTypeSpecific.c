@@ -12,94 +12,124 @@
 #include <common/common.h>
 #include <common/i2c.h>
 
-static uint8_t buffer[CDC_DATA_OUT_EP_SIZE];
-static const char protocolId[] = PROTOCOL_ID;
+#define CHARGING_LED_OUTPUT LATC2
+#define CHARGING_N_STATE_INPUT RC5
 
-void Response(unsigned char * answer, unsigned answerLength)
+static uint8_t s_buffer[CDC_DATA_OUT_EP_SIZE];
+static const char s_protocolId[] = PROTOCOL_ID;
+
+void Response(unsigned char const * answer, unsigned answerLength)
 {
 	int i = 0;
-	buffer[0] = (1 + answerLength);
+	s_buffer[0] = (1 + answerLength);
 	for (; i < answerLength; i++)
-		buffer[i+1] = answer[i];
-	putUSBUSART(&buffer[0], buffer[0]);
+		s_buffer[i+1] = answer[i];
+	putUSBUSART(&s_buffer[0], s_buffer[0]);
+}
+
+void ResponsePrepared(unsigned answerLength)
+{
+	s_buffer[0] = (1 + answerLength);
+	putUSBUSART(&s_buffer[0], s_buffer[0]);
 }
 
 void ResponseChar(unsigned char answer)
 {
-	buffer[0] = 2;
-	buffer[1] = answer;
-	putUSBUSART(buffer, 2);
+	s_buffer[0] = 2;
+	s_buffer[1] = answer;
+	putUSBUSART(s_buffer, 2);
 }
-unsigned char GetFromI2C(MessageId command)
+unsigned char GetFromI2C(MessageId command, unsigned char* data, unsigned char count)
 {
-	unsigned  counter = 1000; //there should probably be less
-	unsigned char retVal = 0;
-	while (0 != counter--)
+	unsigned tryCounter = TO_OUTPUT_MAX_TRAY;
+	while (--tryCounter != 0) //I will repeat it couple of times because output module could be connected to an output and bss b sending a message
 	{
-		if (GetCommandI2C(command, &retVal))
-			return retVal;
+		if (GetCommandFromI2C(command, data, count))
+			return count;
+
+		InvertOutput(); //may be output module is inverted
 	}
-	return 0x0;
+
+	return 0;
 }
 void UsbDataRead()
 {
 	if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1))
 		return;
 
-	unsigned char length = getsUSBUSART(buffer,CDC_DATA_IN_EP_SIZE);
+	unsigned char length = getsUSBUSART(s_buffer,CDC_DATA_IN_EP_SIZE);
 	if (0 != length)
 	{
-		unsigned char deviceId = buffer[1];
-		switch (buffer[2])
+		unsigned char deviceId = s_buffer[1];
+		switch (s_buffer[2])
 		{
 		case MID_GET_PROTOCOL_ID:
-			Response((unsigned char *)protocolId, sizeof(protocolId)-1);
+			Response((unsigned char *)s_protocolId, sizeof(s_protocolId)-1);
 			break;
 		case MID_SET_STATE:
-			g_inState = buffer[3];
+			g_inState = *(unsigned *)(s_buffer+3);
 			g_stateChanged = true;
 			ResponseChar(0);
 			break;
 		case MID_GET_STATE:
 			if (0 == deviceId)
-				ResponseChar(g_inState);
+				Response((unsigned char const*)&g_inState, 2);
 			else
-				ResponseChar(GetFromI2C(MID_GET_STATE));
+				ResponsePrepared(GetFromI2C(MID_GET_STATE, s_buffer + 1, 2));
 			break;
 		case MID_COMMAND_FLASH_GET_VERSION:
-			ResponseChar(GetFromI2C(MID_COMMAND_FLASH_GET_VERSION));
+			ResponsePrepared(GetFromI2C(MID_COMMAND_FLASH_GET_VERSION, s_buffer+ 1, 1));
 			break;
 		case MID_COMMAND_FLASH_END:
-			PutCommandI2C(MID_COMMAND_FLASH_END, NULL, 0);
+			SendCommand(MID_COMMAND_FLASH_END, NULL, 0);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_ADDRESS:
-			PutCommandI2C(MID_COMMAND_FLASH_ADDRESS, buffer+3, 2);
+			//in the case there is not a program it is the first programming command there is a bootloader so no status message will be accepted
+			g_stateMessageEnabled = false;
+			SendCommand(MID_COMMAND_FLASH_ADDRESS, s_buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_LATCH_WORD:
-			PutCommandI2C(MID_COMMAND_FLASH_LATCH_WORD, buffer+3, 2);
+			SendCommand(MID_COMMAND_FLASH_LATCH_WORD, s_buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_WRITE_WORD:
-			PutCommandI2C(MID_COMMAND_FLASH_WRITE_WORD, buffer+3, 2);
+			SendCommand(MID_COMMAND_FLASH_WRITE_WORD, s_buffer+3, 2);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_CHECKSUM:
-			ResponseChar(GetFromI2C(MID_COMMAND_FLASH_CHECKSUM));
+			ResponsePrepared(GetFromI2C(MID_COMMAND_FLASH_CHECKSUM, s_buffer + 1, 1));
 			break;
 		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
-			PutCommandI2C(MID_COMMAND_FLASH_SET_BOOT_FLAG, buffer+3, 1);
+			//in the case there is a program it is the first programming command which cause a reset of module, no more state message will be accepted
+			//it is also the last proggramming command. the main programm is alread running ane status messages will be accepted again
+			g_stateMessageEnabled = (g_stateMessageEnabled ? false : true);
+
+			SendCommand(MID_COMMAND_FLASH_SET_BOOT_FLAG, s_buffer+3, 1);
 			ResponseChar(0);
 			break;
 		case MID_GET_MODULE_TYPE:
 			if (0 == deviceId)
 				ResponseChar(GetModuleType());
 			else
-				ResponseChar(GetFromI2C(MID_GET_MODULE_TYPE));
+				ResponsePrepared(GetFromI2C(MID_GET_MODULE_TYPE, s_buffer + 1, 1));
+			break;
+		case MID_GET_MODE:
+			if (0 == deviceId)
+				ResponseChar(g_persistant.mode);
+			else
+				ResponsePrepared(GetFromI2C(MID_GET_MODE, s_buffer + 1, 1));
+			break;
+		case MID_SET_MODE:
+			if (0 == deviceId)
+				SetMode(s_buffer[3]);
+			else
+				SendCommand(MID_SET_MODE, s_buffer+3, 1);
+			ResponseChar(0);
 			break;
 		default:
-			PutCommandI2C(buffer[2], buffer+3, 1);
+			SendCommand(s_buffer[2], s_buffer+3, 1);
 			break;
 		}
 	}
@@ -187,19 +217,21 @@ void ModuleTypeSpecificInit()
     USBDeviceAttach();
 	g_inState = STATE_MAX;
 
-	TRISC5 = true; //stat
+	TRISC5 = true; //charging state
 	TRISC2 = false; //LED
 }
 
 
 void ProcessModuleFunctionality()
 {
+	CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
+	
 	SYSTEM_Tasks();
 	if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
 		return;
 
 	UsbDataRead();
-	LATC2 = !RC5;
+	
 }
 
 unsigned char GetModuleType()

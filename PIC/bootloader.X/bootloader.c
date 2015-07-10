@@ -112,7 +112,7 @@ int main()
 
 	INTCONbits.GIE = 0;
 	
-	TRISA5 = 1;
+	//TRISA5 = 1;
 	FLASH_READ_BYTE(RUN_PROGRAM_FLAG_POSITION)
 	if (RUN_PROGRAM_VALUE == PMDAT /*&& PORTAbits.RA5*/)
 	{
