@@ -18,8 +18,6 @@
 static uint8_t s_buffer[CDC_DATA_OUT_EP_SIZE];
 static const char s_protocolId[] = PROTOCOL_ID;
 
-unsigned sleepCounter = 0;
-
 void Response(unsigned char const * answer, unsigned answerLength)
 {
 	int i = 0;
@@ -203,6 +201,8 @@ void ProcessStateChangedModuleTypeSpecific()
 void ModuleTypeSpecificInit()
 {
 	SWDTEN = false; //watchdog is disabled
+	WDTCONbits.WDTPS = 0b00000;
+
 	OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
 	ACTCON = 0x90;  //Active clock tuning enabled for USB
 	ANSELC = 0;
@@ -226,26 +226,23 @@ void ProcessModuleFunctionality()
 	//CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
 	
 	SYSTEM_Tasks();
-	if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
+
+	if ((USBGetDeviceState() < DEFAULT_STATE || USBIsDeviceSuspended()))
 	{
-		if (USBGetDeviceState() <= POWERED_STATE && sleepCounter++ == 10000)
-		{
-			RC2 = true;
-			SWDTEN = true; //watchdog is enabled
-			WDTCONbits.WDTPS = 0;
-	#asm
-			SLEEP;
-	#endasm
-			SWDTEN = false; //watchdog is disabled
-			RC2 = false;
-			sleepCounter = 0;
-			return;
-		}
-		//sleepCounter = 0;
+		//RC2 = true;
+		SWDTEN = true; //watchdog is enabled
+#asm
+		SLEEP;
+#endasm
+		SWDTEN = false; //watchdog is disabled
 		return;
 	}
-	//sleepCounter = 0;
-	RC2 = false;
+
+
+	if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
+		return;
+
+	//RC2 = false;
 	UsbDataRead();
 	
 }
