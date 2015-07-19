@@ -21,7 +21,6 @@ unsigned char g_inStateHiTemp = 0;
 unsigned char  g_bootloaderPolicy = 0;
 void I2cSlaveInit()
 {
-#ifndef _PIC18F14K50_H_
 	I2C_COMMON_INIT
 	/*SSP1STAT &= 0x3F;                // power on state
   SSP1CON1 = 0x00;                 // power on state
@@ -43,16 +42,10 @@ void I2cSlaveInit()
     SSPADD = 0x00; /*no address is set, all the time is conneceted only one slave*/
     SSPCON1 = 0b00010110; /*clock stretching + 7-bit addressing*/ 
     SSPEN = 1;
-#endif
 }
 
 void I2cMasterInit(void)
 {
-#if defined(_PIC18F14K50_H_)
-	CloseI2C();
-	SSPADD = (FREQ/(BITRATE*4))-1;
-	OpenI2C(MASTER, SLEW_OFF);
-#else
 	I2C_COMMON_INIT
 
 	//I2C master mode setting
@@ -73,15 +66,10 @@ void I2cMasterInit(void)
 	SSPADD = (FREQ/(BITRATE*4))-1;
 	ENABLE_I2C_MASTER_MODE_bit = 1;         //Enable I2C Master mode
 	SSPEN = 1;         //Enable SSP module - I2C Initialized
-#endif
  }
 
 bool I2cMasterIdle(void)
 {
-#if defined(_PIC18F14K50_H_)
-	IdleI2C();
-	return true;
-#else
 	//unsigned counter = SEND_TRY_COUNT;
 	while ((SSPCON2 & 0x1F) | (SSPSTATbits.R_nW))
 	{
@@ -89,15 +77,10 @@ bool I2cMasterIdle(void)
 		//	return false;
 	};
 	return true;
-#endif
-	
 }
 
 void I2cMasterStart(void)
 {
-#if defined(_PIC18F14K50_H_)
-	StartI2C();
-#else
 	/*SSPMSK = 0;
 	SSPCON2 = 0;
 	SSPCON3 = 0;
@@ -106,21 +89,16 @@ void I2cMasterStart(void)
 	SSPCON2bits.SEN=1;
 	while(SSPCON2bits.SEN)
   {} //SEM will be cleared automaticlay after seting of start condition on a bus
-#endif
 }
 /*
 FIXME: legacy - returns false when success
 */
 bool I2cMasterWrite(char byte)
 {
-#if defined(_PIC18F14K50_H_)
-	return 0 == WriteI2C(byte);
-#else
 	SSPBUF = byte;
 	while(SSP1STATbits.R_nW)
 	{} //R_nW will be cleared automatticly after whole message is written on a bus
 	return 0 == SSPCON2bits.ACKSTAT;
-#endif
 }
 
 bool I2cMasterRead(unsigned char *retVal)
@@ -143,13 +121,9 @@ bool I2cMasterRead(unsigned char *retVal)
 
 void I2cMasterStop(void)
 {
-#if defined(_PIC18F14K50_H_)
-	StopI2C();
-#else
 	SSPCON2bits.PEN = 1;
 	while(SSPCON2bits.PEN)
 	{} //PEN is cleared automaticaly when stop combination is send  
-#endif
 }
 
 bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count)
