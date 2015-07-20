@@ -203,7 +203,7 @@ bool SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsigned
 		(expectedSize == 0 && size != (unsigned)g_buffer[0])
 	)
 	{
-		qDebug() << "Error: Readed data are uncomplete. required_size:" << expectedSize << "size:" << size << " g_buffer[0]:" << (unsigned)g_buffer[0];
+		qDebug() << "Error: Readed data are uncomplete. required_size:" << expectedSize << "size:" << size << " moduleId:" << (int)moduleId << " functionId:" << functionId;
 
 		if (forceSize)
 			throw std::runtime_error(tr("Readed data are uncomplete.").toStdString());
