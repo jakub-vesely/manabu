@@ -30,6 +30,7 @@ void ProcessCommandCommon();
 void InvertOutput();
 bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned char const *data, unsigned char count);
 bool SendCommand(MessageId command, unsigned char const * data, unsigned char count);
+unsigned char GetFromI2C(MessageId command, unsigned char* data, unsigned char count);
 void CommonInit();
 
 #ifndef BOOTLOADER

@@ -39,19 +39,7 @@ void ResponseChar(unsigned char answer)
 	s_buffer[1] = answer;
 	putUSBUSART(s_buffer, 2);
 }
-unsigned char GetFromI2C(MessageId command, unsigned char* data, unsigned char count)
-{
-	unsigned tryCounter = TO_OUTPUT_MAX_TRAY;
-	while (--tryCounter != 0) //I will repeat it couple of times because output module could be connected to an output and bss b sending a message
-	{
-		if (GetCommandFromI2C(command, data, count))
-			return count;
 
-		InvertOutput(); //may be output module is inverted
-	}
-
-	return 0;
-}
 void UsbDataRead()
 {
 	if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1))
@@ -239,10 +227,9 @@ void ProcessModuleFunctionality()
 	}
 
 
-	if( USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended() == true )
+	if( USBGetDeviceState() < CONFIGURED_STATE)
 		return;
 
-	//RC2 = false;
 	UsbDataRead();
 	
 }

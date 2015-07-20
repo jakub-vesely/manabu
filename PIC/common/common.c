@@ -109,6 +109,8 @@ bool SendMessageToOutput(unsigned char messageType, MessageId command, unsigned 
 
 bool SendCommand(MessageId command, unsigned char const * data, unsigned char count)
 {
+	INVERT_OUTPUT_TRIS = false; //I switch it to write state only for message writing and after that I will switch it back to read state. it looks is more efficient to power saving (current
+
 	unsigned tryCounter = TO_OUTPUT_MAX_TRAY;
 	while (--tryCounter != 0) //I will repeat it couple of times because output module could be connected to an output and bss b sending a message
 	{
@@ -118,7 +120,30 @@ bool SendCommand(MessageId command, unsigned char const * data, unsigned char co
 		InvertOutput(); //may be output module is inverted
 	}
 
+	INVERT_OUTPUT_TRIS = true; //I switch it to write state only for message writing and after that I will switch it back to read state. it looks is more efficient to power saving (current)
+
+
 	return (0 != tryCounter);
+}
+
+unsigned char GetFromI2C(MessageId command, unsigned char* data, unsigned char count)
+{
+	unsigned tryCounter = TO_OUTPUT_MAX_TRAY;
+	INVERT_OUTPUT_TRIS = false; //I switch it to write state only for message writing and after that I will switch it back to read state. it looks is more efficient to power saving (current)
+
+	while (--tryCounter != 0) //I will repeat it couple of times because output module could be connected to an output and bss b sending a message
+	{
+		if (GetCommandFromI2C(command, data, count))
+		{
+			INVERT_OUTPUT_TRIS = true;
+			return count;
+		}
+
+		InvertOutput(); //may be output module is inverted
+	}
+
+	INVERT_OUTPUT_TRIS = true;
+	return 0;
 }
 
 

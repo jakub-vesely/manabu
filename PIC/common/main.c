@@ -109,7 +109,7 @@ void main(void)
 
 		ProcessModuleFunctionality();
 
-		if (g_stateMessageEnabled && (g_stateChanged || stateRepeater++ == 10))
+		if (g_stateMessageEnabled && (g_stateChanged || stateRepeater++ == 1000))
 		{
 			stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
