@@ -201,7 +201,7 @@ void ProcessStateChangedModuleTypeSpecific()
 void ModuleTypeSpecificInit()
 {
 	SWDTEN = false; //watchdog is disabled
-	WDTCONbits.WDTPS = 0b00000;
+	WDTCONbits.WDTPS = 0b0111;
 
 	OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
 	ACTCON = 0x90;  //Active clock tuning enabled for USB
@@ -218,6 +218,7 @@ void ModuleTypeSpecificInit()
 
 	TRISC5 = true; //charging state
 	TRISC2 = false; //LED
+	g_inState = 50;
 }
 
 
@@ -229,7 +230,6 @@ void ProcessModuleFunctionality()
 
 	if ((USBGetDeviceState() < DEFAULT_STATE || USBIsDeviceSuspended()))
 	{
-		//RC2 = true;
 		SWDTEN = true; //watchdog is enabled
 #asm
 		SLEEP;

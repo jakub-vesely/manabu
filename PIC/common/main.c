@@ -37,12 +37,14 @@ void SendStateToOutputIfReady()
 		//TODO: solve module on output is not connected any more
 		return;
 	}
-
 	g_toOutput.send_try = g_toOutput.send_try - 1;
+	
+	INVERT_OUTPUT_TRIS = false; //I switch it to write state only for message writing and after that I will switch it back to read state. it looks is more efficient to power saving (current)
 	if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 2))
 		g_toOutput.isReady = false;
 	else if (!INPUT_MESSAGE_MISSED)//message was not send
 		InvertOutput();
+	INVERT_OUTPUT_TRIS = true;
 }
 
 void ProcessStateChangedCommon()
@@ -78,7 +80,8 @@ void main(void)
 	CommonInit();
 #endif
 	ModuleTypeSpecificInit();
-	INVERT_OUTPUT_TRIS = false; //FIXME: it should not be here, it should be enough to set it in CommonInit, but it doesn work for the interface module
+	//INVERT_OUTPUT_TRIS = false; //FIXME: it should not be here, it should be enough to set it in CommonInit, but it doesn work for the interface module
+	INVERT_OUTPUT_TRIS = true; //because of power saving
 	while(1)
 	{
 #if defined(HAVE_INPUT)
@@ -106,7 +109,7 @@ void main(void)
 
 		ProcessModuleFunctionality();
 
-		if (g_stateMessageEnabled && (g_stateChanged || stateRepeater++ == 1000))
+		if (g_stateMessageEnabled && (g_stateChanged || stateRepeater++ == 10))
 		{
 			stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
