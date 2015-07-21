@@ -59,7 +59,6 @@ void ProcessStateChangedCommon()
 
 void main(void)
 {
-	unsigned stateRepeater = 0;
 #ifndef INTERFACE
 	INTCONbits.GIE = 0;
 
@@ -108,10 +107,9 @@ void main(void)
 #endif
 
 		ProcessModuleFunctionality();
-
-		if (g_stateMessageEnabled && (g_stateChanged || stateRepeater++ == 1000))
+		if (g_stateMessageEnabled && (g_stateChanged || ++g_stateRepeater >= STATE_REPEATER_MAX))
 		{
-			stateRepeater = 0;
+			g_stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
 			ProcessStateChangedCommon();
 		}

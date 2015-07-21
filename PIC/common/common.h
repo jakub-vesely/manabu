@@ -40,14 +40,19 @@ struct
     unsigned char mode;
 } g_persistant;
 
+#define STATE_REPEATER_MAX 10000
+
 unsigned g_inState = STATE_MAX;
 unsigned g_outState = 0;
 
-bool g_stateMessageEnabled = true;
+bool g_stateMessageEnabled = true; //sometimes (when flash process starts) is state message senduing disabled
 bool g_stateChanged = true;
 bool g_commandRecieved = false;
 unsigned char g_commandInstruction = 0;
 unsigned char g_commandValue = 0;
+unsigned g_stateRepeater = 0;
+
+
 struct
 {
     bool isReady:1;

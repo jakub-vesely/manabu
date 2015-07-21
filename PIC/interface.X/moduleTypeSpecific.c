@@ -189,7 +189,7 @@ void ProcessStateChangedModuleTypeSpecific()
 void ModuleTypeSpecificInit()
 {
 	SWDTEN = false; //watchdog is disabled
-	WDTCONbits.WDTPS = 0b0111;
+	WDTCONbits.WDTPS = 0b0111; //64 ms
 
 	OSCCON = 0xFC;  //HFINTOSC @ 16MHz, 3X PLL, PLL enabled
 	ACTCON = 0x90;  //Active clock tuning enabled for USB
@@ -223,6 +223,10 @@ void ProcessModuleFunctionality()
 		SLEEP;
 #endasm
 		SWDTEN = false; //watchdog is disabled
+
+		//it is not exactly the same like without the sleep. with the sleep mode state is send less often
+		//it is send approximately 16x per second by sllep to 64 ms
+		g_stateRepeater = STATE_REPEATER_MAX;
 		return;
 	}
 

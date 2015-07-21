@@ -60,6 +60,8 @@ void ProcessCommandCommon()
 			}
 		break;
 	}
+
+	g_stateMessageEnabled = true; //command processed, we dont have to block the state sending
 }
 
 void InvertOutput()
