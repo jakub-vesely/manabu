@@ -212,7 +212,7 @@ void ModuleTypeSpecificInit()
 
 void ProcessModuleFunctionality()
 {
-	//CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
+	CHARGING_LED_OUTPUT = !CHARGING_N_STATE_INPUT;
 	
 	SYSTEM_Tasks();
 
