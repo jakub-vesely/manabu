@@ -206,7 +206,6 @@ void ModuleTypeSpecificInit()
 
 	TRISC5 = true; //charging state
 	TRISC2 = false; //LED
-	g_inState = 50;
 }
 
 
