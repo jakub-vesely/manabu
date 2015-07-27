@@ -2,7 +2,6 @@
 #define _COMMON_COMMON_H_
 
 #include <stdbool.h>
-
 #include <pic16f1503.h>
 
 #define INVERT_OUTPUT_PORT LATA4

@@ -101,7 +101,7 @@ void ProcessStateChangedModuleTypeSpecific()
 
 void ModuleTypeSpecificInit()
 {
-	g_inState = 0; //it is not nice to led flash to max and after getting a state from predecessor fading
+	g_inState = 0; //it is not nice to led flash to max and after getting a state from predecessor is fading
 	PwmInit();
 }
 

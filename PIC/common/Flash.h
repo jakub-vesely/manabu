@@ -7,7 +7,6 @@
 * Flash.h
 *
 */
-#include<xc.h>
 #include <system_common.h>
 
 #if defined(_PIC16F1501_H_)

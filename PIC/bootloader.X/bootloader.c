@@ -1,8 +1,8 @@
-#include <xc.h>
-#include <pic16f1503.h>
+#include<xc.h>
+#include <system_common.h>
 #include <common/i2c.h>
 #include <common/common.h>
-#include <system_common.h>
+
 #include <common/Flash.h>
 #include <stdbool.h>
 #include <CommonConstants.h>
@@ -114,7 +114,7 @@ int main()
 	
 	//TRISA5 = 1;
 	FLASH_READ_BYTE(RUN_PROGRAM_FLAG_POSITION)
-	if (RUN_PROGRAM_VALUE == PMDAT /*&& PORTAbits.RA5*/)
+	if (RUN_PROGRAM_VALUE == PMDAT) //&& PORTAbits.RA5)
 	{
 #asm
 		GOTO MAIN_PROOGRAM_START;
