@@ -22,7 +22,7 @@ BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort) :
 	m_hexView(NULL),
 	m_directory("/GitRepository/stavebnice03/PIC"),
 	m_serialPort(serialPort),
-	m_words(0x800, 0x3fff)
+	m_words(0x2000, 0x3fff)
 
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -89,6 +89,7 @@ void BootLoader::openHex()
 			 unsigned address = segment + inLine.mid(3, 4).toInt(0, 16) / wordSize;
 			 unsigned type =  inLine.mid(7, 2).toInt(0, 16);
 
+			 qDebug() << "processed address:" << address;
 			 switch (type)
 			 {
 				case 0: //data
