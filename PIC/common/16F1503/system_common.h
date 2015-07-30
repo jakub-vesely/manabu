@@ -1,6 +1,6 @@
 #ifndef _COMMON_COMMON_H_
 #define _COMMON_COMMON_H_
-
+#include <xc.h>
 #include <stdbool.h>
 #include <pic16f1503.h>
 
