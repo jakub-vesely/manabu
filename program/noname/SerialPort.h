@@ -26,19 +26,21 @@ public:
 	explicit SerialPort(QObject *parent = 0);
 	bool Open();
 
+	void Flashing(bool active);
+
 	~SerialPort();
 
 signals:
 
 public slots:
 	bool SetValue(int value);
-	int GetFlashVersion1();
+	int GetFlashVersion(unsigned layer);
 	void SetFlashAddress(uint16_t address);
 	void SetFlashWriteWord(uint16_t word);
 	void SetFlashLatchWord(uint16_t word);
 	int GetFlashCheckSum();
 	void SetFlashEnd();
-	void SetFlashLoadCheck(unsigned char byte);
+	void SetFlashLoadCheck(unsigned layer, unsigned char byte);
 	bool SetMode(unsigned layer, unsigned mode);
 	bool FillModuleType(unsigned layer, ModuleTypes &moduleType);
 	bool GetState(unsigned layer, int &value);

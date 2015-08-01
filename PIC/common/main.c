@@ -1,9 +1,9 @@
+#include <xc.h>
 #include <stdbool.h>
 #include <common/common.h>
 #include <CommonConstants.h>
 #include <system_common.h>
 #include <common/i2c.h>
-#include <xc.h>
 #include <moduleTypeSpecific.h>
 
 #if !defined INTERFACE
@@ -73,11 +73,12 @@ void main(void)
 		INPUT_MESSAGE_MISSED = false; //interupt flag cleared
 		OPTION_REGbits.INTEDG = 0; //external interupt to falling edge
 #	endif
+#endif
 
 	g_persistant.mode = 1;
 	g_persistant.bootLoaderCheck = RUN_PROGRAM_VALUE;
 	CommonInit();
-#endif
+
 	ModuleTypeSpecificInit();
 	//INVERT_OUTPUT_TRIS = false; //FIXME: it should not be here, it should be enough to set it in CommonInit, but it doesn work for the interface module
 	INVERT_OUTPUT_TRIS = true; //because of power saving
@@ -107,8 +108,14 @@ void main(void)
 #endif
 
 		ProcessModuleFunctionality();
+			
 		if (g_stateMessageEnabled && (g_stateChanged || ++g_stateRepeater >= STATE_REPEATER_MAX))
 		{
+			/*RC2 = true;
+			for (int i = 0; i < 10000; i++)
+			{}
+			RC2 = false;*/
+
 			g_stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
 			ProcessStateChangedCommon();

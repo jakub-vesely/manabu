@@ -19,9 +19,10 @@ class BootLoader : public QWidget
 	QString m_directory;
 	SerialPort *m_serialPort;
 	std::vector<uint16_t> m_words;
+	unsigned m_layer;
 
 public:
-	BootLoader(QWidget *parent, SerialPort *serialPort);
+	BootLoader(QWidget *parent, SerialPort *serialPort, bool layer);
 	~BootLoader();
 
 signals:
@@ -29,6 +30,7 @@ signals:
 public slots:
 	void openHex();
 	void upload();
+	void goToBootloader();
 
 };
 

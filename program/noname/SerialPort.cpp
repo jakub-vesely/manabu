@@ -70,9 +70,9 @@ int SerialPort::GetMode(unsigned layer, unsigned &mode)
 	return true;
 }
 
-int SerialPort::GetFlashVersion1()
+int SerialPort::GetFlashVersion(unsigned layer)
 {
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_GET_VERSION, 0, 2, true);
+	_CallCubeFunction(layer, MID_COMMAND_FLASH_GET_VERSION, 0, 2, true);
 
 	qDebug() << "flash version: " << (int)(g_buffer[1]);
 	return g_buffer[1];
@@ -107,10 +107,15 @@ void SerialPort::SetFlashEnd()
 	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_END, 0, 2, true);
 }
 
-void SerialPort::SetFlashLoadCheck(unsigned char byte)
+void SerialPort::SetFlashLoadCheck(unsigned layer, unsigned char byte)
 {
 	g_buffer[0] = byte;
-	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, true);
+	_CallCubeFunction(layer, MID_COMMAND_FLASH_SET_BOOT_FLAG, 1, 2, false); //I don't want to force a size because when I call it for the interface module will get no response
+}
+
+void SerialPort::Flashing(bool active)
+{
+	_CallCubeFunction(INTERFACE_MODULE_ADDRESS, active ? MID_INTERFACE_FLASHING_START : MID_INTERFACE_FLASHING_STOP, 0, 2, true); //I don't want to force a size because when I call it for the interface module will get no response
 }
 
 bool SerialPort::SetMode(unsigned layer, unsigned mode)
@@ -171,7 +176,7 @@ bool SerialPort::_IsMyDevice()
 	qDebug() << "is really my device?";
 	size_t pidSize = strlen(PROTOCOL_ID);
 
-	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_PROTOCOL_ID, 0, pidSize+1, false))
+	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_FIRMWARE_VERSION, 0, pidSize+1, false))
 		return false;
 
 	return (0 == strncmp(PROTOCOL_ID, g_buffer + MESSAGE_LENGTH_BYTE_COUNT, pidSize));

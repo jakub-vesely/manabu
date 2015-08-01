@@ -1,6 +1,7 @@
 #ifndef _COMMON_16F1454_SYSTEM_COMMON_
 #define _COMMON_16F1454_SYSTEM_COMMON_
 
+#include <xc.h>
 #include <stdbool.h>
 #include <pic16f1454.h>
 

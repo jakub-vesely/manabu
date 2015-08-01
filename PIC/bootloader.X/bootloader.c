@@ -29,6 +29,9 @@
 #	pragma config BORV = LO        // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
 #	pragma config LPBOR = OFF      // Low-Power Brown Out Reset (Low-Power BOR is disabled)
 #	pragma config LVP = OFF        // Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
+
+#	define VERSION 2
+#	define MAIN_PROOGRAM_MAX 0x1FFF
 #else
 // CONFIG1
 #	pragma config FOSC = INTOSC    // Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
@@ -45,15 +48,12 @@
 #	pragma config BORV = LO        // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
 #	pragma config LPBOR = OFF      // Low-Power Brown Out Reset (Low-Power BOR is disabled)
 #	pragma config LVP = OFF        // Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
-#endif
 
-#define VERSION 1
-#define MAIN_PROOGRAM_START 0x100
-#if defined (INTERFACE)
-#	define MAIN_PROOGRAM_MAX 0x1FFF
-#else
+#	define VERSION 1
 #	define MAIN_PROOGRAM_MAX 0x7FF
 #endif
+
+#define MAIN_PROOGRAM_START 0x100
 #define RUN_PROGRAM_FLAG_POSITION HEFLASH_START
 
 unsigned g_flashAddr;
@@ -84,7 +84,8 @@ void ReadI2C()
 			SSPBUF = VERSION;
 		}
 		else if (MID_COMMAND_FLASH_CHECKSUM == g_command)
-		{	SSPBUF = checkSum;
+		{
+			SSPBUF = checkSum;
 			checkSum = 0; //read for next programming
 		}
 		CKP = 1;
@@ -140,9 +141,9 @@ int main()
 
 	INTCONbits.GIE = 0;
 	
-	//TRISA5 = 1;
+	TRISA5 = 1;
 	FLASH_READ_BYTE(RUN_PROGRAM_FLAG_POSITION)
-	if (RUN_PROGRAM_VALUE == PMDAT) //&& PORTAbits.RA5)
+	if (RUN_PROGRAM_VALUE == PMDAT && PORTAbits.RA5)
 	{
 #asm
 		GOTO MAIN_PROOGRAM_START;

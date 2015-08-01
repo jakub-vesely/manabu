@@ -125,7 +125,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="0-ff"/>
+        <property key="code-model-rom" value=""/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
@@ -281,7 +281,7 @@
         <property key="calibrate-oscillator-value" value=""/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="0-ff"/>
+        <property key="code-model-rom" value=""/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>

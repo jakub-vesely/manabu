@@ -51,7 +51,7 @@ void UsbDataRead()
 		unsigned char deviceId = s_buffer[1];
 		switch (s_buffer[2])
 		{
-		case MID_GET_PROTOCOL_ID:
+		case MID_GET_FIRMWARE_VERSION:
 			Response((unsigned char *)s_protocolId, sizeof(s_protocolId)-1);
 			break;
 		case MID_SET_STATE:
@@ -66,15 +66,16 @@ void UsbDataRead()
 				ResponsePrepared(GetFromI2C(MID_GET_STATE, s_buffer + 1, 2));
 			break;
 		case MID_COMMAND_FLASH_GET_VERSION:
-			ResponsePrepared(GetFromI2C(MID_COMMAND_FLASH_GET_VERSION, s_buffer+ 1, 1));
+			if (0 == deviceId)
+				ResponseChar(0);//im not in bootloader so I dont have flash version
+			else
+				ResponsePrepared(GetFromI2C(MID_COMMAND_FLASH_GET_VERSION, s_buffer+ 1, 1));
 			break;
 		case MID_COMMAND_FLASH_END:
 			SendCommand(MID_COMMAND_FLASH_END, NULL, 0);
 			ResponseChar(0);
 			break;
 		case MID_COMMAND_FLASH_ADDRESS:
-			//in the case there is not a program it is the first programming command there is a bootloader so no status message will be accepted
-			g_stateMessageEnabled = false;
 			SendCommand(MID_COMMAND_FLASH_ADDRESS, s_buffer+3, 2);
 			ResponseChar(0);
 			break;
@@ -90,12 +91,15 @@ void UsbDataRead()
 			ResponsePrepared(GetFromI2C(MID_COMMAND_FLASH_CHECKSUM, s_buffer + 1, 1));
 			break;
 		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
-			//in the case there is a program it is the first programming command which cause a reset of module, no more state message will be accepted
-			//it is also the last proggramming command. the main programm is alread running ane status messages will be accepted again
-			g_stateMessageEnabled = (g_stateMessageEnabled ? false : true);
-
-			SendCommand(MID_COMMAND_FLASH_SET_BOOT_FLAG, s_buffer+3, 1);
-			ResponseChar(0);
+			if (0 == deviceId)
+			{
+				GoToBootloader(s_buffer+3);
+			}
+			else
+			{
+				SendCommand(MID_COMMAND_FLASH_SET_BOOT_FLAG, s_buffer+3, 1);
+				ResponseChar(0);
+			}
 			break;
 		case MID_GET_MODULE_TYPE:
 			if (0 == deviceId)
@@ -114,6 +118,14 @@ void UsbDataRead()
 				SetMode(s_buffer[3]);
 			else
 				SendCommand(MID_SET_MODE, s_buffer+3, 1);
+			ResponseChar(0);
+			break;
+		case MID_INTERFACE_FLASHING_START:
+			g_stateMessageEnabled = false;
+			ResponseChar(0);
+			break;
+		case MID_INTERFACE_FLASHING_STOP:
+			g_stateMessageEnabled = true;
 			ResponseChar(0);
 			break;
 		default:
@@ -205,7 +217,7 @@ void ModuleTypeSpecificInit()
 	g_inState = STATE_MAX;
 
 	TRISC5 = true; //charging state
-	TRISC2 = false; //LED
+	TRISC2 = false; //LED	
 }
 
 
@@ -217,12 +229,15 @@ void ProcessModuleFunctionality()
 
 	if ((USBGetDeviceState() < DEFAULT_STATE || USBIsDeviceSuspended()))
 	{
+		if (!g_stateMessageEnabled) //I use this variable because I don't want to sleep in the same time like the state is not send (actually it will be used only in the case of USBIsDeviceSuspended)
+			return;
+
 		SWDTEN = true; //watchdog is enabled
 #asm
 		SLEEP;
 #endasm
 		SWDTEN = false; //watchdog is disabled
-
+		
 		//it is not exactly the same like without the sleep. with the sleep mode state is send less often
 		//it is send approximately 16x per second by sllep to 64 ms
 		g_stateRepeater = STATE_REPEATER_MAX;

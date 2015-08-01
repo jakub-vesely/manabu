@@ -31,30 +31,35 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		_AddInterfaceTab();
 		unsigned version;
+		bool layer1Connected = true;
 		try
 		{
-			version = m_serialPort->GetFlashVersion1();
+			version = m_serialPort->GetFlashVersion(1);
+
 		}
 		catch (...)
 		{
-			return;
+			layer1Connected = false;
 		}
 
-		ModuleTypes moduleType;
-		if(!(ModuleTypes)m_serialPort->FillModuleType(1, moduleType))
-			return; //no module connected to the interface
-
-		if (0 == version)
+		if (layer1Connected)
 		{
-			if (moduleType == TYPE_RGB_LED)
-				_AddRgbTab();
-			else
-				_AddPlotTab();
-		}
-		else
-			qDebug() << "module with a bootloader connected";
+			if (0 == version)
+			{
+				ModuleTypes moduleType;
 
-		_AddBootloaderTab();
+				if(!(ModuleTypes)m_serialPort->FillModuleType(1, moduleType))
+					return; //no module connected to the interface
+
+				if (moduleType == TYPE_RGB_LED)
+					_AddRgbTab();
+				else
+					_AddPlotTab();
+			}
+			else
+				qDebug() << "module with a bootloader connected";
+		}
+		_AddBootloaderTab(layer1Connected ? 1 : 0);
 	}
 }
 
@@ -110,7 +115,7 @@ bool MainWindow::_AddInterfaceTab()
 	}
 
 	unsigned mode;
-	m_serialPort->GetMode(1, mode);
+	m_serialPort->GetMode(0, mode);
 
 	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
 	layout->addWidget(slider);
@@ -136,10 +141,10 @@ void MainWindow::_AddRgbTab()
 	connect(modeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLayer1Mode(int)));
 }
 
-void MainWindow::_AddBootloaderTab()
+void MainWindow::_AddBootloaderTab(unsigned layer)
 {
-	BootLoader *bootLoader = new BootLoader(this, m_serialPort);
-	m_tabWidget->addTab(bootLoader, tr("Bootloader"));
+	BootLoader *bootLoader = new BootLoader(this, m_serialPort, layer);
+	m_tabWidget->addTab(bootLoader, QString(tr("Layer %0 bootloader")).arg(layer));
 }
 
 void MainWindow::_AddPlotTab()

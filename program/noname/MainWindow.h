@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
 	char const *_GetModuleTypeName(ModuleTypes type);
 	bool _AddInterfaceTab();
 	void _AddRgbTab();
-	void _AddBootloaderTab();
+	void _AddBootloaderTab(unsigned layer);
 	void _AddPlotTab();
 
 	SerialPort *m_serialPort;

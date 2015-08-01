@@ -37,6 +37,18 @@ void SetMode(unsigned char mode)
 	g_stateChanged = true;
 }
 
+void GoToBootloader(unsigned char value)
+{
+	g_persistant.bootLoaderCheck = value;
+	HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
+	Wait(1);
+	//if (0 !=  g_persistant.bootLoaderCheck)
+	{
+#asm
+		RESET
+#endasm
+	}
+}
 void ProcessCommandCommon()
 {
 	g_commandRecieved = false;
@@ -47,17 +59,7 @@ void ProcessCommandCommon()
 			SetMode(g_commandValue);
 		break;
 		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
-			g_persistant.bootLoaderCheck = g_commandValue;
-#ifndef INTERFACE
-			HEFLASH_writeBlock(0, (char*)&g_persistant, sizeof(g_persistant));
-			Wait(1);
-#endif
-			//if (0 !=  g_persistant.bootLoaderCheck)
-			{
-#asm
-				RESET
-#endasm
-			}
+			GoToBootloader(g_commandValue);
 		break;
 	}
 
@@ -157,12 +159,14 @@ void CommonInit()
 	if (0 == HEFLASH_readByte(0, 0)) //is not the first time run after the program loading
 		HEFLASH_readBlock((char *)&g_persistant, 0, sizeof(g_persistant));
 
-#ifdef HAVE_OUTPUT
+#if defined(HAVE_INPUT) && defined(HAVE_OUTPUT)
 	SwitchControllerInit();
 #endif
 
+#if defined (HAVE_INPUT)
 	I2cSlaveInit();
-	
+#endif
+
 #ifdef INTERUPTS_ENABLED
 	INTCONbits.GIE = 1;
 #endif
