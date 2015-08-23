@@ -9,6 +9,7 @@
 
 #include "../../CommonConstants.h"
 
+class LogDialog;
 class SerialPort : public QObject
 {
 	Q_OBJECT
@@ -22,11 +23,18 @@ class SerialPort : public QObject
 	QTimer m_timer;
 	bool m_dataReady;
 	bool m_timeout;
+	LogDialog *m_log;
 public:
-	explicit SerialPort(QObject *parent = 0);
+	SerialPort(QObject *parent, LogDialog *logDialog);
 	bool Open();
 
+	void Close()
+	{ m_serialPort.close(); }
+
 	void Flashing(bool active);
+
+	bool IsOpen()
+	{ return m_serialPort.isOpen(); }
 
 	~SerialPort();
 

@@ -2,34 +2,98 @@
 #include "SerialPort.h"
 #include "BootLoader.h"
 
+#include <NoInterface.h>
 #include <QComboBox>
 #include <QLineEdit>
 #include <QSlider>
 #include <QString>
 #include <QMessageBox>
 #include <QTabWidget>
-#include <QtCore/QDebug>
 #include <QVBoxLayout>
 #include <QThread>
 #include <Plot.h>
+#include <Interface.h>
+#include <RGB.h>
+#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <LogDialog.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
-	m_serialPort(NULL)
+	m_serialPort(NULL),
+	m_mainWidget(NULL),
+	m_flashInterface(NULL),
+	m_flashNeighbor(NULL),
+	m_logAction(NULL),
+	m_log(NULL)
 {
-	setMinimumSize(400, 300);
+	setMinimumSize(320, 480);
 
-	_SetMainLayout();
+	m_log = new  LogDialog(this);
+	connect(m_log, SIGNAL(finished(int)), this, SLOT(uncheckLogAction(int)));
 
-	m_serialPort = new SerialPort(this);
+	QMenu *menu = this->menuBar()->addMenu(tr("menu"));
+	QAction *refresh = menu->addAction(tr("&Refresh"));
+	refresh->setShortcuts(QKeySequence::Refresh);
+	connect(refresh, SIGNAL(triggered()), this, SLOT(reintModules()));
+
+	m_logAction = menu->addAction(tr("&Log"));
+	m_logAction->setCheckable(true);
+	m_logAction->setChecked(false);
+	connect(m_logAction, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
+
+	menu->addSeparator();
+	m_flashInterface = menu->addAction(tr("&Flash interface"));
+	connect(m_flashInterface, SIGNAL(triggered()), this, SLOT(openInterfaceBootloder()));
+
+	m_flashNeighbor = menu->addAction(tr("&Flash neighbor"));
+	connect(m_flashNeighbor, SIGNAL(triggered()), this, SLOT(openNeighborBootloader()));
+
+	menu->addSeparator();
+	QAction *exit = menu->addAction(tr("E&xit"));
+	exit->setShortcuts(QKeySequence::Close);
+	connect(exit, SIGNAL(triggered()), this, SLOT(close()));
+
+	reintModules();
+}
+
+void MainWindow::uncheckLogAction(int notUsed)
+{
+	m_logAction->setChecked(false);
+
+}
+void MainWindow::showLog(bool show)
+{
+	if (show)
+		m_log->show();
+	else
+		m_log->hide();
+
+}
+
+void MainWindow::reintModules()
+{
+	_ResetMainLayout();
+
+	if (NULL == m_serialPort)
+		m_serialPort = new SerialPort(this, m_log);
+
+	if (m_serialPort->IsOpen())
+		m_serialPort->Close();
+
 	if (!m_serialPort->Open())
 	{
-		QMessageBox::critical(this, "", tr("Device not connected."));
-
+		m_mainWidget->layout()->addWidget(new NoInterface(m_mainWidget, m_serialPort));
+		m_flashInterface->setEnabled(false);
 	}
 	else
 	{
-		_AddInterfaceTab();
+		m_mainWidget->layout()->addWidget(new Interface(m_mainWidget, m_serialPort));
+		m_flashInterface->setEnabled(true);
+
 		unsigned version;
 		bool layer1Connected = true;
 		try
@@ -42,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
 			layer1Connected = false;
 		}
 
+		m_flashNeighbor->setEnabled(layer1Connected);
 		if (layer1Connected)
 		{
 			if (0 == version)
@@ -52,117 +117,49 @@ MainWindow::MainWindow(QWidget *parent) :
 					return; //no module connected to the interface
 
 				if (moduleType == TYPE_RGB_LED)
-					_AddRgbTab();
+					m_mainWidget->layout()->addWidget(new RGB(m_mainWidget, m_serialPort));
 				else
-					_AddPlotTab();
+					m_mainWidget->layout()->addWidget(new Plot(m_mainWidget, m_serialPort));
 			}
 			else
-				qDebug() << "module with a bootloader connected";
+				m_log->Info("module with a bootloader connected");
+
 		}
-		_AddBootloaderTab(layer1Connected ? 1 : 0);
+		else
+		{
+			((QVBoxLayout*)m_mainWidget->layout())->addStretch();
+		}
 	}
 }
-
-void MainWindow::_SetMainLayout()
+void MainWindow::_ResetMainLayout()
 {
-	m_tabWidget = new QTabWidget(this);
-	this->setCentralWidget(m_tabWidget);
+	if (NULL != m_mainWidget)
+		delete m_mainWidget;
+
+	m_mainWidget = new QWidget(this);
+	this->setCentralWidget(m_mainWidget);
+	new QVBoxLayout(m_mainWidget);
+
 }
 
-char const *MainWindow::_GetModuleTypeName(ModuleTypes type)
+
+void MainWindow::_OpenBootloaderDialog(unsigned layer)
 {
-	switch(type)
-	{
-	case TYPE_USB_INTERFACE:
-		return tr("USB Interface").toStdString().c_str();
-	case TYPE_POTENTIOMETER:
-		return tr("Potentiometer").toStdString().c_str();
-	case TYPE_RGB_LED:
-		return tr("RGB LED").toStdString().c_str();
-	case TYPE_BUTTON:
-		return tr("Button").toStdString().c_str();
-	case TYPE_ARITHMETIC_LOGIC:
-		return tr("Arithmetic-logic").toStdString().c_str();
-	default:
-		return tr("Unknown module").toStdString().c_str();
-	}
+
+	BootLoader *bootLoader = new BootLoader(this, m_serialPort, layer, m_log);
+	connect(bootLoader, SIGNAL(flashed()), this, SLOT(reintModules()));
+	bootLoader->exec();
 }
 
-bool MainWindow::_AddInterfaceTab()
+void MainWindow::openInterfaceBootloder()
 {
-	QWidget *widget = new QWidget(this);
-
-	ModuleTypes moduleType;
-	if (!m_serialPort->FillModuleType(0, moduleType))
-		return false;
-
-	m_tabWidget->addTab(widget, _GetModuleTypeName(moduleType));
-	QVBoxLayout *layout = new QVBoxLayout(widget);
-
-	QSlider *slider = new QSlider(Qt::Horizontal, widget);
-	slider->setMinimumSize(200, 20);
-	slider->setRange(0, 1023);
-
-	int value;
-	if (m_serialPort->GetState(0, value))
-	{
-		slider->setValue(value);
-		qDebug() << "value: " << value;
-	}
-	else
-	{
-		QMessageBox::critical(this, "", tr("Value was not set."));
-	}
-
-	unsigned mode;
-	m_serialPort->GetMode(0, mode);
-
-	connect(slider, SIGNAL(valueChanged(int)), m_serialPort, SLOT(SetValue(int)));
-	layout->addWidget(slider);
-
-	return true;
+	_OpenBootloaderDialog(0);
 }
-
-void MainWindow::_AddRgbTab()
+void MainWindow::openNeighborBootloader()
 {
-	QWidget *widget = new QWidget(this);
-	m_tabWidget->addTab(widget, _GetModuleTypeName(TYPE_RGB_LED));
-	QVBoxLayout *layout = new QVBoxLayout(widget);
-
-	QComboBox *modeCombo = new QComboBox(widget);
-	modeCombo->addItem(tr("red to red"));
-	modeCombo->addItem(tr("red to purple"));
-	modeCombo->addItem(tr("white value"));
-
-	unsigned mode;
-	m_serialPort->GetMode(1, mode);
-	modeCombo->setCurrentIndex(mode-1);
-
-	connect(modeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLayer1Mode(int)));
-}
-
-void MainWindow::_AddBootloaderTab(unsigned layer)
-{
-	BootLoader *bootLoader = new BootLoader(this, m_serialPort, layer);
-	m_tabWidget->addTab(bootLoader, QString(tr("Layer %0 bootloader")).arg(layer));
-}
-
-void MainWindow::_AddPlotTab()
-{
-	Plot *plot = new Plot(this, m_serialPort);
-	ModuleTypes moduleType;
-	if(!(ModuleTypes)m_serialPort->FillModuleType(1, moduleType))
-		return; //tab will not be added
-
-	m_tabWidget->addTab(plot, _GetModuleTypeName(moduleType));
+	_OpenBootloaderDialog(1);
 }
 
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::changeLayer1Mode(int value)
-{
-	m_serialPort->SetMode(1, value+1);
-
 }

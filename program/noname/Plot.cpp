@@ -6,13 +6,22 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include "SerialPort.h"
-
+#include <QLineEdit>
 Plot::Plot(QWidget *parent, SerialPort *serialPort) :
-	QWidget(parent),
+	ModuleWidget(parent, serialPort, false),
 	m_customPlot(NULL),
-	m_serialPort(serialPort)
+	m_serialPort(serialPort),
+	m_outValue(NULL)
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
+
+	QHBoxLayout *outValueLayout = new QHBoxLayout(this);
+	layout->addLayout(outValueLayout);
+	QLabel *label = new QLabel("output value: ");
+	outValueLayout->addWidget(label);
+	m_outValue = new QLineEdit(this);
+	m_outValue->setReadOnly(true);
+	outValueLayout->addWidget(m_outValue);
 
 	m_customPlot = new QCustomPlot(this);
 	layout->addWidget(m_customPlot);
@@ -23,19 +32,13 @@ Plot::Plot(QWidget *parent, SerialPort *serialPort) :
 	m_customPlot->xAxis->setRange(0, 1);
 	m_customPlot->yAxis->setRange(0, 1024);
 
-	QHBoxLayout *buttons = new QHBoxLayout(this);
-	layout->addLayout(buttons);
-
-	QPushButton *m_startButton = new QPushButton(tr("Start"), this);
-	buttons->addWidget(m_startButton);
-	connect(m_startButton, SIGNAL(clicked()), this, SLOT(start()));
-
-	QPushButton *m_stopButton = new QPushButton(tr("Stop"), this);
-	buttons->addWidget(m_stopButton);
-	connect(m_stopButton, SIGNAL(clicked()), this, SLOT(stop()));
+	QPushButton *m_stopButton = new QPushButton(tr("Clear"), this);
+	layout->addWidget(m_stopButton);
+	connect(m_stopButton, SIGNAL(clicked()), this, SLOT(clear()));
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(draw()));
+	m_timer->start(1000);
 }
 
 void Plot::draw()
@@ -50,10 +53,12 @@ void Plot::draw()
 	if (m_serialPort->GetState(1, state))
 	{
 		m_y[size] = state;
+		m_outValue->setText(QString("%1").arg(state));
 	}
 	else
 	{
 		m_y[size] = 0;
+		m_outValue->setText(tr("N/A"));
 	}
 
 	m_customPlot->xAxis->setRange(0, m_x[size]);
@@ -62,16 +67,10 @@ void Plot::draw()
 	m_customPlot->replot(QCustomPlot::rpImmediate);
 }
 
-void Plot::start()
+void Plot::clear()
 {
 	m_x.clear();
 	m_y.clear();
-	m_timer->start(200);
-}
-
-void Plot::stop()
-{
-	m_timer->stop();
 }
 
 

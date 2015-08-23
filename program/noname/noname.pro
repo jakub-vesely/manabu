@@ -17,13 +17,23 @@ SOURCES += main.cpp\
     SerialPort.cpp \
     BootLoader.cpp \
     ../extern/qcustomplot/qcustomplot.cpp \
-    Plot.cpp
+    Plot.cpp \
+    ModuleWidget.cpp \
+    Interface.cpp \
+    RGB.cpp \
+    NoInterface.cpp \
+    LogDialog.cpp
 
 HEADERS  += MainWindow.h \
     SerialPort.h \
     BootLoader.h \
     ../extern/qcustomplot/qcustomplot.h \
     Plot.h \
-    ../../CommonConstants.h
+    ../../CommonConstants.h \
+    ModuleWidget.h \
+    Interface.h \
+    RGB.h \
+    NoInterface.h \
+    LogDialog.h
 
 FORMS    +=

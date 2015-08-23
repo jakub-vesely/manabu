@@ -1,5 +1,4 @@
 #include "BootLoader.h"
-#include <QtCore/QDebug>
 #include <QHBoxLayout>
 #include <QFile>
 #include <QFileDialog>
@@ -14,16 +13,18 @@
 #include <QVBoxLayout>
 #include "SerialPort.h"
 #include <vector>
+#include <LogDialog.h>
 
-
-BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort, bool layer) :
-	QWidget(parent),
+BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort, bool layer, LogDialog *logDialog) :
+	QDialog(parent),
 	m_hexPath(NULL),
 	m_hexView(NULL),
 	m_directory("/GitRepository/stavebnice03/PIC"),
 	m_serialPort(serialPort),
 	m_words(0x2000, 0x3fff),
-	m_layer(layer)
+	m_layer(layer),
+	m_uploadButton(NULL),
+	m_log(logDialog)
 
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -47,10 +48,11 @@ BootLoader::BootLoader(QWidget *parent, SerialPort *serialPort, bool layer) :
 	hexPathLaout->addWidget(hexButton);
 	connect(hexButton, SIGNAL(clicked()), this, SLOT(openHex()));
 
-	QPushButton *uploadButton = new QPushButton(this);
-	uploadButton->setText(tr("Upload"));
-	hexPathLaout->addWidget(uploadButton);
-	connect(uploadButton, SIGNAL(clicked()), this, SLOT(upload()));
+	m_uploadButton = new QPushButton(this);
+	m_uploadButton->setText(tr("Upload"));
+	m_uploadButton->setDisabled(true);
+	hexPathLaout->addWidget(m_uploadButton);
+	connect(m_uploadButton, SIGNAL(clicked()), this, SLOT(upload()));
 
 	m_hexView = new QTextEdit(this);
 	QFont font(QFontDatabase::systemFont(QFontDatabase::FixedFont));
@@ -89,10 +91,12 @@ void BootLoader::openHex()
 	fileName = QFileDialog::getOpenFileName(this,
 		 tr("Open Intel-Hex file"), m_directory, tr("Intel-Hex file (*.hex)"));
 
-	if ("" != fileName)
-		m_directory = QFileInfo(fileName).absoluteDir().absolutePath();
+	if ("" == fileName)
+		return;
 
-	m_status->append(QString(tr("hex file:%1 has been loaded")).arg(fileName));
+	m_uploadButton->setDisabled(true);
+	m_directory = QFileInfo(fileName).absoluteDir().absolutePath();
+	m_status->append(QString(tr("loaded HEX file:%1 has been loaded")).arg(fileName));
 	m_hexPath->setText(fileName);
 
 	QFile file(fileName);
@@ -133,6 +137,7 @@ void BootLoader::openHex()
 				default:
 					QMessageBox::critical(this, "", tr("unsuported record type."));
 			}
+			m_uploadButton->setEnabled(true);
 		}
 		m_status->append(QString(tr("HEX file range 0x0100:0x%1")).arg(lastAddress, 4, 16, QChar('0')));
 		m_status->repaint();
@@ -248,11 +253,13 @@ void BootLoader::upload()
 
 				unsigned version = m_serialPort->GetFlashVersion(m_layer);
 				if (0 == version)
-				{
 					m_status->append(tr("the program is runnimg"));
-					m_status->repaint();
-				}
+				else
+					m_status->append(tr("the program DOESN'T runnimg"));
+
+				m_status->repaint();
 				m_serialPort->SetFlashLoadCheck(1, 0);
+
 				m_serialPort->Flashing(false);
 
 				m_status->append(tr("programming finished"));
@@ -264,11 +271,16 @@ void BootLoader::upload()
 			m_serialPort->Flashing(false);
 			m_status->append(tr("Checksum doesn't match, unplug a device and plug it again and try it again"));
 			m_status->repaint();
-			qDebug() << "checksum doesn't match. my checksum is:" << (unsigned char) checkSum << "device checksum is:" << (unsigned char) deviceCheckSum;
+			m_log->Error(
+				QString("checksum doesn't match. my checksum is: %1, device checksum is: %2").
+					arg(checkSum).
+					arg((unsigned char) deviceCheckSum)
+			);
 		}
 	}
 	catch (...)
 	{
 		m_status->append(tr("uploading error - module was disconnected"));
 	}
+	flashed();
 }

@@ -2,19 +2,19 @@
 #include <stdexcept>
 #include <QMessageBox>
 #include <QThread>
-#include <QtCore/QDebug>
-
+#include <LogDialog.h>
 #define BUFFER_SIZE 100
 #define TIMEOUT 500
 
 static char g_buffer[BUFFER_SIZE];
 
-SerialPort::SerialPort(QObject *parent) :
+SerialPort::SerialPort(QObject *parent, LogDialog *logDialog) :
 	QObject(parent),
 	m_serialPort(),
 	m_timer(),
 	m_dataReady(false),
-	m_timeout(false)
+	m_timeout(false),
+	m_log(logDialog)
 {
 	connect(&m_serialPort, SIGNAL(readyRead()), this, SLOT(readyRead()));
 	connect(&m_timer, SIGNAL(timeout()), this, SLOT(timerTimeout()));
@@ -46,7 +46,7 @@ bool SerialPort::SetValue(int value)
 	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_SET_STATE, 2, 2, false))
 		return false;
 
-	qDebug() << "value has been set to: " << value;
+	m_log->Info(QString("value has been set to: %1").arg(value));
 	return true;
 }
 
@@ -56,7 +56,7 @@ bool SerialPort::GetState(unsigned layer, int &value)
 			return false;
 
 	value = *(uint16_t *)(g_buffer+1);
-	qDebug() << "get value: " << *(uint16_t *)(g_buffer+1);
+	m_log->Info(QString("get value: %1").arg(*(uint16_t *)(g_buffer+1)));
 	return true;
 }
 
@@ -66,7 +66,7 @@ int SerialPort::GetMode(unsigned layer, unsigned &mode)
 			return false;
 
 	mode = g_buffer[1];
-	qDebug() << "get mode: " << mode;
+	m_log->Info(QString("get mode: %1").arg(mode));
 	return true;
 }
 
@@ -74,7 +74,7 @@ int SerialPort::GetFlashVersion(unsigned layer)
 {
 	_CallCubeFunction(layer, MID_COMMAND_FLASH_GET_VERSION, 0, 2, true);
 
-	qDebug() << "flash version: " << (int)(g_buffer[1]);
+	m_log->Info(QString("flash version: %1").arg((int)(g_buffer[1])));
 	return g_buffer[1];
 }
 
@@ -121,7 +121,7 @@ void SerialPort::Flashing(bool active)
 bool SerialPort::SetMode(unsigned layer, unsigned mode)
 {
 	g_buffer[0] = mode;
-	qDebug() << "mode on layer:" << layer << " set to " << mode;
+	m_log->Info(QString("mode on layer: %1 set to %2").arg(layer).arg(mode));
 
 	return _CallCubeFunction(layer, MID_SET_MODE, 1, 2, false);
 }
@@ -131,7 +131,7 @@ bool SerialPort::FillModuleType(unsigned layer, ModuleTypes &moduleType)
 	if (!_CallCubeFunction(layer, MID_GET_MODULE_TYPE, 0, 2, false))
 		return false;
 
-	qDebug() << "module type on layer:" << layer << " is " << (unsigned char)(g_buffer[1]);
+	m_log->Info(QString("module type on layer: %1 is %2").arg(layer).arg((unsigned char)(g_buffer[1])));
 	moduleType = (ModuleTypes)g_buffer[1];
 
 	return true;
@@ -145,25 +145,25 @@ bool SerialPort::_OpenIfMyPotr()
 	{
 		if (info.manufacturer() == "Microchip Technology, Inc.")
 		{
-			qDebug() << info.portName() << "looks like my port";
+			m_log->Info(QString("%1 looks like my port").arg(info.portName()));
 			m_serialPort.setPortName(info.portName());
 			m_serialPort.setBaudRate(115200);
 			if (m_serialPort.open(QIODevice::ReadWrite))
 			{
 				if (_IsMyDevice())
 				{
-					qDebug() << info.portName() << "is my port";
+					m_log->Info(QString("%1 is my port").arg(info.portName()));
 					return true;
 				}
 				else
 				{
-					qDebug() << info.portName() << "is not my port";
+					m_log->Warning(QString("%1 is not my port").arg(info.portName()));
 				}
 				m_serialPort.close();
 			}
 			else
 			{
-				qDebug() << info.portName() << "was not open";
+				m_log->Error(QString("%1 was not opened").arg(info.portName()));
 			}
 		}
 	}
@@ -173,7 +173,6 @@ bool SerialPort::_OpenIfMyPotr()
 
 bool SerialPort::_IsMyDevice()
 {
-	qDebug() << "is really my device?";
 	size_t pidSize = strlen(PROTOCOL_ID);
 
 	if (!_CallCubeFunction(INTERFACE_MODULE_ADDRESS, MID_GET_FIRMWARE_VERSION, 0, pidSize+1, false))
@@ -186,7 +185,7 @@ bool SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsigned
 {
 	if (!m_serialPort.isOpen())
 	{
-		qDebug() << "Error: Hardware is unavailable. Please check if it is connected or another program instance is not running.";
+		m_log->Error(QString("Hardware is unavailable. Please check if it is connected or another program instance is not running."));
 		throw std::runtime_error(tr("Hardware is unavailable. Please check if it is connected or another program instance is not running.").toStdString());
 	}
 	char messageLength = 3 + inDataSize; //1x messgeLength + 1x moduleId +1x functionId
@@ -208,7 +207,13 @@ bool SerialPort::_CallCubeFunction(char moduleId, MessageId functionId, unsigned
 		(expectedSize == 0 && size != (unsigned)g_buffer[0])
 	)
 	{
-		qDebug() << "Error: Readed data are uncomplete. required_size:" << expectedSize << "size:" << size << " moduleId:" << (int)moduleId << " functionId:" << functionId;
+		m_log->Error(
+			QString("Readed data are uncomplete. required_size: %1, size: %2, moduleId: %3 functionId: %4" ).
+				arg(expectedSize).
+				arg(size).
+				arg((int)moduleId).
+				arg(functionId)
+		);
 
 		if (forceSize)
 			throw std::runtime_error(tr("Readed data are uncomplete.").toStdString());

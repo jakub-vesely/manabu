@@ -3,31 +3,35 @@
 
 #include <QMainWindow>
 #include <QVector>
-#include <../../CommonConstants.h>
 
-class QTabWidget;
+class QWidget;
 class Qstring;
 class SerialPort;
-
+class QAction;
+class LogDialog;
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
-	void _SetMainLayout();
-	char const *_GetModuleTypeName(ModuleTypes type);
-	bool _AddInterfaceTab();
-	void _AddRgbTab();
-	void _AddBootloaderTab(unsigned layer);
-	void _AddPlotTab();
+	void _ResetMainLayout();
+	void _OpenBootloaderDialog(unsigned layer);
 
 	SerialPort *m_serialPort;
-	QTabWidget *m_tabWidget;
+	QWidget *m_mainWidget;
+	QAction *m_flashInterface;
+	QAction *m_flashNeighbor;
+	QAction *m_logAction;
+	LogDialog *m_log;
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
 public slots:
-	void changeLayer1Mode(int value);
+	void openInterfaceBootloder();
+	void openNeighborBootloader();
+	void reintModules();
+	void showLog(bool show);
+	void uncheckLogAction(int notUsed);
 };
 
 #endif // MAINWINDOW_H
