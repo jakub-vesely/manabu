@@ -111,11 +111,6 @@ void main(void)
 			
 		if (g_stateMessageEnabled && (g_stateChanged || ++g_stateRepeater >= STATE_REPEATER_MAX))
 		{
-			/*RC2 = true;
-			for (int i = 0; i < 10000; i++)
-			{}
-			RC2 = false;*/
-
 			g_stateRepeater = 0;
 			ProcessStateChangedModuleTypeSpecific();
 			ProcessStateChangedCommon();

@@ -20,9 +20,9 @@ void ProcessCommandModuleTypeSpecific()
 }
 void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
 {
-	SetDutyCyclePWM1((unsigned char)((float)green * GREEN_CALIBRATION));
-	SetDutyCyclePWM2((unsigned char)((float)red * RED_CALIBRATION));
-    SetDutyCyclePWM3((unsigned char)((float)blue * BLUE_CALIBRATION));
+	SetDutyCyclePWM1((unsigned char)((float)red * RED_CALIBRATION));
+	SetDutyCyclePWM2((unsigned char)((float)blue * BLUE_CALIBRATION));
+    SetDutyCyclePWM3((unsigned char)((float)green * GREEN_CALIBRATION));
 }
 
 void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
@@ -59,7 +59,7 @@ void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
 		return;
 	}
 
-	SetDutyCyclePWM(28, 28, 28);
+	SetDutyCyclePWM(50,50,50);//28, 28, 28);
 }
 
 void SetWhiteValue(unsigned char value)

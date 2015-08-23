@@ -38,7 +38,7 @@ unsigned int ADC_Read10bit(void)
     result <<=8;
     result |= ADRESL;
 
-    return result;
+    return STATE_MAX - result;
 }
 
 

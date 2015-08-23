@@ -179,12 +179,10 @@
 <wire x1="-4.064" y1="-1.27" x2="-3.81" y2="-1.016" width="0.1524" layer="51"/>
 <wire x1="-6.35" y1="-1.016" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="-1.27" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
+<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
 <pad name="2" x="-2.54" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="0" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
-<text x="-6.096" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-6.88" y="0.033" size="0.9906" layer="21" ratio="12" align="center">&lt;</text>
-<text x="-6.096" y="-4.318" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-5.996" y="-2.949" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <rectangle x1="-5.3848" y1="-0.3048" x2="-4.7752" y2="0.3048" layer="51"/>
 <rectangle x1="-2.8448" y1="-0.3048" x2="-2.2352" y2="0.3048" layer="51"/>
 <rectangle x1="-0.3048" y1="-0.3048" x2="0.3048" y2="0.3048" layer="51"/>
@@ -266,6 +264,7 @@
 <wire x1="0" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
 <wire x1="0" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="JUMPER5M">
 <pin name="1" x="-7.62" y="10.16" length="middle"/>
@@ -287,6 +286,7 @@
 <wire x1="0" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
 <wire x1="0" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -6389,9 +6389,9 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2K2"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
-<part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device=""/>
-<part name="DATA" library="!stavebnice03" deviceset="JUMPER5M" device=""/>
-<part name="TP1" library="testpad" deviceset="TP" device="B1,27"/>
+<part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device="" value=""/>
+<part name="DATA" library="!stavebnice03" deviceset="JUMPER5M" device="" value=""/>
+<part name="FLASH" library="testpad" deviceset="TP" device="B1,27"/>
 </parts>
 <sheets>
 <sheet>
@@ -6406,7 +6406,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="R1" gate="G$1" x="109.22" y="93.98"/>
 <instance part="PROG" gate="G$1" x="172.72" y="35.56" rot="MR270"/>
 <instance part="DATA" gate="G$1" x="116.84" y="35.56" rot="R270"/>
-<instance part="TP1" gate="G$1" x="116.84" y="101.6"/>
+<instance part="FLASH" gate="G$1" x="116.84" y="101.6"/>
 </instances>
 <busses>
 </busses>
@@ -6561,7 +6561,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <pinref part="U1" gate="G$1" pin="RA5"/>
 <pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="124.46" y1="93.98" x2="116.84" y2="93.98" width="0.1524" layer="91"/>
-<pinref part="TP1" gate="G$1" pin="TP"/>
+<pinref part="FLASH" gate="G$1" pin="TP"/>
 <wire x1="116.84" y1="93.98" x2="114.3" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="99.06" x2="116.84" y2="93.98" width="0.1524" layer="91"/>
 </segment>

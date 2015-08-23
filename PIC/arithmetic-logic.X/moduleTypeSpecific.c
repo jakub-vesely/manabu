@@ -7,7 +7,7 @@ void ProcessCommandModuleTypeSpecific()
 }
 void ProcessStateChangedModuleTypeSpecific()
 {
-	g_outState = STATE_MAX - g_inState; //works as invertor
+	g_outState = g_inState / 2;//STATE_MAX - g_inState; //works as invertor
 }
 
 void ModuleTypeSpecificInit()

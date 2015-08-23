@@ -14,14 +14,14 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
+<layer number="21" name="tPlace" color="14" fill="1" visible="no" active="no"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="no"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="25" name="tNames" color="3" fill="1" visible="no" active="no"/>
+<layer number="26" name="bNames" color="6" fill="1" visible="no" active="no"/>
+<layer number="27" name="tValues" color="11" fill="1" visible="no" active="no"/>
+<layer number="28" name="bValues" color="11" fill="1" visible="no" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -268,14 +268,11 @@
 <wire x1="-5.08" y1="-1.016" x2="-4.826" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-0.254" y1="-1.27" x2="-2.286" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-2.794" y1="-1.27" x2="-4.826" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
+<pad name="1" x="-3.81" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
 <pad name="2" x="-1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-4.826" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-3.81" y="-2.667" size="0.9906" layer="51" ratio="12">1</text>
-<text x="-1.27" y="-2.667" size="0.9906" layer="51" ratio="12">2</text>
-<text x="1.27" y="-2.667" size="0.9906" layer="51" ratio="12">3</text>
-<text x="-4.826" y="-4.318" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-4.826" y="-3.048" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 <rectangle x1="-4.1148" y1="-0.3048" x2="-3.5052" y2="0.3048" layer="51"/>
 <rectangle x1="-1.5748" y1="-0.3048" x2="-0.9652" y2="0.3048" layer="51"/>
 <rectangle x1="0.9652" y1="-0.3048" x2="1.5748" y2="0.3048" layer="51"/>
@@ -286,14 +283,12 @@
 <wire x1="2.54" y1="-1.016" x2="2.794" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="4.826" y1="-1.27" x2="2.794" y2="-1.27" width="0.1524" layer="51"/>
 <pad name="4" x="3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
-<text x="3.81" y="-2.667" size="0.9906" layer="51" ratio="12">4</text>
 <rectangle x1="3.5052" y1="-0.3048" x2="4.1148" y2="0.3048" layer="51"/>
 <wire x1="5.08" y1="-1.016" x2="5.08" y2="1.016" width="0.1524" layer="51"/>
 <wire x1="-5.15" y1="-1.35" x2="5.15" y2="-1.35" width="0.127" layer="21"/>
 <wire x1="5.15" y1="-1.35" x2="5.15" y2="1.35" width="0.127" layer="21"/>
 <wire x1="5.15" y1="1.35" x2="-5.15" y2="1.35" width="0.127" layer="21"/>
 <wire x1="-5.15" y1="1.35" x2="-5.15" y2="-1.35" width="0.127" layer="21"/>
-<text x="-3.8" y="1.85" size="0.8128" layer="21" ratio="15" rot="R90" align="center">&lt;</text>
 </package>
 <package name="JUMPER5M">
 <wire x1="-4.064" y1="1.27" x2="-3.81" y2="1.016" width="0.1524" layer="51"/>
@@ -302,12 +297,10 @@
 <wire x1="-4.064" y1="-1.27" x2="-3.81" y2="-1.016" width="0.1524" layer="51"/>
 <wire x1="-6.35" y1="-1.016" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="-1.27" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
+<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
 <pad name="2" x="-2.54" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="0" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
-<text x="-6.096" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-6.88" y="0.033" size="0.9906" layer="21" ratio="12" align="center">&lt;</text>
-<text x="-6.096" y="-4.318" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-5.996" y="-2.949" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <rectangle x1="-5.3848" y1="-0.3048" x2="-4.7752" y2="0.3048" layer="51"/>
 <rectangle x1="-2.8448" y1="-0.3048" x2="-2.2352" y2="0.3048" layer="51"/>
 <rectangle x1="-0.3048" y1="-0.3048" x2="0.3048" y2="0.3048" layer="51"/>
@@ -402,6 +395,7 @@
 <wire x1="0" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
 <wire x1="0" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="JUMPER5F-90">
 <pin name="1" x="-7.62" y="10.16" length="middle"/>
@@ -413,6 +407,7 @@
 <wire x1="5.08" y1="12.7" x2="5.08" y2="-12.7" width="0.254" layer="94"/>
 <wire x1="5.08" y1="-12.7" x2="-2.54" y2="-12.7" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="JIMPER4M">
 <pin name="1" x="-7.62" y="7.62" length="middle"/>
@@ -431,6 +426,7 @@
 <wire x1="0" y1="2.54" x2="7.62" y2="2.54" width="0.254" layer="94"/>
 <wire x1="0" y1="-2.54" x2="7.62" y2="-2.54" width="0.254" layer="94"/>
 <wire x1="0" y1="-7.62" x2="7.62" y2="-7.62" width="0.254" layer="94"/>
+<text x="-5.08" y="12.7" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="JUMPER5M">
 <pin name="1" x="-7.62" y="10.16" length="middle"/>
@@ -452,6 +448,7 @@
 <wire x1="0" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
 <wire x1="0" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -6321,25 +6318,25 @@ Source: AVX .. aphvc.pdf</description>
 </class>
 </classes>
 <parts>
-<part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device=""/>
+<part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device="" value="16F103"/>
 <part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R2" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
-<part name="U2" library="!stavebnice03" deviceset="NC7SB3157P6X" device=""/>
-<part name="U3" library="!stavebnice03" deviceset="NC7SB3157P6X" device=""/>
+<part name="U2" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
+<part name="U3" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
 <part name="C1" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
 <part name="C3" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
-<part name="IN" library="!stavebnice03" deviceset="JUMPER5M-90" device=""/>
-<part name="OUT" library="!stavebnice03" deviceset="JUMPER5F-90" device=""/>
-<part name="U4" library="!stavebnice03" deviceset="NC7SB3157P6X" device=""/>
-<part name="U5" library="!stavebnice03" deviceset="NC7SB3157P6X" device=""/>
+<part name="IN" library="!stavebnice03" deviceset="JUMPER5M-90" device="" value=""/>
+<part name="OUT" library="!stavebnice03" deviceset="JUMPER5F-90" device="" value=""/>
+<part name="U4" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
+<part name="U5" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
 <part name="C5" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
 <part name="C4" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
-<part name="DATA" library="!stavebnice03" deviceset="JUMPER4M" device=""/>
+<part name="DATA" library="!stavebnice03" deviceset="JUMPER4M" device="" value="JUMPER4M"/>
 <part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2K2"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
-<part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device=""/>
+<part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device="" value="JUMPER5M"/>
 </parts>
 <sheets>
 <sheet>
@@ -6516,7 +6513,7 @@ Source: AVX .. aphvc.pdf</description>
 </net>
 <net name="N$13" class="0">
 <segment>
-<wire x1="162.56" y1="50.8" x2="162.56" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="50.8" x2="162.56" y2="53.34" width="0.1524" layer="91" style="dashdot"/>
 <wire x1="162.56" y1="53.34" x2="106.68" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="53.34" x2="106.68" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="MCLR/VPP/RA3"/>

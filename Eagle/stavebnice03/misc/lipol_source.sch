@@ -271,12 +271,10 @@
 <wire x1="-4.064" y1="-1.27" x2="-3.81" y2="-1.016" width="0.1524" layer="51"/>
 <wire x1="-6.35" y1="-1.016" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="-1.27" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
+<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
 <pad name="2" x="-2.54" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="0" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
-<text x="-6.096" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-6.88" y="0.033" size="0.9906" layer="21" ratio="12" align="center">&lt;</text>
-<text x="-6.096" y="-4.318" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-5.996" y="-2.949" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <rectangle x1="-5.3848" y1="-0.3048" x2="-4.7752" y2="0.3048" layer="51"/>
 <rectangle x1="-2.8448" y1="-0.3048" x2="-2.2352" y2="0.3048" layer="51"/>
 <rectangle x1="-0.3048" y1="-0.3048" x2="0.3048" y2="0.3048" layer="51"/>
@@ -401,6 +399,7 @@
 <wire x1="5.08" y1="12.7" x2="5.08" y2="-12.7" width="0.254" layer="94"/>
 <wire x1="5.08" y1="-12.7" x2="-2.54" y2="-12.7" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="USB">
 <pin name="VUSB" x="7.62" y="10.16" length="middle" rot="R180"/>
@@ -523,6 +522,7 @@
 <wire x1="0" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
 <pin name="5" x="-7.62" y="-10.16" length="middle"/>
 <wire x1="0" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 <symbol name="BUTTON">
 <pin name="P$1" x="-7.62" y="0" visible="off" length="middle"/>
