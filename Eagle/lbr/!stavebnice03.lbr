@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -615,12 +615,8 @@
 <rectangle x1="-5.3848" y1="1.524" x2="-4.7752" y2="2.032" layer="51"/>
 <wire x1="-6.3" y1="-1.3" x2="-6.3" y2="-1.9" width="0.127" layer="21"/>
 <wire x1="-6.3" y1="-1.3" x2="-5.7" y2="-1.3" width="0.127" layer="21"/>
-<wire x1="-6.3" y1="-3.8" x2="-6.3" y2="-3.2" width="0.127" layer="21"/>
-<wire x1="-6.3" y1="-3.8" x2="-5.7" y2="-3.8" width="0.127" layer="21"/>
-<wire x1="6.3" y1="-3.8" x2="5.7" y2="-3.8" width="0.127" layer="21"/>
 <wire x1="6.3" y1="-1.3" x2="5.7" y2="-1.3" width="0.127" layer="21"/>
 <wire x1="6.3" y1="-1.3" x2="6.3" y2="-1.9" width="0.127" layer="21"/>
-<wire x1="6.3" y1="-3.8" x2="6.3" y2="-3.2" width="0.127" layer="21"/>
 <text x="5.1" y="-4" size="0.8128" layer="21" ratio="15" rot="R270" align="center">&gt;</text>
 </package>
 <package name="JUMPER5M-90">
@@ -693,10 +689,9 @@
 <rectangle x1="4.7752" y1="-1.524" x2="5.3848" y2="-1.016" layer="51"/>
 <rectangle x1="4.7752" y1="-2.794" x2="5.3848" y2="-1.524" layer="51"/>
 <text x="-5.1" y="-3.95" size="0.8128" layer="21" ratio="15" rot="R90" align="center">&lt;</text>
-<wire x1="-6.45" y1="-1.1" x2="6.45" y2="-1.1" width="0.127" layer="21"/>
-<wire x1="6.45" y1="-1.1" x2="6.45" y2="1.6" width="0.127" layer="21"/>
+<wire x1="6.45" y1="0.17" x2="6.45" y2="1.6" width="0.127" layer="21"/>
 <wire x1="6.45" y1="1.6" x2="-6.45" y2="1.6" width="0.127" layer="21"/>
-<wire x1="-6.45" y1="1.6" x2="-6.45" y2="-1.1" width="0.127" layer="21"/>
+<wire x1="-6.45" y1="1.6" x2="-6.45" y2="0.17" width="0.127" layer="21"/>
 </package>
 <package name="AAA_THIRD">
 <wire x1="-7" y1="5" x2="7" y2="5" width="0.127" layer="21"/>

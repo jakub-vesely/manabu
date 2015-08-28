@@ -197,10 +197,9 @@
 <rectangle x1="4.7752" y1="-1.524" x2="5.3848" y2="-1.016" layer="51"/>
 <rectangle x1="4.7752" y1="-2.794" x2="5.3848" y2="-1.524" layer="51"/>
 <text x="-5.1" y="-3.95" size="0.8128" layer="21" ratio="15" rot="R90" align="center">&lt;</text>
-<wire x1="-6.45" y1="-1.1" x2="6.45" y2="-1.1" width="0.127" layer="21"/>
-<wire x1="6.45" y1="-1.1" x2="6.45" y2="1.6" width="0.127" layer="21"/>
+<wire x1="6.45" y1="0.17" x2="6.45" y2="1.6" width="0.127" layer="21"/>
 <wire x1="6.45" y1="1.6" x2="-6.45" y2="1.6" width="0.127" layer="21"/>
-<wire x1="-6.45" y1="1.6" x2="-6.45" y2="-1.1" width="0.127" layer="21"/>
+<wire x1="-6.45" y1="1.6" x2="-6.45" y2="0.17" width="0.127" layer="21"/>
 </package>
 <package name="JUMPER5F-90">
 <wire x1="2.54" y1="2.032" x2="2.54" y2="6.985" width="0.6604" layer="51"/>
@@ -240,12 +239,8 @@
 <rectangle x1="-5.3848" y1="1.524" x2="-4.7752" y2="2.032" layer="51"/>
 <wire x1="-6.3" y1="-1.3" x2="-6.3" y2="-1.9" width="0.127" layer="21"/>
 <wire x1="-6.3" y1="-1.3" x2="-5.7" y2="-1.3" width="0.127" layer="21"/>
-<wire x1="-6.3" y1="-3.8" x2="-6.3" y2="-3.2" width="0.127" layer="21"/>
-<wire x1="-6.3" y1="-3.8" x2="-5.7" y2="-3.8" width="0.127" layer="21"/>
-<wire x1="6.3" y1="-3.8" x2="5.7" y2="-3.8" width="0.127" layer="21"/>
 <wire x1="6.3" y1="-1.3" x2="5.7" y2="-1.3" width="0.127" layer="21"/>
 <wire x1="6.3" y1="-1.3" x2="6.3" y2="-1.9" width="0.127" layer="21"/>
-<wire x1="6.3" y1="-3.8" x2="6.3" y2="-3.2" width="0.127" layer="21"/>
 <text x="5.1" y="-4" size="0.8128" layer="21" ratio="15" rot="R270" align="center">&gt;</text>
 </package>
 <package name="JUMPER4M">
@@ -268,7 +263,7 @@
 <wire x1="-5.08" y1="-1.016" x2="-4.826" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-0.254" y1="-1.27" x2="-2.286" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-2.794" y1="-1.27" x2="-4.826" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-3.81" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
+<pad name="1" x="-3.81" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="2" x="-1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="1.27" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-4.826" y="1.651" size="1.27" layer="25" ratio="10">&gt;NAME</text>
@@ -6319,19 +6314,19 @@ Source: AVX .. aphvc.pdf</description>
 </classes>
 <parts>
 <part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device="" value="16F103"/>
-<part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
+<part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R2" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="U2" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
 <part name="U3" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
-<part name="C1" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
-<part name="C3" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
-<part name="IN" library="!stavebnice03" deviceset="JUMPER5M-90" device="" value=""/>
-<part name="OUT" library="!stavebnice03" deviceset="JUMPER5F-90" device="" value=""/>
+<part name="C1" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
+<part name="C3" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
+<part name="IN" library="!stavebnice03" deviceset="JUMPER5M-90" device="" value="JUMPER5M-90"/>
+<part name="OUT" library="!stavebnice03" deviceset="JUMPER5F-90" device="" value="JUMPER5F-90"/>
 <part name="U4" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
 <part name="U5" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
-<part name="C5" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
-<part name="C4" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
+<part name="C5" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
+<part name="C4" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="DATA" library="!stavebnice03" deviceset="JUMPER4M" device="" value="JUMPER4M"/>
 <part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2K2"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
