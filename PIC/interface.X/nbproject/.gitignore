@@ -1,5 +1,0 @@
-*.mk
-Makefile-genesis.properties
-Package-default.bash
-private
-*.bash
