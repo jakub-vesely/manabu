@@ -279,10 +279,15 @@ sizeof(sd001),USB_DESCRIPTOR_STRING,
 }};
 
 //Product string descriptor
-const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[25];}sd002={
-sizeof(sd002),USB_DESCRIPTOR_STRING,
-{'C','D','C',' ','R','S','-','2','3','2',' ',
-'E','m','u','l','a','t','i','o','n',' ','D','e','m','o'}
+const struct{uint8_t bLength;uint8_t bDscType;uint16_t string[20];}sd002=
+{
+	sizeof(sd002),
+	USB_DESCRIPTOR_STRING,
+	{
+		'M','a','n','a','b','u',' ',
+		'U','S','B',' ',
+		'I','n','t','e','t','f','a', 'c', 'e'
+	}
 };
 
 //Array of configuration descriptors
