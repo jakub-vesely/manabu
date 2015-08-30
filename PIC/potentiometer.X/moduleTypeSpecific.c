@@ -1,6 +1,9 @@
 #include <system_common.h>
 #include <common/common.h>
 #include <CommonConstants.h>
+
+#define CALIBRATION 1.001
+
 void ProcessCommandModuleTypeSpecific()
 {
 }
@@ -38,14 +41,15 @@ unsigned int ADC_Read10bit(void)
     result <<=8;
     result |= ADRESL;
 
-    return STATE_MAX - result;
+    return (unsigned)((float)(STATE_MAX - result) * CALIBRATION);
 }
 
 
 void ProcessModuleFunctionality()
 {
 	unsigned potValue = ADC_Read10bit();
-
+	if (potValue > STATE_MAX)
+		potValue = STATE_MAX;
 	unsigned outState = (unsigned)((unsigned long)g_inState * (unsigned long)potValue / (unsigned long)STATE_MAX);
 	if (g_outState != outState)
 	{

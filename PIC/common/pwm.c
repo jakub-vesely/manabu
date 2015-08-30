@@ -59,3 +59,21 @@ void PwmInit()
     SetDutyCyclePWM2(0);
     SetDutyCyclePWM3(0);
 }
+
+void SetDutyCyclePWM1(unsigned x)
+{
+    PWM1DCH = x >> 2;
+    PWM1DCL = (x & 3) << 6;
+}
+
+void SetDutyCyclePWM2(unsigned x)
+{
+    PWM2DCH = x >> 2;
+    PWM2DCL = (x & 3) << 6;
+}
+
+void SetDutyCyclePWM3(unsigned x)
+{
+    PWM3DCH = x >> 2;
+    PWM3DCL = (x & 3) << 6;
+}

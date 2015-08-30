@@ -1,12 +1,12 @@
 #include <common/pwm.h>
 #include <CommonConstants.h>
 
-#define RED_TO_RED_PERIOD 85 //6 states
-#define RED_TO_PURPLE_PERIOD 102 //5 states
+#define RED_TO_RED_PERIOD ((unsigned)((float)STATE_MAX / 3)) //6 states
+#define RED_TO_PURPLE_PERIOD ((unsigned)((float)STATE_MAX / 2.5)) //5 states
 
-#define RED_CALIBRATION 0.8
-#define GREEN_CALIBRATION 1.2
-#define BLUE_CALIBRATION 1
+#define RED_CALIBRATION 0.7
+#define GREEN_CALIBRATION 1.0
+#define BLUE_CALIBRATION 0.9
 
 typedef enum
 {
@@ -18,14 +18,14 @@ typedef enum
 void ProcessCommandModuleTypeSpecific()
 {
 }
-void SetDutyCyclePWM(unsigned char red, unsigned char green, unsigned char blue)
+void SetDutyCyclePWM(unsigned red, unsigned green, unsigned blue)
 {
-	SetDutyCyclePWM1((unsigned char)((float)red * RED_CALIBRATION));
-	SetDutyCyclePWM2((unsigned char)((float)blue * BLUE_CALIBRATION));
-    SetDutyCyclePWM3((unsigned char)((float)green * GREEN_CALIBRATION));
+	SetDutyCyclePWM1((unsigned)((float)red * RED_CALIBRATION));
+	SetDutyCyclePWM2((unsigned)((float)blue * BLUE_CALIBRATION));
+    SetDutyCyclePWM3((unsigned)((float)green * GREEN_CALIBRATION));
 }
 
-void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
+void SetColor(unsigned i, unsigned pwmPeriod, bool blackAndWhite)
 {
 	unsigned value = i % pwmPeriod;
 	if (i == 0)
@@ -39,7 +39,6 @@ void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
 
 	if (i < pwmPeriod)
 	{
-
 		SetDutyCyclePWM(pwmPeriod -1 - value, value, 0);
 		return;
 	}
@@ -50,34 +49,34 @@ void SetColor(unsigned char i, unsigned char pwmPeriod, bool blackAndWhite)
 		return;
 	}
 
-	if (i < 255 || !blackAndWhite)
+	if (i < STATE_MAX || !blackAndWhite)
 	{
-		if (!blackAndWhite && i == 255 && value == 0)
+		if (!blackAndWhite && i == STATE_MAX && value == 0)
 			value = pwmPeriod-1;
 
 		SetDutyCyclePWM(value, 0, pwmPeriod -1 - value);
 		return;
 	}
 
-	SetDutyCyclePWM(50,50,50);//28, 28, 28);
+	SetDutyCyclePWM(STATE_MAX/3,STATE_MAX/3,STATE_MAX/3);
 }
 
-void SetWhiteValue(unsigned char value)
+void SetWhiteValue(unsigned value)
 {
 	SetDutyCyclePWM(value, value, value);
 }
 
-void SetRed(unsigned char pwmPeriod)
+void SetRed(unsigned pwmPeriod)
 {
 	SetDutyCyclePWM(pwmPeriod -1, 0, 0);
 }
 
-void SetGreen(unsigned char pwmPeriod)
+void SetGreen(unsigned pwmPeriod)
 {
 	SetDutyCyclePWM(0, pwmPeriod, 0);
 }
 
-void SetBlue(unsigned char pwmPeriod)
+void SetBlue(unsigned pwmPeriod)
 {
 	SetDutyCyclePWM(0, 0, pwmPeriod -1);
 }
@@ -88,13 +87,13 @@ void ProcessStateChangedModuleTypeSpecific()
 	switch (g_persistant.mode)
 	{
 		case MODE_RED_TO_RED:
-			SetColor(g_outState/4, RED_TO_RED_PERIOD, true);
+			SetColor(g_outState, RED_TO_RED_PERIOD, true);
 			break;
 		case MODE_RED_TO_PURPLE:
-			SetColor(g_outState/4, RED_TO_PURPLE_PERIOD, true);
+			SetColor(g_outState, RED_TO_PURPLE_PERIOD, true);
 			break;
 		default: //white and initial value from HEFLASH after programming
-			SetWhiteValue(g_outState/8);
+			SetWhiteValue(g_outState);
 			break;
 	}
 }
