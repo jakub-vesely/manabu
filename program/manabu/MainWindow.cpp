@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(m_logAction, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
 
 	menu->addSeparator();
-	m_flashInterface = menu->addAction(tr("&Flash interface"));
+	m_flashInterface = menu->addAction(tr("&Interface to bootloader"));
 	connect(m_flashInterface, SIGNAL(triggered()), this, SLOT(openInterfaceBootloder()));
 
 	m_flashNeighbor = menu->addAction(tr("&Flash neighbor"));
