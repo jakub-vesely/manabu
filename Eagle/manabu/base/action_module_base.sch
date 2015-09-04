@@ -167,10 +167,9 @@
 <rectangle x1="4.7752" y1="-1.524" x2="5.3848" y2="-1.016" layer="51"/>
 <rectangle x1="4.7752" y1="-2.794" x2="5.3848" y2="-1.524" layer="51"/>
 <text x="-5.1" y="-3.95" size="0.8128" layer="21" ratio="15" rot="R90" align="center">&lt;</text>
-<wire x1="-6.45" y1="-1.1" x2="6.45" y2="-1.1" width="0.127" layer="21"/>
-<wire x1="6.45" y1="-1.1" x2="6.45" y2="1.6" width="0.127" layer="21"/>
+<wire x1="6.45" y1="0.17" x2="6.45" y2="1.6" width="0.127" layer="21"/>
 <wire x1="6.45" y1="1.6" x2="-6.45" y2="1.6" width="0.127" layer="21"/>
-<wire x1="-6.45" y1="1.6" x2="-6.45" y2="-1.1" width="0.127" layer="21"/>
+<wire x1="-6.45" y1="1.6" x2="-6.45" y2="0.17" width="0.127" layer="21"/>
 </package>
 <package name="JUMPER5M">
 <wire x1="-4.064" y1="1.27" x2="-3.81" y2="1.016" width="0.1524" layer="51"/>
@@ -179,7 +178,7 @@
 <wire x1="-4.064" y1="-1.27" x2="-3.81" y2="-1.016" width="0.1524" layer="51"/>
 <wire x1="-6.35" y1="-1.016" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="-1.27" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
+<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="2" x="-2.54" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="0" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-5.996" y="-2.949" size="1.27" layer="25" ratio="10">&gt;NAME</text>
@@ -6383,15 +6382,15 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 </class>
 </classes>
 <parts>
-<part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device=""/>
-<part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
+<part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device="" value="16F103"/>
+<part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="IN" library="!stavebnice03" deviceset="JUMPER5M-90" device=""/>
 <part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2K2"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
-<part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device="" value=""/>
-<part name="DATA" library="!stavebnice03" deviceset="JUMPER5M" device="" value=""/>
-<part name="FLASH" library="testpad" deviceset="TP" device="B1,27"/>
+<part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device="" value="JUMPER5M"/>
+<part name="DATA" library="!stavebnice03" deviceset="JUMPER5M" device="" value="JUMPER5M"/>
+<part name="FLASH" library="testpad" deviceset="TP" device="TP10R" value="TPTP10R"/>
 </parts>
 <sheets>
 <sheet>

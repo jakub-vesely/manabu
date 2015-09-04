@@ -102,7 +102,6 @@
 <wire x1="1.1" y1="0.5" x2="1.1" y2="-0.5" width="0.2032" layer="21"/>
 <wire x1="1.1" y1="-0.5" x2="-1.1" y2="-0.5" width="0.2032" layer="51"/>
 <wire x1="-1.1" y1="-0.5" x2="-1.1" y2="0.5" width="0.2032" layer="21"/>
-<circle x="-0.65" y="-0.2" radius="0.15" width="0" layer="21"/>
 <smd name="1" x="-0.65" y="-0.85" dx="0.35" dy="0.8" layer="1"/>
 <smd name="2" x="0" y="-0.85" dx="0.35" dy="0.8" layer="1"/>
 <smd name="3" x="0.65" y="-0.85" dx="0.35" dy="0.8" layer="1"/>
@@ -117,15 +116,15 @@
 <rectangle x1="0.5" y1="0.6" x2="0.8" y2="1.1" layer="51"/>
 <rectangle x1="-0.15" y1="0.6" x2="0.15" y2="1.1" layer="51"/>
 <rectangle x1="-0.8" y1="0.6" x2="-0.5" y2="1.1" layer="51"/>
-<wire x1="-0.15" y1="-0.2" x2="0" y2="0.2" width="0.05" layer="51"/>
-<wire x1="0" y1="0.2" x2="0.15" y2="-0.2" width="0.05" layer="51"/>
-<wire x1="0.1" y1="-0.1" x2="-0.1" y2="-0.1" width="0.05" layer="51"/>
-<wire x1="-0.55" y1="-0.2" x2="-0.4" y2="0.2" width="0.05" layer="51"/>
-<wire x1="-0.4" y1="0.2" x2="-0.25" y2="-0.2" width="0.05" layer="51"/>
-<wire x1="-0.3" y1="-0.1" x2="-0.5" y2="-0.1" width="0.05" layer="51"/>
-<wire x1="0.25" y1="-0.2" x2="0.4" y2="0.2" width="0.05" layer="51"/>
-<wire x1="0.4" y1="0.2" x2="0.55" y2="-0.2" width="0.05" layer="51"/>
-<wire x1="0.5" y1="-0.1" x2="0.3" y2="-0.1" width="0.05" layer="51"/>
+<wire x1="-0.15" y1="-0.2" x2="0" y2="0.2" width="0.127" layer="21"/>
+<wire x1="0" y1="0.2" x2="0.15" y2="-0.2" width="0.127" layer="21"/>
+<wire x1="0.1" y1="-0.1" x2="-0.1" y2="-0.1" width="0.127" layer="21"/>
+<wire x1="-0.55" y1="-0.2" x2="-0.4" y2="0.2" width="0.127" layer="21"/>
+<wire x1="-0.4" y1="0.2" x2="-0.25" y2="-0.2" width="0.127" layer="21"/>
+<wire x1="-0.3" y1="-0.1" x2="-0.5" y2="-0.1" width="0.127" layer="21"/>
+<wire x1="0.25" y1="-0.2" x2="0.4" y2="0.2" width="0.127" layer="21"/>
+<wire x1="0.4" y1="0.2" x2="0.55" y2="-0.2" width="0.127" layer="21"/>
+<wire x1="0.5" y1="-0.1" x2="0.3" y2="-0.1" width="0.127" layer="21"/>
 </package>
 <package name="JUMPER5M-90">
 <wire x1="1.016" y1="1.524" x2="-1.016" y2="1.524" width="0.1524" layer="51"/>
@@ -292,7 +291,7 @@
 <wire x1="-4.064" y1="-1.27" x2="-3.81" y2="-1.016" width="0.1524" layer="51"/>
 <wire x1="-6.35" y1="-1.016" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="-1.27" x2="-6.096" y2="-1.27" width="0.1524" layer="51"/>
-<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="square" rot="R90"/>
+<pad name="1" x="-5.08" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="2" x="-2.54" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <pad name="3" x="0" y="0" drill="0.9144" diameter="1.778" shape="octagon" rot="R90"/>
 <text x="-5.996" y="-2.949" size="1.27" layer="25" ratio="10">&gt;NAME</text>
@@ -6317,14 +6316,14 @@ Source: AVX .. aphvc.pdf</description>
 <part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R2" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
-<part name="U2" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
-<part name="U3" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
+<part name="U2" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value="NC7SB3157P6X"/>
+<part name="U3" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value="NC7SB3157P6X"/>
 <part name="C1" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="C3" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="IN" library="!stavebnice03" deviceset="JUMPER5M-90" device="" value="JUMPER5M-90"/>
 <part name="OUT" library="!stavebnice03" deviceset="JUMPER5F-90" device="" value="JUMPER5F-90"/>
-<part name="U4" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
-<part name="U5" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value=""/>
+<part name="U4" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value="NC7SB3157P6X"/>
+<part name="U5" library="!stavebnice03" deviceset="NC7SB3157P6X" device="" value="NC7SB3157P6X"/>
 <part name="C5" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="C4" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="DATA" library="!stavebnice03" deviceset="JUMPER4M" device="" value="JUMPER4M"/>
