@@ -6,7 +6,7 @@
 * HEFlash.h
 *
 */
-#include <common/FLash.h>
+#include <common/Flash.h>
 #define HEFLASH_MAXROWS (HEFLASH_END-HEFLASH_START+1)/FLASH_ROWSIZE
 /******************************************************************************
 * High Endurance Flash functions

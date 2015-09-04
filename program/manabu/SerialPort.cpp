@@ -143,11 +143,14 @@ bool SerialPort::_OpenIfMyPotr()
 
 	foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
 	{
-		if (info.manufacturer() == "Microchip Technology, Inc.")
+        if (info.manufacturer() == "Microchip Technology, Inc." || info.manufacturer() == "Microchip Technology Inc.")
 		{
 			m_log->Info(QString("%1 looks like my port").arg(info.portName()));
-			m_serialPort.setPortName(info.portName());
-			m_serialPort.setBaudRate(115200);
+            m_serialPort.setPort(info);
+            m_serialPort.setBaudRate(115200);
+
+            //to open port in linux you have to permit access by
+            //sudo chmod a+rw /dev/ttyACM0
 			if (m_serialPort.open(QIODevice::ReadWrite))
 			{
 				if (_IsMyDevice())

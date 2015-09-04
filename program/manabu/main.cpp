@@ -1,3 +1,5 @@
+#pragma comment (lib, "opengl32.lib")
+
 #include "MainWindow.h"
 #include <QApplication>
 

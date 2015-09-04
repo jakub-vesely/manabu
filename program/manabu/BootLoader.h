@@ -29,7 +29,7 @@ public:
 	~BootLoader();
 
 signals:
-	flashed();
+    void flashed();
 public slots:
 	void openHex();
 	void upload();
