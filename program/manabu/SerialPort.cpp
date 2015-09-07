@@ -14,7 +14,8 @@ SerialPort::SerialPort(QObject *parent, LogDialog *logDialog) :
 	m_timer(),
 	m_dataReady(false),
 	m_timeout(false),
-	m_log(logDialog)
+    m_log(logDialog),
+    m_foundClosedPort(false)
 {
 	connect(&m_serialPort, SIGNAL(readyRead()), this, SLOT(readyRead()));
 	connect(&m_timer, SIGNAL(timeout()), this, SLOT(timerTimeout()));
@@ -140,7 +141,7 @@ bool SerialPort::FillModuleType(unsigned layer, ModuleTypes &moduleType)
 
 bool SerialPort::_OpenIfMyPotr()
 {
-
+    m_foundClosedPort = false;
 	foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
 	{
         if (info.manufacturer() == "Microchip Technology, Inc." || info.manufacturer() == "Microchip Technology Inc.")
@@ -166,6 +167,7 @@ bool SerialPort::_OpenIfMyPotr()
 			}
 			else
 			{
+                m_foundClosedPort = true;
 				m_log->Error(QString("%1 was not opened").arg(info.portName()));
 			}
 		}

@@ -13,7 +13,7 @@ class ModuleWidget : public QGroupBox
 protected:
 	QString _GetModuleTypeName(ModuleTypes type);
 
-	SerialPort *m_serialPort;
+    SerialPort *m_serialPort;
 public:
 	ModuleWidget(QWidget *parent, SerialPort *serialPort, bool isInterface);
 	~ModuleWidget();

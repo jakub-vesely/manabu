@@ -86,7 +86,9 @@ void MainWindow::reintModules()
 
 	if (!m_serialPort->Open())
 	{
-		m_mainWidget->layout()->addWidget(new NoInterface(m_mainWidget, m_serialPort));
+        NoInterface *noInterface =new NoInterface(m_mainWidget, m_serialPort);
+        connect(noInterface, SIGNAL(connected()), this, SLOT(reintModules()));
+        m_mainWidget->layout()->addWidget(noInterface);
 		m_flashInterface->setEnabled(false);
 	}
 	else

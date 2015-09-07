@@ -24,6 +24,7 @@ class SerialPort : public QObject
 	bool m_dataReady;
 	bool m_timeout;
 	LogDialog *m_log;
+    bool m_foundClosedPort;
 public:
 	SerialPort(QObject *parent, LogDialog *logDialog);
 	bool Open();
@@ -36,8 +37,12 @@ public:
 	bool IsOpen()
 	{ return m_serialPort.isOpen(); }
 
+    QString GetPortName()
+    {   return m_serialPort.portName(); }
 	~SerialPort();
 
+    bool FoundButClosed()
+    { return m_foundClosedPort; }
 signals:
 
 public slots:

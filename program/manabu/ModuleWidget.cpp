@@ -22,7 +22,7 @@ QString ModuleWidget::_GetModuleTypeName(ModuleTypes type)
 	switch(type)
 	{
 	case TYPE_NONE:
-		return tr("Device not found");
+        return tr("");
 	case TYPE_USB_INTERFACE:
 		return tr("USB Interface");
 	case TYPE_POTENTIOMETER:
