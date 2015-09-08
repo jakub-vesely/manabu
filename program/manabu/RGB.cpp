@@ -14,8 +14,8 @@ RGB::RGB(QWidget *parent, SerialPort *serialPort) :
 	QLabel *label = new QLabel(tr("mode: "), this);
 	hLayout->addWidget(label);
 	QComboBox *modeCombo = new QComboBox(this);
-	modeCombo->addItem(tr("red to red"));
-	modeCombo->addItem(tr("red to purple"));
+    modeCombo->addItem(tr("black,red to purple, white"));
+    modeCombo->addItem(tr("red to red"));
 	modeCombo->addItem(tr("white value"));
 	hLayout->addWidget(modeCombo);
 

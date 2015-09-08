@@ -10,8 +10,8 @@
 
 typedef enum
 {
-	MODE_RED_TO_RED = 1,
-	MODE_RED_TO_PURPLE = 2,
+	MODE_RED_TO_PURPLE = 1,
+    MODE_RED_TO_RED = 2,	
 	MODE_WHITE_VALUE = 3,
 } MODE;
 
@@ -87,7 +87,7 @@ void ProcessStateChangedModuleTypeSpecific()
 	switch (g_persistant.mode)
 	{
 		case MODE_RED_TO_RED:
-			SetColor(g_outState, RED_TO_RED_PERIOD, true);
+			SetColor(g_outState, RED_TO_RED_PERIOD, false);
 			break;
 		case MODE_RED_TO_PURPLE:
 			SetColor(g_outState, RED_TO_PURPLE_PERIOD, true);
