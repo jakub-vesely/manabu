@@ -41,7 +41,15 @@ unsigned int ADC_Read10bit(void)
     result <<=8;
     result |= ADRESL;
 
-    return (unsigned)((float)(STATE_MAX - result) * CALIBRATION);
+    //It took too mach program space (463 bytes))
+    //return (unsigned)((float)(STATE_MAX - result) * CALIBRATION);
+    
+    //this code do the same but take only 32bytes
+    //I need this code to cancel a noise near to max output value 
+    if (result < STATE_MAX/ 2)
+        return (STATE_MAX - result) + 1;
+    else
+        return (STATE_MAX - result);
 }
 
 
