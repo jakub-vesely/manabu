@@ -4,7 +4,7 @@
 #include <QTimer>
 #include <SerialPort.h>
 
-#define TRY_MAX  30
+#define TRY_MAX  60
 
 NoInterface::NoInterface(QWidget *parent, SerialPort *serialPort) :
     ModuleWidget(parent, serialPort, true),
@@ -42,12 +42,12 @@ void NoInterface::tryConnect()
         return;
     }
 
-    if (!m_serialPort->FoundButClosed())
+    /*if (!m_serialPort->FoundButClosed())
     {
         m_label->setText(QString(tr("Interface has been disconnected.")));
         m_timer->stop();
         return;
-    }
+    }*/
 
     if (++m_tryCount == TRY_MAX)
     {
