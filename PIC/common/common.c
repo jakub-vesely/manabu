@@ -21,10 +21,9 @@ void SwitchControllerInit()
 	INnOUT_TRIS = 0;
 	INnOUT_PORT = 1;
 
-#if defined HAVE_OUTPUT
 	INVERT_OUTPUT_TRIS = 0;
 	INVERT_OUTPUT_PORT = 0;
-#endif
+
 }
 
 void SetMode(unsigned char mode)
