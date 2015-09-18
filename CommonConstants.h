@@ -48,6 +48,7 @@ typedef enum
     TYPE_RGB_LED = 3,
     TYPE_BUTTON = 4,
     TYPE_ARITHMETIC_LOGIC = 5,
+    TYPE_GENERATOR = 6,
 } ModuleTypes;
 
 
