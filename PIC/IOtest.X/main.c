@@ -7,13 +7,13 @@ __CONFIG(FOSC_INTOSC & WDTE_OFF & MCLRE_OFF & BOREN_OFF & WRT_OFF & LVP_OFF &CP_
 
 void SdaSclSwitch()
 {
-	PORTCbits.RC0 = 0;
-	PORTCbits.RC1 = 1;
+	LATC0 = 0;
+	LATC1 = 1;
 	Wait(10);
 
 
-	PORTCbits.RC0 = 1;
-	PORTCbits.RC1 = 0;
+	LATC0 = 1;
+	LATC1 = 0;
 	Wait(10);
 }
 main()
@@ -28,29 +28,22 @@ main()
 
 	TRISC0 = 0;
 	LATC0 = 0;
-	PORTCbits.RC0 = 0;
 	TRISC1 = 0;
 	LATC1 = 0;
-	PORTCbits.RC1 = 1;
 
 	INnOUT_PORT = 0;
 	INVERT_OUTPUT_PORT = 1;
 
 	while (1)
 	{
+        INnOUT_PORT = 1;
+        SdaSclSwitch();
+        
+        INnOUT_PORT = 0;        
 		INVERT_OUTPUT_PORT = 0;
-		INnOUT_PORT = 1;
 		SdaSclSwitch();
-
-		INnOUT_PORT = 0;
-		SdaSclSwitch();
-
-
-		INVERT_OUTPUT_PORT = 1;
-		INnOUT_PORT = 1;
-		SdaSclSwitch();
-
-		INnOUT_PORT = 0;
+        
+        INVERT_OUTPUT_PORT = 1;
 		SdaSclSwitch();
 	}
 }
