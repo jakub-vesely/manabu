@@ -19,10 +19,10 @@ bool I2cMasterPut(unsigned char messageType, MessageId command, unsigned char co
 bool I2cMasterGet(unsigned char messageType, MessageId command, unsigned char *retVal, unsigned char count);
 
 
-#define SCL_PORT PORTCbits.RC0
-#define SDA_PORT PORTCbits.RC1
-#define SCL_TRIS TRISCbits.TRISC0
-#define SDA_TRIS TRISCbits.TRISC1
+#define SCL_PORT LATC0
+#define SDA_PORT LATC1
+#define SCL_TRIS TRISC0
+#define SDA_TRIS TRISC1
 
 #define  I2C_COMMON_INIT\
     SSPEN = 0;\
