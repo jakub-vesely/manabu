@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.4.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -6312,7 +6312,7 @@ Source: AVX .. aphvc.pdf</description>
 </class>
 </classes>
 <parts>
-<part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device="" value="16F103"/>
+<part name="U1" library="!stavebnice03" deviceset="16F103-TSSOP" device="" value="16F1503"/>
 <part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R2" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
@@ -6327,7 +6327,7 @@ Source: AVX .. aphvc.pdf</description>
 <part name="C5" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="C4" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="DATA" library="!stavebnice03" deviceset="JUMPER4M" device="" value="JUMPER4M"/>
-<part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2K2"/>
+<part name="R3" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
 <part name="PROG" library="!stavebnice03" deviceset="JUMPER5M" device="" value="JUMPER5M"/>
@@ -6668,8 +6668,8 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="246.38" y1="58.42" x2="101.6" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="58.42" x2="101.6" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="RA4"/>
-<wire x1="101.6" y1="88.9" x2="124.46" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="U5" gate="G$1" pin="S"/>
+<wire x1="101.6" y1="88.9" x2="124.46" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="238.76" y1="73.66" x2="246.38" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="U4" gate="G$1" pin="S"/>
 <wire x1="246.38" y1="73.66" x2="246.38" y2="114.3" width="0.1524" layer="91"/>
