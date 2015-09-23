@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.4.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -983,6 +983,16 @@
 <wire x1="3" y1="7.1" x2="2.1" y2="7.1" width="0.127" layer="51"/>
 <wire x1="2.1" y1="7.1" x2="2.1" y2="6.2" width="0.127" layer="51"/>
 </package>
+<package name="BUTTON_12X12">
+<wire x1="-6" y1="-6" x2="6" y2="-6" width="0.127" layer="51"/>
+<wire x1="6" y1="-6" x2="6" y2="6" width="0.127" layer="51"/>
+<wire x1="6" y1="6" x2="-6" y2="6" width="0.127" layer="51"/>
+<wire x1="-6" y1="6" x2="-6" y2="-6" width="0.127" layer="51"/>
+<pad name="B2" x="-2.5" y="-6.2" drill="0.8" shape="offset" rot="R90"/>
+<pad name="A2" x="2.5" y="-6.2" drill="0.8" shape="offset" rot="R90"/>
+<pad name="B1" x="-2.5" y="6.2" drill="0.8" shape="offset" rot="R270"/>
+<pad name="A1" x="2.5" y="6.2" drill="0.8" shape="offset" rot="R270"/>
+</package>
 </packages>
 <symbols>
 <symbol name="16F1503">
@@ -1923,6 +1933,22 @@
 <connect gate="G$1" pin="2" pad="2"/>
 <connect gate="G$1" pin="3" pad="3"/>
 <connect gate="G$1" pin="GND" pad="GND1 GND2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BUTTON_12X12">
+<gates>
+<gate name="G$1" symbol="BUTTON" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BUTTON_12X12">
+<connects>
+<connect gate="G$1" pin="P$1" pad="A1 A2"/>
+<connect gate="G$1" pin="P$2" pad="B1 B2"/>
 </connects>
 <technologies>
 <technology name=""/>

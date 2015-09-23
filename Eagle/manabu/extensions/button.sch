@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.4.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -103,17 +103,6 @@
 <wire x1="5.15" y1="1.35" x2="-5.15" y2="1.35" width="0.127" layer="21"/>
 <wire x1="-5.15" y1="1.35" x2="-5.15" y2="-1.35" width="0.127" layer="21"/>
 </package>
-<package name="BUTTON_6.2X6.2">
-<smd name="P$1" x="-2.21" y="-3.5" dx="2" dy="2" layer="1" rot="R90"/>
-<smd name="P$2" x="2.29" y="-3.5" dx="2" dy="2" layer="1" rot="R90"/>
-<smd name="P$3" x="-2.21" y="3.5" dx="2" dy="2" layer="1" rot="R90"/>
-<smd name="P$4" x="2.29" y="3.5" dx="2" dy="2" layer="1" rot="R90"/>
-<wire x1="-3.21" y1="-3.2" x2="3.19" y2="-3.2" width="0.127" layer="21"/>
-<wire x1="3.19" y1="-3.2" x2="3.19" y2="3.2" width="0.127" layer="21"/>
-<wire x1="3.19" y1="3.2" x2="-3.21" y2="3.2" width="0.127" layer="21"/>
-<wire x1="-3.21" y1="3.2" x2="-3.21" y2="-3.2" width="0.127" layer="21"/>
-<circle x="-0.01" y="0" radius="1.529703125" width="0.127" layer="21"/>
-</package>
 <package name="JUMPER5M">
 <wire x1="-4.064" y1="1.27" x2="-3.81" y2="1.016" width="0.1524" layer="51"/>
 <wire x1="-6.35" y1="1.016" x2="-6.096" y2="1.27" width="0.1524" layer="51"/>
@@ -163,6 +152,16 @@
 <wire x1="6.5" y1="1.4" x2="-6.5" y2="1.4" width="0.127" layer="21"/>
 <wire x1="-6.5" y1="1.4" x2="-6.5" y2="-1.4" width="0.127" layer="21"/>
 </package>
+<package name="BUTTON_7X7">
+<wire x1="-6" y1="-6" x2="6" y2="-6" width="0.127" layer="51"/>
+<wire x1="6" y1="-6" x2="6" y2="6" width="0.127" layer="51"/>
+<wire x1="6" y1="6" x2="-6" y2="6" width="0.127" layer="51"/>
+<wire x1="-6" y1="6" x2="-6" y2="-6" width="0.127" layer="51"/>
+<pad name="B2" x="-2.5" y="-6.2" drill="0.8" shape="offset" rot="R90"/>
+<pad name="A2" x="2.5" y="-6.2" drill="0.8" shape="offset" rot="R90"/>
+<pad name="B1" x="-2.5" y="6.2" drill="0.8" shape="offset" rot="R270"/>
+<pad name="A1" x="2.5" y="6.2" drill="0.8" shape="offset" rot="R270"/>
+</package>
 </packages>
 <symbols>
 <symbol name="JIMPER4M">
@@ -183,11 +182,6 @@
 <wire x1="0" y1="-2.54" x2="7.62" y2="-2.54" width="0.254" layer="94"/>
 <wire x1="0" y1="-7.62" x2="7.62" y2="-7.62" width="0.254" layer="94"/>
 <text x="-5.08" y="12.7" size="1.778" layer="95">&gt;NAME</text>
-</symbol>
-<symbol name="BUTTON">
-<pin name="P$1" x="-7.62" y="0" length="middle"/>
-<pin name="P$2" x="7.62" y="0" length="middle" rot="R180"/>
-<wire x1="-2.54" y1="0" x2="2.54" y2="2.54" width="0.254" layer="94"/>
 </symbol>
 <symbol name="JUMPER5M">
 <pin name="1" x="-7.62" y="10.16" length="middle"/>
@@ -211,6 +205,12 @@
 <wire x1="0" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
 <text x="-5.08" y="15.24" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
+<symbol name="BUTTON">
+<pin name="P$1" x="-7.62" y="0" visible="off" length="middle"/>
+<pin name="P$2" x="7.62" y="0" visible="off" length="middle" rot="R180"/>
+<wire x1="-2.54" y1="0" x2="2.54" y2="2.54" width="0.254" layer="94"/>
+<text x="0" y="-2.54" size="1.778" layer="95" align="center">&gt;NAME</text>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="JUMPER4M">
@@ -231,22 +231,6 @@
 </device>
 </devices>
 </deviceset>
-<deviceset name="BUTTON_6.3X6.3">
-<gates>
-<gate name="G$1" symbol="BUTTON" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="BUTTON_6.2X6.2">
-<connects>
-<connect gate="G$1" pin="P$1" pad="P$1 P$3"/>
-<connect gate="G$1" pin="P$2" pad="P$2 P$4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="JUMPER5M">
 <gates>
 <gate name="G$1" symbol="JUMPER5M" x="0" y="0"/>
@@ -259,6 +243,22 @@
 <connect gate="G$1" pin="3" pad="3"/>
 <connect gate="G$1" pin="4" pad="4"/>
 <connect gate="G$1" pin="5" pad="5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BUTTON_7X7">
+<gates>
+<gate name="G$1" symbol="BUTTON" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BUTTON_7X7">
+<connects>
+<connect gate="G$1" pin="P$1" pad="A1 A2"/>
+<connect gate="G$1" pin="P$2" pad="B1 B2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -5603,9 +5603,9 @@ Source: AVX .. aphvc.pdf</description>
 <parts>
 <part name="U$9" library="!stavebnice03" deviceset="JUMPER4M" device=""/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="100k"/>
-<part name="U$1" library="!stavebnice03" deviceset="BUTTON_6.3X6.3" device=""/>
 <part name="U$2" library="!stavebnice03" deviceset="JUMPER5M" device=""/>
 <part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100nF"/>
+<part name="U$1" library="!stavebnice03" deviceset="BUTTON_7X7" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5614,16 +5614,15 @@ Source: AVX .. aphvc.pdf</description>
 <instances>
 <instance part="U$9" gate="G$1" x="137.16" y="27.94" rot="R270"/>
 <instance part="R1" gate="G$1" x="172.72" y="53.34" rot="R90"/>
-<instance part="U$1" gate="G$1" x="167.64" y="53.34" rot="R90"/>
 <instance part="U$2" gate="G$1" x="172.72" y="27.94" rot="MR270"/>
 <instance part="C2" gate="G$1" x="160.02" y="50.8" rot="R180"/>
+<instance part="U$1" gate="G$1" x="167.64" y="53.34" rot="R90"/>
 </instances>
 <busses>
 </busses>
 <nets>
 <net name="AA" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="P$2"/>
 <wire x1="160.02" y1="63.5" x2="167.64" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="167.64" y1="63.5" x2="167.64" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="167.64" y1="63.5" x2="172.72" y2="63.5" width="0.1524" layer="91"/>
@@ -5636,6 +5635,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="172.72" y1="63.5" x2="182.88" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="182.88" y1="63.5" x2="182.88" y2="35.56" width="0.1524" layer="91"/>
 <junction x="172.72" y="63.5"/>
+<pinref part="U$1" gate="G$1" pin="P$2"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -5666,10 +5666,10 @@ Source: AVX .. aphvc.pdf</description>
 <segment>
 <pinref part="C2" gate="G$1" pin="1"/>
 <wire x1="160.02" y1="48.26" x2="160.02" y2="45.72" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="P$1"/>
 <wire x1="167.64" y1="35.56" x2="167.64" y2="45.72" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="2"/>
 <wire x1="160.02" y1="45.72" x2="167.64" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="P$1"/>
 <junction x="167.64" y="45.72"/>
 </segment>
 </net>
