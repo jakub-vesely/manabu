@@ -38,7 +38,7 @@ Plot::Plot(QWidget *parent, SerialPort *serialPort) :
 
 	m_timer = new QTimer(this);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(draw()));
-	m_timer->start(1000);
+    m_timer->start(500);
 }
 
 void Plot::draw()
