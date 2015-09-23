@@ -9,12 +9,12 @@ void SdaSclSwitch()
 {
 	LATC0 = 0;
 	LATC1 = 1;
-	Wait(10);
+	Wait(50);
 
 
 	LATC0 = 1;
 	LATC1 = 0;
-	Wait(10);
+	Wait(50);
 }
 main()
 {
