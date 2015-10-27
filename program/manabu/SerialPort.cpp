@@ -148,7 +148,7 @@ bool SerialPort::_OpenIfMyPotr()
 		{
 			m_log->Info(QString("%1 looks like my port").arg(info.portName()));
             m_serialPort.setPort(info);
-            m_serialPort.setBaudRate(115200);
+            m_serialPort.setBaudRate(QSerialPort::Baud115200); //FIXME: I guess it will be wrong
 
             //to open port in linux you have to permit access by
             //sudo chmod a+rw /dev/ttyACM0

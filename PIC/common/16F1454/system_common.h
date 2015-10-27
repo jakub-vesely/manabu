@@ -6,11 +6,19 @@
 #include <pic16f1454.h>
 
 
-#define INVERT_OUTPUT_PORT LATA4
-#define INnOUT_PORT LATA5
+#if defined LIPOL_V0_1
+#   define INVERT_OUTPUT_PORT LATA5
+#   define INnOUT_PORT LATA4
 
-#define INVERT_OUTPUT_TRIS TRISA4
-#define INnOUT_TRIS TRISA5
+#   define INVERT_OUTPUT_TRIS TRISA5
+#   define INnOUT_TRIS TRISA4
+#else
+#   define INVERT_OUTPUT_PORT LATA4
+#   define INnOUT_PORT LATA5
+
+#   define INVERT_OUTPUT_TRIS TRISA4
+#   define INnOUT_TRIS TRISA5
+#endif
 
 #define RUN_PROGRAM_VALUE 0
 #define IS_DATA SSPSTATbits.D_nA

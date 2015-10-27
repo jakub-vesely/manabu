@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.4.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -6793,7 +6793,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="U1" library="!stavebnice03" deviceset="16F1454" device=""/>
 <part name="C2" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
-<part name="R2" library="resistor" deviceset="R-EU_" device="R0603" value="2k2"/>
+<part name="R2" library="resistor" deviceset="R-EU_" device="R0603" value="2_k2"/>
 <part name="C3" library="resistor" deviceset="C-EU" device="C0603K" value="100n"/>
 <part name="OUT" library="!stavebnice03" deviceset="JUMPER5F-90" device=""/>
 <part name="U3" library="!stavebnice03" deviceset="NC7SB3157P6X" device=""/>
@@ -6853,7 +6853,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <instance part="RESET" gate="G$1" x="165.1" y="147.32" rot="R90"/>
 <instance part="D1" gate="G$1" x="86.36" y="66.04" rot="R90"/>
 <instance part="R8" gate="G$1" x="114.3" y="101.6" rot="R270"/>
-<instance part="FLASH" gate="G$1" x="106.68" y="96.52"/>
+<instance part="FLASH" gate="G$1" x="106.68" y="91.44"/>
 </instances>
 <busses>
 </busses>
@@ -7069,20 +7069,20 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <segment>
 <wire x1="246.38" y1="73.66" x2="246.38" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="58.42" x2="114.3" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="58.42" x2="114.3" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="58.42" x2="114.3" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="S"/>
 <wire x1="238.76" y1="73.66" x2="246.38" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="U3" gate="G$1" pin="S"/>
 <wire x1="246.38" y1="73.66" x2="246.38" y2="114.3" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="114.3" x2="238.76" y2="114.3" width="0.1524" layer="91"/>
 <junction x="246.38" y="73.66"/>
-<pinref part="U1" gate="G$1" pin="RA5"/>
-<wire x1="114.3" y1="93.98" x2="124.46" y2="93.98" width="0.1524" layer="91"/>
 <pinref part="R8" gate="G$1" pin="2"/>
-<wire x1="114.3" y1="93.98" x2="114.3" y2="96.52" width="0.1524" layer="91"/>
-<junction x="114.3" y="93.98"/>
+<wire x1="114.3" y1="88.9" x2="114.3" y2="96.52" width="0.1524" layer="91"/>
+<junction x="114.3" y="88.9"/>
 <pinref part="FLASH" gate="G$1" pin="TP"/>
-<wire x1="106.68" y1="93.98" x2="114.3" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="88.9" x2="114.3" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="RA4"/>
+<wire x1="124.46" y1="88.9" x2="114.3" y2="88.9" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">

@@ -143,7 +143,9 @@ int main()
 	
 	TRISA5 = 1;
 	FLASH_READ_BYTE(RUN_PROGRAM_FLAG_POSITION)
-	if (RUN_PROGRAM_VALUE == PMDAT )//&& PORTAbits.RA5)
+    
+    //NOTE: when you will activate RA5 there must be RA4 for LIPOL version > 0.1
+	if (RUN_PROGRAM_VALUE == PMDAT )//&& PORTAbits.RA5)   
 	{
 #asm
 		GOTO MAIN_PROOGRAM_START;
