@@ -1,9 +1,11 @@
 #include "RGB.h"
-#include <SerialPort.h>
 #include <QComboBox>
-#include <QLabel>
+#include <QDebug>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QVBoxLayout>
+#include <SerialPort.h>
+
 RGB::RGB(QWidget *parent, SerialPort *serialPort) :
 	ModuleWidget(parent, serialPort, false)
 {
@@ -23,7 +25,9 @@ RGB::RGB(QWidget *parent, SerialPort *serialPort) :
 
 	unsigned mode;
 	m_serialPort->GetMode(1, mode);
-	modeCombo->setCurrentIndex(mode-1);
+    qDebug() << "RGB mode:" << mode;
+
+    modeCombo->setCurrentIndex(mode);
 
 	connect(modeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeMode(int)));
 
@@ -37,6 +41,6 @@ RGB::~RGB()
 
 void RGB::changeMode(int value)
 {
-	m_serialPort->SetMode(1, value+1);
+    m_serialPort->SetMode(1, value);
 }
 

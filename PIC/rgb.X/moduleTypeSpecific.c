@@ -10,9 +10,10 @@
 
 typedef enum
 {
-	MODE_RED_TO_PURPLE = 1,
-    MODE_RED_TO_RED = 2,	
-	MODE_WHITE_VALUE = 3,
+	MODE_RED_TO_PURPLE = 0,
+    MODE_RED_TO_RED = 1,	
+	MODE_WHITE_VALUE = 2,
+    MODE_COUNT = 3
 } MODE;
 
 void ProcessCommandModuleTypeSpecific()
@@ -111,4 +112,9 @@ void ProcessModuleFunctionality()
 unsigned char GetModuleType()
 {
 	return TYPE_RGB_LED;
+}
+
+unsigned char GetModeCount()
+{
+    return MODE_COUNT;
 }

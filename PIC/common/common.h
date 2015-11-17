@@ -53,11 +53,13 @@ unsigned char g_commandInstruction = 0;
 unsigned char g_commandValue = 0;
 unsigned g_stateRepeater = 0;
 
-
 struct
 {
+    bool messageType:1;
     bool isReady:1;
-    unsigned send_try:6;
+    unsigned sendTry:6;
+    unsigned commandId:5;
+    
 } g_toOutput;
 
 #endif //BOOTLOADER

@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     Interface.cpp \
     RGB.cpp \
     NoInterface.cpp \
-    LogDialog.cpp
+    LogDialog.cpp \
+    Button.cpp
 
 HEADERS  += MainWindow.h \
     SerialPort.h \
@@ -34,6 +35,7 @@ HEADERS  += MainWindow.h \
     Interface.h \
     RGB.h \
     NoInterface.h \
-    LogDialog.h
+    LogDialog.h \
+    Button.h
 
 FORMS    +=

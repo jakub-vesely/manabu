@@ -26,21 +26,21 @@
 #	define RECEIVE_TRY_COUNT  5000
 #endif
 
-void SendStateToOutputIfReady()
+void SendMessageToOutputIfReady()
 {
 	if (!g_toOutput.isReady)
 		return;
 
-	if (0 == g_toOutput.send_try)
+	if (0 == g_toOutput.sendTry)
 	{
 		g_toOutput.isReady = false;
 		//TODO: solve module on output is not connected any more
 		return;
 	}
-	g_toOutput.send_try = g_toOutput.send_try - 1;
+	g_toOutput.sendTry = g_toOutput.sendTry - 1;
 	
 	INVERT_OUTPUT_TRIS = false; //I switch it to write state only for message writing and after that I will switch it back to read state. it looks is more efficient to power saving (current)
-	if (SendMessageToOutput(I2C_MESSAGE_TYPE_DATA, 0, &g_outState, 2))
+	if (SendMessageToOutput(g_toOutput.messageType, g_toOutput.commandId, &g_outState, g_toOutput.messageType == I2C_MESSAGE_TYPE_COMMAND ? 1 : 2))
 		g_toOutput.isReady = false;
 	else if (!INPUT_MESSAGE_MISSED)//message was not send
 		InvertOutput();
@@ -52,7 +52,7 @@ void ProcessStateChangedCommon()
 	g_stateChanged = false;
 
 #ifdef HAVE_OUTPUT
-	g_toOutput.send_try = TO_OUTPUT_MAX_TRAY;
+	g_toOutput.sendTry = TO_OUTPUT_MAX_TRAY;
 	g_toOutput.isReady = true;
 #endif
 }
@@ -116,7 +116,7 @@ void main(void)
 			ProcessStateChangedCommon();
 		}
 #if defined (HAVE_OUTPUT)
-		SendStateToOutputIfReady();
+		SendMessageToOutputIfReady();
 #endif
 	}
 }

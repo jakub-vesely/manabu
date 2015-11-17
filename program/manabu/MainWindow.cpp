@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 #include "SerialPort.h"
 #include "BootLoader.h"
-
+#include <Button.h>
 #include <NoInterface.h>
 #include <QComboBox>
 #include <QLineEdit>
@@ -118,11 +118,19 @@ void MainWindow::reintModules()
 				if(!(ModuleTypes)m_serialPort->FillModuleType(1, moduleType))
 					return; //no module connected to the interface
 
-				if (moduleType == TYPE_RGB_LED)
-					m_mainWidget->layout()->addWidget(new RGB(m_mainWidget, m_serialPort));
-				else
-					m_mainWidget->layout()->addWidget(new Plot(m_mainWidget, m_serialPort));
-			}
+                switch (moduleType)
+                {
+                    case TYPE_RGB_LED:
+                        m_mainWidget->layout()->addWidget(new RGB(m_mainWidget, m_serialPort));
+                    break;
+                    case TYPE_BUTTON:
+                        m_mainWidget->layout()->addWidget(new Button(m_mainWidget, m_serialPort));
+                    break;
+                    default:
+                        m_mainWidget->layout()->addWidget(new Plot(m_mainWidget, m_serialPort));
+                    break;
+                }
+            }
 			else
 				m_log->Info("module with a bootloader connected");
 

@@ -60,6 +60,21 @@ void ProcessCommandCommon()
 		case MID_COMMAND_FLASH_SET_BOOT_FLAG:
 			GoToBootloader(g_commandValue);
 		break;
+        case MID_DECREASE_INCREASE_MODE:
+            if (g_commandValue == INCREASE_MODE)
+            {
+                if (g_persistant.mode + 1 == GetModeCount())
+                    SetMode(0);
+                else
+                    SetMode(g_persistant.mode + 1);
+            }
+            else
+            {
+                if (g_persistant.mode - 1 == 0)
+                    SetMode(GetModeCount() - 1);
+                else
+                    SetMode(g_persistant.mode - 1);
+            }
 	}
 
 	g_stateMessageEnabled = true; //command processed, we dont have to block the state sending
@@ -164,6 +179,13 @@ void CommonInit()
 
 #if defined (HAVE_INPUT)
 	I2cSlaveInit();
+#endif
+    
+#if defined (HAVE_OUTPUT)
+    g_toOutput.commandId = 0;
+    g_toOutput.isReady = false;
+    g_toOutput.messageType = I2C_MESSAGE_TYPE_DATA;
+    g_toOutput.sendTry = 0;
 #endif
 
 #ifdef INTERUPTS_ENABLED
