@@ -5,7 +5,7 @@
 #define RED_TO_PURPLE_PERIOD ((unsigned)((float)STATE_MAX / 2.5)) //5 states
 
 #define RED_CALIBRATION 0.7
-#define GREEN_CALIBRATION 1.0
+//#define GREEN_CALIBRATION 1.0
 #define BLUE_CALIBRATION 0.9
 
 typedef enum
@@ -13,7 +13,8 @@ typedef enum
 	MODE_RED_TO_PURPLE = 0,
     MODE_RED_TO_RED = 1,	
 	MODE_WHITE_VALUE = 2,
-    MODE_COUNT = 3
+    MODE_TEMPERATURE = 3,        
+    MODE_COUNT = 4
 } MODE;
 
 void ProcessCommandModuleTypeSpecific()
@@ -23,7 +24,8 @@ void SetDutyCyclePWM(unsigned red, unsigned green, unsigned blue)
 {
 	SetDutyCyclePWM1((unsigned)((float)red * RED_CALIBRATION));
 	SetDutyCyclePWM2((unsigned)((float)blue * BLUE_CALIBRATION));
-    SetDutyCyclePWM3((unsigned)((float)green * GREEN_CALIBRATION));
+   // SetDutyCyclePWM3((unsigned)((float)green * GREEN_CALIBRATION));
+    SetDutyCyclePWM3(green);
 }
 
 void SetColor(unsigned i, unsigned pwmPeriod, bool blackAndWhite)
@@ -93,8 +95,18 @@ void ProcessStateChangedModuleTypeSpecific()
 		case MODE_RED_TO_PURPLE:
 			SetColor(g_outState, RED_TO_PURPLE_PERIOD, true);
 			break;
+        case MODE_TEMPERATURE:
+            if (g_outState < STATE_MAX / 2)
+                SetDutyCyclePWM(STATE_MAX, STATE_MAX / 2 + g_outState, g_outState * 2);
+            else
+            {
+                unsigned rgValue = STATE_MAX + STATE_MAX / 2 - g_outState;
+                SetDutyCyclePWM(rgValue, rgValue, STATE_MAX);
+            }
+        
+            break;
 		default: //white and initial value from HEFLASH after programming
-			SetWhiteValue(g_outState);
+			SetDutyCyclePWM(g_outState, g_outState, g_outState);
 			break;
 	}
 }
