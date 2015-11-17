@@ -23,3 +23,8 @@ unsigned char GetModuleType()
 {
 	return TYPE_ARITHMETIC_LOGIC;
 }
+
+unsigned char GetModeCount()
+{
+    return 1;
+}

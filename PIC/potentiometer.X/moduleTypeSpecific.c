@@ -70,3 +70,8 @@ unsigned char GetModuleType()
 {
 	return TYPE_POTENTIOMETER;
 }
+
+unsigned char GetModeCount()
+{
+    return 1;
+}

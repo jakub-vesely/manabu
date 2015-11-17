@@ -4,4 +4,5 @@ void ProcessStateChangedModuleTypeSpecific();
 void ModuleTypeSpecificInit();
 void ProcessModuleFunctionality();
 unsigned char GetModuleType();
+unsigned char GetModeCount();
 #endif //_MODULE_TYPE_SPECIFIC_H_
