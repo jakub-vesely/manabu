@@ -19,6 +19,7 @@ RGB::RGB(QWidget *parent, SerialPort *serialPort) :
     modeCombo->addItem(tr("black,red to purple, white"));
     modeCombo->addItem(tr("red to red"));
 	modeCombo->addItem(tr("white value"));
+    modeCombo->addItem(tr("temperature"));
 	hLayout->addWidget(modeCombo);
 
 	hLayout->addStretch();

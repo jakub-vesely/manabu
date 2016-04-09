@@ -96,14 +96,15 @@ void ProcessStateChangedModuleTypeSpecific()
 			SetColor(g_outState, RED_TO_PURPLE_PERIOD, true);
 			break;
         case MODE_TEMPERATURE:
-            if (g_outState < STATE_MAX / 2)
-                SetDutyCyclePWM(STATE_MAX, STATE_MAX / 2 + g_outState, g_outState * 2);
+        {
+            if (g_outState > STATE_MAX / 2)
+                SetDutyCyclePWM(STATE_MAX, STATE_MAX + STATE_MAX / 2 - g_outState, (STATE_MAX - g_outState) * 2);
             else
             {
-                unsigned rgValue = STATE_MAX + STATE_MAX / 2 - g_outState;
+                unsigned rgValue = STATE_MAX / 2 + g_outState;
                 SetDutyCyclePWM(rgValue, rgValue, STATE_MAX);
             }
-        
+        }
             break;
 		default: //white and initial value from HEFLASH after programming
 			SetDutyCyclePWM(g_outState, g_outState, g_outState);
